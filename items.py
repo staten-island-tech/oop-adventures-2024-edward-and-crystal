@@ -1,4 +1,4 @@
-from characters import inventory, currenthp
+from characters import MainCharacter
 '''wooden sword
 10 strength
 infinite durability (probably like 1024, just to make sure it doesnt break leaving the player no weapon)
@@ -37,18 +37,17 @@ class Item:
         self.strength = strength
         self.durability = durability
         self.cost = cost
-        self.broken = False
 
     def weapon_broken(self):
         if self.durability == 0:
-            self.broken = True
-            inventory.remove(self.name)
+            Character.inventory.remove(self.name)
             print(f'Your {self.name} has broken! You can no longer use it')
     
-
-
     
-class WoodenSword:
+class WoodenSword(Item):
+    def __init__(self):
+        super().__init__(name='Wooden Sword', strength=10, durability=1024, cost='cannot buy')
     
-            
+    
+
 
