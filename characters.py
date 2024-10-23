@@ -9,21 +9,18 @@ class Character:
         self.weapon = weapon
         self.dead = False
 
+    def CharacterDeathMessage(self):
+        print(f"{self.name} has DIED.")
+
 class MainCharacter(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon, inventory, gold):
         super().__init__(name, maxhp, currenthp, strength, weapon)
         self.inventory = list(inventory)
         self.gold = gold
-    
-    def PlayerDeadMessage(self):
-        print(f"{self.name} has DIED.")
 
-    def CharacterTakeDamage(self, damage):
-        self.currenthp -= damage
-        if self.currenthp < 0:
-            self.currenthp = 0
-            self.dead = True
-            self.PlayerTakeDamage
+    def PlayerTakeDamage(self):
+            super().CharacterTakeDamage()
+            self.CharacterDeathMessage()
   
     def PlayerHeal(self, heal):
         self.currenthp += heal
@@ -47,14 +44,12 @@ class MainCharacter(Character):
     def PlayerDamageCalc(self, weaponstrength):
         damage = self.strength + weaponstrength
         return damage
-    
-    def PlayerHit(self):
-        weaponstrength = player.weapon['strength']
-        damage = self.PlayerDamageCalc(weaponstrength)
-        return damage
-
+ 
     def PlayerEquipWeapon(self, weapon):
-        player.weapon = weapon
+        self.weapon = weapon
+        
+    def CharacterDeathMessage(self):
+        print(f"{self.name} has DIED.")
 
     def PlayerSaveFileReady(self):
         return {
@@ -79,13 +74,10 @@ class MainCharacter(Character):
         return player      
 
 class Enemy(Character):
-    def __init__(self, name, maxhp, currenthp, strength, weapon, dead, golddrop, weapondrop):
-        super().__init__(name, maxhp, currenthp, strength, weapon, dead)
+    def __init__(self, name, maxhp, currenthp, strength, weapon, golddrop, weapondrop):
+        super().__init__(name, maxhp, currenthp, strength, weapon)
         self.golddrop = golddrop
         self.weapondrop = weapondrop
-    
-    def EnemyDeathMessage(self, player):
-        print(f"{self.name} has been killed by {player}")
 
     def EnemyTakeDamage(self, damage):
         self.currenthp -= damage
@@ -95,9 +87,9 @@ class Enemy(Character):
             self.EnemyDie(self)
     
     def EnemyDie(self):
-        self.EnemyDeathMessage(player.name)
-        player.gold += self.golddrop
-        player.inventory.append(self.weapondrop)
+        self.EnemyDeathMessage(self)
+        self.gold += self.golddrop
+        self.inventory.append(self.weapondrop)
 
     def EnemyHeal(self, heal):
         self.currenthp += heal
@@ -110,32 +102,45 @@ class Enemy(Character):
         damage = self.strength + weaponstrength
         player.health -= damage
 
+    
+class BattleInteractions(Character):
+    def DamageCalc(attacker, defender):
+        damage = attacker.strength + attacker.weapon['strength']
 
-player = MainCharacter('name', 1, 1, 1, )
+    def CharacterAttack(attacker, defender):
+        damage = BattleInteractions.DamageCalc(attacker, defender)
+        newdefenderhealth = defender.health - damage
+
+        if newdefenderhealth <= 0:
+            defender.dead = True
+            defender.CharacterDeathMessage()
+            return newdefenderhealth
+
+        else:
+            return newdefenderhealth
+
+    def PlayerAttack(player, enemies):
+        enemysearch = input("Who would you like to attack? ")
+        done = False
+
+        while done == False:
+            for enemy in enemies:
+                if enemysearch in enemy.name:
+                    confirm = input(f"Would you like to attack {enemy.name}? ")
+                    if confirm.upper == "YES":
+                        enemyhealth = BattleInteractions.CharacterAttack(player, enemy)
+                        print(f"{player.name} attacks {enemy.name}, and {enemy.name} now has {enemyhealth}.")
+                        done = True
+    
+    def EnemyAttack(enemy, player):
+        newdefenderhealth = BattleInteractions.CharacterAttack(enemy, player)
+        print(f"{enemy.name} attacks you. You now have {newdefenderhealth}.")
+
+    def Battles(player, enemies):
 
 
+    
+player = MainCharacter('player', 10, 10, 100, {'strength': 100}, [], 0)
+goblin = Enemy('goblin', 10, 10, 10, {'gobsword': 100}, 10, 'gobbysword')
 
-"""Player Character:
-‘id’ : 1
-‘name’ : “playerperson”
-‘maxhp’: 75
-‘currenthp’: 75 (will change)
-‘strength’: 5
-‘gold’: 0 (will change)
-‘inventory’: [list of dictionaries with different items]
-sample item dictionary, all the items are weapons to simplify things
-
-‘Name’: wooden sword
-‘damage’: 10
-
-Enemy Characters:
-
-‘id’ : 2
-‘name’ : “slime”
-‘maxhp’: 20
-‘currenthp’: 20 (will change)
-‘strength’: 5
-‘golddrop’: 10
-‘weapondrop’ : “nothing”
-
-"""
+BattleInteractions.DamageCalc(player, goblin)
