@@ -161,12 +161,6 @@ class BattleInteractions(MainCharacter, Enemy):
     def DamageCalc(attacker, defender):
         damage = attacker.strength + attacker.weapon['strength']
 
-    def Battles(player, enemies):
-        enemycount = len(enemies)
-        if enemycount == 1:
-            while enemies[0].dead == False:
-                player.MainCharacterAttack(enemies)
-                enemies[0].EnemyHit(player)
 
 
 
