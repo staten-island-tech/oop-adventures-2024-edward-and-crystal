@@ -164,17 +164,20 @@ class BattleInteractions(MainCharacter, Enemy):
     def Battles(player, enemies):
         enemycount = len(enemies)
         if enemycount == 1:
-            while player.dead == False:
-                while enemies[0].dead == False:
-                    player.MainCharacterAttack(enemies)
-                    enemies[0].EnemyHit(player)
-                    print(str("enemies.dead"))
+            while True:
+                player.MainCharacterAttack(enemies)
+                enemy1 = enemies[0]
+                enemy1.EnemyHit(player)
+                if enemy1.dead == True:
+                    break
+                    
 
 
     
 player = MainCharacter('player', 10, 10, 100, {'strength': 100}, [], 0)
 goblin = Enemy('goblin', 10, 10, 10, {'strength': 100}, 10, 'gobbysword')
-
+print(player.dead)
+print(goblin.dead)
 enemies = [goblin]
 
 BattleInteractions.Battles(player, enemies)
