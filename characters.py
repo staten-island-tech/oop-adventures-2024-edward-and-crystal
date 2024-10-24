@@ -12,6 +12,10 @@ class Character:
     def CharacterDeathMessage(self):
         print(f"{self.name} has DIED.")
 
+    def CharacterDamageCalc(self):
+        damage = self.strength + self.weapon['strength']
+        return damage
+
 class MainCharacter(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon, inventory, gold):
         super().__init__(name, maxhp, currenthp, strength, weapon)
@@ -51,6 +55,47 @@ class MainCharacter(Character):
     def CharacterDeathMessage(self):
         print(f"{self.name} has DIED.")
 
+    def MainCharacterChooseEnemy(self, enemies):
+       selectedenemies = []
+       found = False
+       for enemy in enemies:
+           print(f"{enemy.name} ) {enemy.currenthp} HP")
+       while found == False:
+           request = input("Who would you like to attack? ")
+           for enemy in enemies:
+               if request.upper() in enemy.name.upper():
+                   selectedenemies.append(enemy)
+                   found = True
+
+       functiondone = False
+
+       # i realize my rage induced variable names for this next part might make it hard to read,
+       # IHATETHISFUNCTIOn was originally called "thisfunctionfinallyf.indone"
+       # dopeoplereadthis is a yes or no
+
+       if len(selectedenemies) == 1:
+           return selectedenemies[0]
+       else:
+           while functiondone == False:
+               theenemy = 0
+               for request in selectedenemies:
+                   confirmchoice = input(f"Do you want to attack the {selectedenemies[theenemy].name}? ")
+                   if confirmchoice.upper() == "YES":
+                       functiondone = True
+                       return selectedenemies[theenemy]
+                   else:
+                       theenemy += 1
+  
+    def MainCharacterAttack(self, enemies):
+       selectedenemy = self.MainCharacterChooseEnemy(enemies)
+       print(f"{self.name} attacks {selectedenemy.name}!")
+       damage = super().CharacterDamageCalc()
+       selectedenemy.currenthp -= damage
+       if selectedenemy.currenthp > 0:
+           print(f"{selectedenemy.name} now has {selectedenemy.currenthp} health!")
+       else:
+           print(f"{selectedenemy.name} has died.")
+
     def PlayerSaveFileReady(self):
         return {
             'name': self.name,
@@ -71,7 +116,7 @@ class MainCharacter(Character):
             sf = json.load(file)
             # sf is short for savefile
         player = MainCharacter(sf['name'], sf['strength'], sf['maxhp'], sf['currenthp'], sf['gold'], sf['inventory'])
-        return player      
+        return player   
 
 class Enemy(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon, golddrop, weapondrop):
@@ -102,45 +147,33 @@ class Enemy(Character):
         damage = self.strength + weaponstrength
         player.health -= damage
 
+    def EnemyHit(self, player):
+       print(f"{self.name} attacks {player.name}!")
+       damage = super().CharacterDamageCalc()
+       player.currenthp -= damage
+       if player.currenthp > 0:
+           print(f"{player.name} lost {damage} HP, and now has {player.currenthp} HP!")
+       else:
+           print(f"{player.name} has died.")
+
     
-class BattleInteractions(Character):
+class BattleInteractions(MainCharacter, Enemy):
     def DamageCalc(attacker, defender):
         damage = attacker.strength + attacker.weapon['strength']
 
-    def CharacterAttack(attacker, defender):
-        damage = BattleInteractions.DamageCalc(attacker, defender)
-        newdefenderhealth = defender.health - damage
-
-        if newdefenderhealth <= 0:
-            defender.dead = True
-            defender.CharacterDeathMessage()
-            return newdefenderhealth
-
-        else:
-            return newdefenderhealth
-
-    def PlayerAttack(player, enemies):
-        enemysearch = input("Who would you like to attack? ")
-        done = False
-
-        while done == False:
-            for enemy in enemies:
-                if enemysearch in enemy.name:
-                    confirm = input(f"Would you like to attack {enemy.name}? ")
-                    if confirm.upper == "YES":
-                        enemyhealth = BattleInteractions.CharacterAttack(player, enemy)
-                        print(f"{player.name} attacks {enemy.name}, and {enemy.name} now has {enemyhealth}.")
-                        done = True
-    
-    def EnemyAttack(enemy, player):
-        newdefenderhealth = BattleInteractions.CharacterAttack(enemy, player)
-        print(f"{enemy.name} attacks you. You now have {newdefenderhealth}.")
-
     def Battles(player, enemies):
+        enemycount = len(enemies)
+        if enemycount == 1:
+            while enemies[0].dead == False:
+                player.MainCharacterAttack(enemies)
+                enemies[0].EnemyHit(player)
+
 
 
     
 player = MainCharacter('player', 10, 10, 100, {'strength': 100}, [], 0)
-goblin = Enemy('goblin', 10, 10, 10, {'gobsword': 100}, 10, 'gobbysword')
+goblin = Enemy('goblin', 10, 10, 10, {'strength': 100}, 10, 'gobbysword')
 
-BattleInteractions.DamageCalc(player, goblin)
+enemies = [goblin]
+
+BattleInteractions.Battles(player, enemies)
