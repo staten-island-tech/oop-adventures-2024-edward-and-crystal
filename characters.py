@@ -200,9 +200,9 @@ class BattleInteractions(MainCharacter, Enemy):
                     break
 
                     
-player = MainCharacter('player', 10, 10, 100, {'strength': 100}, [], 0)
-goblin = Enemy('goblin', 10, 10, 10, {'strength': 10}, 10, 'gobbysword')
-goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 0}, 10, 'gobbysword')
+player = MainCharacter('player', 100, 100, 10, {'strength': 100}, [], 0)
+goblin = Enemy('goblin', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
+goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
 
 enemies = [goblin, goblin2]
 
