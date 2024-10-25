@@ -160,115 +160,24 @@ class BattleInteractions(MainCharacter, Enemy):
         damage = attacker.strength + attacker.weapon['strength']
 
     def Battles(player, enemies):
-        enemycount = len(enemies)
-        if enemycount == 1:
-            enemy1 = enemies[0]
-            while enemy1.dead is False:
-                player.MainCharacterAttack(enemies)
-                if enemy1.currenthp <= 0:
-                    enemy1.dead = True
-                else:
-                    enemy1 = enemies[0]
-                    enemy1.EnemyHit(player)
-                if player.dead <= 0:
+        while len(enemies) > 0:
+            player.MainCharacterAttack(enemies)
+
+            for enemy in enemies:
+                if enemy.currenthp <= 0:
+                    enemy.dead = True
+                if enemy.dead is True:
+                    enemies.remove(enemy)
+
+            for enemy in enemies:
+                enemy.EnemyHit(player)
+                if player.currenthp <= 0:
                     player.dead is True
+                if player.dead is True:
                     enemies.clear()
                     break
 
-        elif enemycount == 2:
-            enemy1 = enemies[0]
-            enemy2 = enemies[1]
-            print(len(enemies))
-            while len(enemies) > 0: # this checks if no enemies are left
-                player.MainCharacterAttack(enemies)
-                if enemy1.currenthp <= 0:
-                    enemy1.dead is True
-                    try:
-                        enemies.remove(enemy1)
-                    except ValueError:
-                        pass
-                if enemy2.currenthp <= 0:
-                    enemy2.dead is True
-                    try:
-                        enemies.remove(enemy2)
-                    except ValueError:
-                        pass
 
-                for enemy in enemies:
-                    enemy.EnemyHit(player)
-                if player.dead <= 0:
-                    player.dead is True
-                    enemies.clear()
-
-        elif enemycount == 3:
-            enemy1 = enemies[0]
-            enemy2 = enemies[1]
-            enemy3 = enemies[2]
-            while len(enemies) > 0:
-                player.MainCharacterAttack(enemies)
-                if enemy1.currenthp <= 0:
-                    enemy1.dead is True
-                    try:
-                        enemies.remove(enemy1)
-                    except ValueError:
-                        pass
-                if enemy2.currenthp <= 0:
-                    enemy2.dead is True
-                    try:
-                        enemies.remove(enemy2)
-                    except ValueError:
-                        pass
-                if enemy3.currenthp <= 0:
-                    enemy3.dead is True
-                    try:
-                        enemies.remove(enemy3)
-                    except ValueError:
-                        pass
-
-                for enemy in enemies:
-                    enemy.EnemyHit(player)
-                if player.dead <= 0:
-                    player.dead is True
-                    enemies.clear()
-                    break
-
-        else:
-            enemy1 = enemies[0]
-            enemy2 = enemies[1]
-            enemy3 = enemies[2]
-            enemy4 = enemies[3]
-            while len(enemies) > 0:
-                player.MainCharacterAttack(enemies)
-                if enemy1.currenthp <= 0:
-                    enemy1.dead is True
-                    try:
-                        enemies.remove(enemy1)
-                    except ValueError:
-                        pass
-                if enemy2.currenthp <= 0:
-                    enemy2.dead is True
-                    try:
-                        enemies.remove(enemy2)
-                    except ValueError:
-                        pass
-                if enemy3.currenthp <= 0:
-                    enemy3.dead is True
-                    try:
-                        enemies.remove(enemy3)
-                    except ValueError:
-                        pass
-                if enemy4.currenthp <= 0:
-                    enemy4.dead is True
-                    try:
-                        enemies.remove(enemy4)
-                    except ValueError:
-                        pass
-                for enemy in enemies:
-                    enemy.EnemyHit(player)
-                if player.dead <= 0:
-                    player.dead is True
-                    enemies.clear()
-                    break
 
                     
 player = MainCharacter('player', 100, 100, 10, {'strength': 100}, [], 0)
