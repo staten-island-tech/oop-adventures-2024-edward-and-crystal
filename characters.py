@@ -177,7 +177,7 @@ class BattleInteractions(MainCharacter, Enemy):
             enemy1 = enemies[0]
             enemy2 = enemies[1]
             
-            while enemy1.dead is False or enemy2.dead is False:
+            while len(enemies) > 0:
                 if enemy1.dead is True and enemy2.dead is True:
                     break
                 player.MainCharacterAttack(enemies)
