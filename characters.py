@@ -178,7 +178,7 @@ class BattleInteractions(MainCharacter, Enemy):
             enemy2 = enemies[1]
             
             while enemy1.dead is False or enemy2.dead is False:
-                if enemy1.dead and enemy2.dead:
+                if enemy1.dead is True and enemy2.dead is True:
                     break
                 player.MainCharacterAttack(enemies)
                 if enemy1.currenthp <= 0:
@@ -207,3 +207,4 @@ goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
 enemies = [goblin, goblin2]
 
 BattleInteractions.Battles(player, enemies)
+#:LALAALALLALALALAL IT WORKS !!!!!!!! >:D
