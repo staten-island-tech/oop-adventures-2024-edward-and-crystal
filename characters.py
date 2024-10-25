@@ -56,26 +56,22 @@ class MainCharacter(Character):
         print(f"{self.name} has DIED.")
 
     def MainCharacterChooseEnemy(self, enemies):
-       selectedenemies = []
-       found = False
-       for enemy in enemies:
-           print(f"{enemy.name} ) {enemy.currenthp} HP")
-       while found == False:
+        selectedenemies = []
+        found = False
+        for enemy in enemies:
+                print(f"{enemy.name} ) {enemy.currenthp} HP")
+        while found == False:
            request = input("Who would you like to attack? ")
            for enemy in enemies:
                if request.upper() in enemy.name.upper():
                    selectedenemies.append(enemy)
                    found = True
 
-       functiondone = False
+        functiondone = False
 
-       # i realize my rage induced variable names for this next part might make it hard to read,
-       # IHATETHISFUNCTIOn was originally called "thisfunctionfinallyf.indone"
-       # dopeoplereadthis is a yes or no
-
-       if len(selectedenemies) == 1:
-           return selectedenemies[0]
-       else:
+        if len(selectedenemies) == 1:
+            return selectedenemies[0]
+        else:
            while functiondone == False:
                theenemy = 0
                for request in selectedenemies:
@@ -93,6 +89,7 @@ class MainCharacter(Character):
        selectedenemy.currenthp -= damage
        if selectedenemy.currenthp > 0:
            print(f"{selectedenemy.name} now has {selectedenemy.currenthp} health!")
+           selectedenemy.dead = True
        else:
            print(f"{selectedenemy.name} has died.")
 
@@ -155,6 +152,7 @@ class Enemy(Character):
            print(f"{player.name} lost {damage} HP, and now has {player.currenthp} HP!")
        else:
            print(f"{player.name} has died.")
+           player.dead = True
 
     
 class BattleInteractions(MainCharacter, Enemy):
@@ -164,12 +162,15 @@ class BattleInteractions(MainCharacter, Enemy):
     def Battles(player, enemies):
         enemycount = len(enemies)
         if enemycount == 1:
-            while True:
+            while enemies[0].dead is False:
                 player.MainCharacterAttack(enemies)
+                enemyhealth = enemies[0].currenthp
+                if enemyhealth <= 0:
+                    enemies[0].dead = True
                 enemy1 = enemies[0]
                 enemy1.EnemyHit(player)
-                if enemy1.dead == True:
-                    break
+                print(enemy1.dead)
+
                     
 
 
