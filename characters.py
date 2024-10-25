@@ -160,21 +160,42 @@ class BattleInteractions(MainCharacter, Enemy):
         damage = attacker.strength + attacker.weapon['strength']
 
     def Battles(player, enemies):
-        while len(enemies) > 0:
-            player.MainCharacterAttack(enemies)
+        players = []
+        players.append(player)
+        while len(enemies) != 0 and len(players) > 0:
+            blockorattack = input("Would you like to block or attack? ")
+            previousinput = blockorattack.upper()
+            if blockorattack.upper() == "ATTACK":
+                player.MainCharacterAttack(enemies)
+                for enemy in enemies:
+                    if enemy.currenthp <= 0:
+                        enemy.dead = True
+                    if enemy.dead is True:
+                        enemies.remove(enemy)
 
-            for enemy in enemies:
-                if enemy.currenthp <= 0:
-                    enemy.dead = True
-                if enemy.dead is True:
-                    enemies.remove(enemy)
-
-            for enemy in enemies:
-                enemy.EnemyHit(player)
-                print(player.currenthp)
-                if player.currenthp <= 0:
-                    enemies.clear()
-                    break
+                for enemy in enemies:
+                    enemy.EnemyHit(player)
+                    if player.currenthp <= 0:
+                        try:
+                            players.remove(player)
+                            player.CharacterDeathMessage()
+                        except ValueError:
+                            pass
+            
+            elif blockorattack.upper() == "BLOCK":
+                if previousinput == "BLOCK":
+                    print("Your block has failed. Literally every video game does this. ")
+                    for enemy in enemies:
+                        enemy.EnemyHit(player)
+                    if player.currenthp <= 0:
+                        try:
+                            players.remove(player)
+                            player.CharacterDeathMessage()
+                        except ValueError:
+                            pass
+                else:
+                    player.PlayerHeal(5)
+                    print(f"Blocking has allowed you to regain some stamina. You now have {player.currenthp} health.")
 
 
 
