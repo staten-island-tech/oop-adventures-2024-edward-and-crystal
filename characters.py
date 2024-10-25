@@ -150,7 +150,7 @@ class Enemy(Character):
        player.currenthp -= damage
        if player.currenthp > 0:
            print(f"{player.name} lost {damage} HP, and now has {player.currenthp} HP!")
-       else:
+       elif player.currenthp == 0:
            print(f"{player.name} has died.")
            player.dead = True
 
@@ -176,7 +176,10 @@ class BattleInteractions(MainCharacter, Enemy):
         elif enemycount == 2:
             enemy1 = enemies[0]
             enemy2 = enemies[1]
+            
             while enemy1.dead is False or enemy2.dead is False:
+                if enemy1.dead and enemy2.dead:
+                    break
                 player.MainCharacterAttack(enemies)
                 if enemy1.currenthp <= 0:
                     enemy1.dead is True
@@ -190,19 +193,16 @@ class BattleInteractions(MainCharacter, Enemy):
                         enemies.remove(enemy2)
                     except ValueError:
                         pass
-                if enemy1.dead and enemy2.dead:
-                    break
 
                 for enemy in enemies:
                     enemy.EnemyHit(player)
                 if player.dead:
                     break
-                
 
                     
 player = MainCharacter('player', 10, 10, 100, {'strength': 100}, [], 0)
-goblin = Enemy('goblin', 10, 10, 10, {'strength': 100}, 10, 'gobbysword')
-goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 100}, 10, 'gobbysword')
+goblin = Enemy('goblin', 10, 10, 10, {'strength': 10}, 10, 'gobbysword')
+goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 0}, 10, 'gobbysword')
 
 enemies = [goblin, goblin2]
 
