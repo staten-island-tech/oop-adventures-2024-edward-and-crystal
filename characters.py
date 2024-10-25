@@ -196,6 +196,7 @@ class BattleInteractions(MainCharacter, Enemy):
 
                 for enemy in enemies:
                     enemy.EnemyHit(player)
+                    print(enemy.dead)
                 if player.dead:
                     break
 
