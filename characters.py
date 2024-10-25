@@ -170,22 +170,34 @@ class BattleInteractions(MainCharacter, Enemy):
                 else:
                     enemy1 = enemies[0]
                     enemy1.EnemyHit(player)
-                    if player.dead == True:
-                        enemy1.dead = True # not true, but it breaks the while loop
+                    if player.dead is True:
+                        enemy1.dead is True # not true, but it breaks the while loop
 
         elif enemycount == 2:
             enemy1 = enemies[0]
             enemy2 = enemies[1]
-            while enemy1.dead is False and enemy2.dead is False:
+            while enemy1.dead is False or enemy2.dead is False:
                 player.MainCharacterAttack(enemies)
                 if enemy1.currenthp <= 0:
                     enemy1.dead is True
-                    enemies.remove(enemy1)
+                    try:
+                        enemies.remove(enemy1)
+                    except ValueError:
+                        pass
                 if enemy2.currenthp <= 0:
                     enemy2.dead is True
-                    enemies.remove(enemy2)
+                    try:
+                        enemies.remove(enemy2)
+                    except ValueError:
+                        pass
+                if enemy1.dead and enemy2.dead:
+                    break
+
                 for enemy in enemies:
                     enemy.EnemyHit(player)
+                    if player.dead is True:
+                        enemy1.dead is True
+                        enemy2.dead is True
                 
 
                     
