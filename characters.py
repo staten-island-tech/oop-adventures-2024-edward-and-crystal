@@ -171,9 +171,8 @@ class BattleInteractions(MainCharacter, Enemy):
 
             for enemy in enemies:
                 enemy.EnemyHit(player)
+                print(player.currenthp)
                 if player.currenthp <= 0:
-                    player.dead is True
-                if player.dead is True:
                     enemies.clear()
                     break
 
