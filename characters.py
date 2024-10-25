@@ -162,14 +162,31 @@ class BattleInteractions(MainCharacter, Enemy):
     def Battles(player, enemies):
         enemycount = len(enemies)
         if enemycount == 1:
-            while enemies[0].dead is False:
+            enemy1 = enemies[0]
+            while enemy1.dead is False:
                 player.MainCharacterAttack(enemies)
-                enemyhealth = enemies[0].currenthp
-                if enemyhealth <= 0:
-                    enemies[0].dead = True
-                enemy1 = enemies[0]
-                enemy1.EnemyHit(player)
-                print(enemy1.dead)
+                if enemy1.currenthp <= 0:
+                    enemy1.dead = True
+                else:
+                    enemy1 = enemies[0]
+                    enemy1.EnemyHit(player)
+                    if player.dead == True:
+                        enemy1.dead = True # not true, but it breaks the while loop
+
+        elif enemycount == 2:
+            enemy1 = enemies[0]
+            enemy2 = enemies[1]
+            while enemy1.dead is False and enemy2.dead is False:
+                player.MainCharacterAttack(enemies)
+                if enemy1.currenthp <= 0:
+                    enemy1.dead is True
+                    enemies.remove(enemy1)
+                if enemy2.currenthp <= 0:
+                    enemy2.dead is True
+                    enemies.remove(enemy2)
+                for enemy in enemies:
+                    enemy.EnemyHit(player)
+                
 
                     
 
@@ -177,8 +194,8 @@ class BattleInteractions(MainCharacter, Enemy):
     
 player = MainCharacter('player', 10, 10, 100, {'strength': 100}, [], 0)
 goblin = Enemy('goblin', 10, 10, 10, {'strength': 100}, 10, 'gobbysword')
-print(player.dead)
-print(goblin.dead)
-enemies = [goblin]
+goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 100}, 10, 'gobbysword')
+
+enemies = [goblin, goblin2]
 
 BattleInteractions.Battles(player, enemies)
