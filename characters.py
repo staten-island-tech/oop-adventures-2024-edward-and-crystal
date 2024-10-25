@@ -55,6 +55,9 @@ class MainCharacter(Character):
     def CharacterDeathMessage(self):
         print(f"{self.name} has DIED.")
 
+    def PlayerOpenShop(self):
+        print('shop')
+
     def MainCharacterChooseEnemy(self, enemies):
         selectedenemies = []
         found = False
@@ -179,7 +182,7 @@ class BattleInteractions(MainCharacter, Enemy):
                 for enemy in enemies:
                     healorattack = random.randint(1,2)
                     if healorattack == 1:
-                        enemy.EnemyHeal(10)
+                        enemy.EnemyHeal(5)
                     if healorattack == 2:
                         enemy.EnemyHit(player)
 
@@ -193,7 +196,7 @@ class BattleInteractions(MainCharacter, Enemy):
             
             elif blockorattack.upper() == "BLOCK":
                 if previousinputs[0] == "BLOCK":
-                    print("Your block has failed. Literally every video game does this. ")
+                    print("Your block has failed. Literally every video game does this. Do better. ")
                     for enemy in enemies:
                         enemy.EnemyHit(player)
                     if player.currenthp <= 0:
@@ -206,17 +209,21 @@ class BattleInteractions(MainCharacter, Enemy):
                 else:
                     player.PlayerHeal(15)
                     print(f"Blocking has allowed you to regain some stamina. You now have {player.currenthp} health.")
+                    for enemy in enemies:
+                        healorattack = random.randint(1,2)
+                        if healorattack == 1:
+                            print(f"{enemy.name} attempted to strike, but the attack was blocked!")
+                        else:
+                            enemy.EnemyHeal(5)
                     previousinputs.clear()
                     previousinputs.append("BLOCK")
 
+
     
-
-
-
 
                     
 player = MainCharacter('player', 100, 100, 10, {'strength': 100}, [], 0)
-goblin = Enemy('goblin', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
+goblin = Enemy('goblin', 115, 10, 10, {'strength': 20}, 10, 'gobbysword')
 goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
 goblin3 = Enemy('goblin3', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
 goblin4 = Enemy('goblin4', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
