@@ -170,16 +170,16 @@ class BattleInteractions(MainCharacter, Enemy):
                 else:
                     enemy1 = enemies[0]
                     enemy1.EnemyHit(player)
-                    if player.dead is True:
-                        enemy1.dead is True # not true, but it breaks the while loop
+                if player.dead <= 0:
+                    player.dead is True
+                    enemies.clear()
+                    break
 
         elif enemycount == 2:
             enemy1 = enemies[0]
             enemy2 = enemies[1]
-            
-            while len(enemies) > 0:
-                if enemy1.dead is True and enemy2.dead is True:
-                    break
+            print(len(enemies))
+            while len(enemies) > 0: # this checks if no enemies are left
                 player.MainCharacterAttack(enemies)
                 if enemy1.currenthp <= 0:
                     enemy1.dead is True
@@ -196,16 +196,88 @@ class BattleInteractions(MainCharacter, Enemy):
 
                 for enemy in enemies:
                     enemy.EnemyHit(player)
-                    print(enemy.dead)
-                if player.dead:
+                if player.dead <= 0:
+                    player.dead is True
+                    enemies.clear()
+
+        elif enemycount == 3:
+            enemy1 = enemies[0]
+            enemy2 = enemies[1]
+            enemy3 = enemies[2]
+            while len(enemies) > 0:
+                player.MainCharacterAttack(enemies)
+                if enemy1.currenthp <= 0:
+                    enemy1.dead is True
+                    try:
+                        enemies.remove(enemy1)
+                    except ValueError:
+                        pass
+                if enemy2.currenthp <= 0:
+                    enemy2.dead is True
+                    try:
+                        enemies.remove(enemy2)
+                    except ValueError:
+                        pass
+                if enemy3.currenthp <= 0:
+                    enemy3.dead is True
+                    try:
+                        enemies.remove(enemy3)
+                    except ValueError:
+                        pass
+
+                for enemy in enemies:
+                    enemy.EnemyHit(player)
+                if player.dead <= 0:
+                    player.dead is True
+                    enemies.clear()
+                    break
+
+        else:
+            enemy1 = enemies[0]
+            enemy2 = enemies[1]
+            enemy3 = enemies[2]
+            enemy4 = enemies[3]
+            while len(enemies) > 0:
+                player.MainCharacterAttack(enemies)
+                if enemy1.currenthp <= 0:
+                    enemy1.dead is True
+                    try:
+                        enemies.remove(enemy1)
+                    except ValueError:
+                        pass
+                if enemy2.currenthp <= 0:
+                    enemy2.dead is True
+                    try:
+                        enemies.remove(enemy2)
+                    except ValueError:
+                        pass
+                if enemy3.currenthp <= 0:
+                    enemy3.dead is True
+                    try:
+                        enemies.remove(enemy3)
+                    except ValueError:
+                        pass
+                if enemy4.currenthp <= 0:
+                    enemy4.dead is True
+                    try:
+                        enemies.remove(enemy4)
+                    except ValueError:
+                        pass
+                for enemy in enemies:
+                    enemy.EnemyHit(player)
+                if player.dead <= 0:
+                    player.dead is True
+                    enemies.clear()
                     break
 
                     
 player = MainCharacter('player', 100, 100, 10, {'strength': 100}, [], 0)
 goblin = Enemy('goblin', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
 goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
+goblin3 = Enemy('goblin3', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
+goblin4 = Enemy('goblin4', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
 
-enemies = [goblin, goblin2]
+enemies = [goblin, goblin2, goblin3, goblin4]
 
 BattleInteractions.Battles(player, enemies)
-#:LALAALALLALALALAL IT WORKS !!!!!!!! >:D
+#:LALAALALLALALALAL IT WORKS !!!!!!!! no it doesnt
