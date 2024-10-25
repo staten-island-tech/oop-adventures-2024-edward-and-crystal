@@ -195,15 +195,11 @@ class BattleInteractions(MainCharacter, Enemy):
 
                 for enemy in enemies:
                     enemy.EnemyHit(player)
-                    if player.dead is True:
-                        enemy1.dead is True
-                        enemy2.dead is True
+                if player.dead:
+                    break
                 
 
                     
-
-
-    
 player = MainCharacter('player', 10, 10, 100, {'strength': 100}, [], 0)
 goblin = Enemy('goblin', 10, 10, 10, {'strength': 100}, 10, 'gobbysword')
 goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 100}, 10, 'gobbysword')
