@@ -240,14 +240,17 @@ class Menu(Weapon, HealingItem):
         goldsword = Weapon('Gold Sword', 35, 6, 20)
         apple = HealingItem('Apple', 10, 5)
         healingpotion = HealingItem('Healing Potion', 35, 15)
+        endshopping = "EndShopping"
         shopitems = [ ]
         shopitems.append(woodensword)
         shopitems.append(stonesword)
         shopitems.append(goldsword)
         shopitems.append(apple)
         shopitems.append(healingpotion)
-        for item in shopitems:
+        shopitems.append(endshopping)
+        for item in shopitems[:5]:
             print(f"{item.name} ) {item.cost} Gold")
+            print(endshopping)
         finish = False
         x = 0
         while finish == False:
@@ -268,8 +271,10 @@ class Menu(Weapon, HealingItem):
                             player.gold -= selecteditem.cost
                             player.inventory.append(selecteditem)
                             print(f"You have bought the {selecteditem.name}. Now you have {player.gold} gold.")
-                            finish = True
-                if isinstance(selecteditem, HealingItem):
+                            keepgoing = input("Are you finished shopping? ")
+                            if keepgoing.upper() == "YES":
+                                finish = True
+                elif isinstance(selecteditem, HealingItem):
                     print(selecteditem.name)
                     print(f"Heals {selecteditem.heal} HP")
                     print(f"Costs {selecteditem.cost} Gold")
@@ -281,7 +286,11 @@ class Menu(Weapon, HealingItem):
                             player.gold -= selecteditem.cost
                             player.inventory.append(selecteditem)
                             print(f"You have bought the {selecteditem.name}. Now you have {player.gold} gold.")
-                            finish = True
+                            keepgoing = input("Are you finished shopping? ")
+                            if keepgoing.upper() == "YES":
+                                finish = True
+                else:
+                    finish = True
             else:
                 move = input("Press Z to move up the menu and X to move down the menu. ")
     
