@@ -14,6 +14,10 @@ class Weapon:
             'durability': self.durability,
             'cost': self.cost
         }
+    
+class OtherStuff():
+    def __init__(self, name):
+        self.name = name
 
 class HealingItem:
     def __init__(self, name, heal, cost):
@@ -202,12 +206,14 @@ class Menu(Weapon, HealingItem):
                 if isinstance(selecteditem, Weapon):
                     print(f"name) {selecteditem.name})")
                     print(f"strength) {selecteditem.strength}")
-                    print(f"durability) {selecteditem.durability}")
+                    if selecteditem.durability > 500: # nobody is swinging their sword 7700 times in this game.
+                        print("Infinite Durability")
+                    else:
+                        print(f"durability) {selecteditem.durability}")
                     equip = input("Would you like to equip this item? ")
                     if equip.upper() == "YES":
                         player.weapon = selecteditem
                         print(f"You have equipped the {selecteditem.name}. ")
-                        finish = True
                 elif isinstance(selecteditem, HealingItem):
                     print(f"name) {selecteditem.name}")
                     print(f"heal amount) {selecteditem.heal}")
@@ -215,9 +221,12 @@ class Menu(Weapon, HealingItem):
                     if use.upper() == "YES":
                         print(f"You have {player.currenthp}, and use the {selecteditem.name}")
                         player.PlayerHeal(selecteditem.heal)
-                        player.inventory.remove(selecteditem)
+                        try:
+                            player.inventory.remove(selecteditem)
+                        except ValueError:
+                            pass
+                        print(player.inventory)
                         print(f"Now you have {player.currenthp} HP! ")
-                        finish = True
             else:
                 move = input("Press Z to move up the menu and X to move down the menu. ")
     
@@ -240,7 +249,7 @@ class Menu(Weapon, HealingItem):
         goldsword = Weapon('Gold Sword', 35, 6, 20)
         apple = HealingItem('Apple', 10, 5)
         healingpotion = HealingItem('Healing Potion', 35, 15)
-        endshopping = "EndShopping"
+        endshopping = OtherStuff('End Shopping')
         shopitems = [ ]
         shopitems.append(woodensword)
         shopitems.append(stonesword)
@@ -250,62 +259,70 @@ class Menu(Weapon, HealingItem):
         shopitems.append(endshopping)
         for item in shopitems[:5]:
             print(f"{item.name} ) {item.cost} Gold")
-            print(endshopping)
+        print(endshopping.name)
         finish = False
         x = 0
         while finish == False:
             selecteditem = shopitems[x]
-            print(f"You are currently hovering over the {selecteditem.name}. ")
-            confirm = input("Would you like to inspect this item? ")
-            if confirm.upper() == "YES":
-                if isinstance(selecteditem, Weapon):
-                    print(selecteditem.name)
-                    print(f"{selecteditem.strength} Damage")
-                    print(f"{selecteditem.durability} Durability")
-                    print(f"Costs {selecteditem.cost} Gold")
-                    if selecteditem.cost > player.gold:
-                        print("You cannot afford this item. ")
-                    else:
-                        confirmB = input("Would you like to buy this item? ")
-                        if confirmB.upper() == 'YES':
-                            player.gold -= selecteditem.cost
-                            player.inventory.append(selecteditem)
-                            print(f"You have bought the {selecteditem.name}. Now you have {player.gold} gold.")
-                            keepgoing = input("Are you finished shopping? ")
-                            if keepgoing.upper() == "YES":
-                                finish = True
-                elif isinstance(selecteditem, HealingItem):
-                    print(selecteditem.name)
-                    print(f"Heals {selecteditem.heal} HP")
-                    print(f"Costs {selecteditem.cost} Gold")
-                    if selecteditem.cost > player.gold:
-                        print("You cannot afford this item. ")
-                    else:
-                        confirmB = input("Would you like to buy this item? ")
-                        if confirmB.upper() == 'YES':
-                            player.gold -= selecteditem.cost
-                            player.inventory.append(selecteditem)
-                            print(f"You have bought the {selecteditem.name}. Now you have {player.gold} gold.")
-                            keepgoing = input("Are you finished shopping? ")
-                            if keepgoing.upper() == "YES":
-                                finish = True
-                else:
+            if isinstance(selecteditem, OtherStuff):
+                confirm = input('Would you like to finish shopping? ')
+                if confirm.upper() == "YES":
                     finish = True
             else:
-                move = input("Press Z to move up the menu and X to move down the menu. ")
-    
-                if move.upper() == "Z":
-                    if x != 0:
-                        x -= 1
+                print(f"You are currently hovering over the {selecteditem.name}. ")
+                confirm = input("Would you like to inspect this item? ")
+                if confirm.upper() == "YES":
+                    if isinstance(selecteditem, Weapon):
+                        print(selecteditem.name)
+                        print(f"{selecteditem.strength} Damage")
+                        if selecteditem.durability > 4000:
+                            print("Infinite Durability")
+                        else:
+                            print(f"{selecteditem.durability} Durability")
+                        print(f"Costs {selecteditem.cost} Gold")
+                        if selecteditem.cost > player.gold:
+                            print("You cannot afford this item. ")
+                        else:
+                            confirmB = input("Would you like to buy this item? ")
+                            if confirmB.upper() == 'YES':
+                                player.gold -= selecteditem.cost
+                                player.inventory.append(selecteditem)
+                                print(f"You have bought the {selecteditem.name}. Now you have {player.gold} gold.")
+                                keepgoing = input("Are you finished shopping? ")
+                                if keepgoing.upper() == "YES":
+                                    finish = True
+                    elif isinstance(selecteditem, HealingItem):
+                        print(selecteditem.name)
+                        print(f"Heals {selecteditem.heal} HP")
+                        print(f"Costs {selecteditem.cost} Gold")
+                        if selecteditem.cost > player.gold:
+                            print("You cannot afford this item. ")
+                        else:
+                            confirmB = input("Would you like to buy this item? ")
+                            if confirmB.upper() == 'YES':
+                                player.gold -= selecteditem.cost
+                                player.inventory.append(selecteditem)
+                                print(f"You have bought the {selecteditem.name}. Now you have {player.gold} gold.")
+                                keepgoing = input("Are you finished shopping? ")
+                                if keepgoing.upper() == "YES":
+                                    finish = True
                     else:
-                        x = len(shopitems) - 1
-                elif move.upper() == "X":
-                    if x != len(shopitems) - 1:
-                        x += 1
-                    else:
-                        x = 0
+                        finish = True
                 else:
-                    print("That is not a valid input.")
+                    move = input("Press Z to move up the menu and X to move down the menu. ")
+    
+                    if move.upper() == "Z":
+                        if x != 0:
+                            x -= 1
+                        else:
+                            x = len(shopitems) - 1
+                    elif move.upper() == "X":
+                        if x != len(shopitems) - 1:
+                            x += 1
+                        else:
+                            x = 0
+                    else:
+                        print("That is not a valid input.")
                         
     
 class BattleInteractions(MainCharacter, Enemy):
@@ -377,7 +394,8 @@ inventory = [woodsword, woodclub, apple]
 
 player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 10)
 print(player.gold)
-Menu.Shop(player)
+Menu.Inventory(player)
+Menu.Inventory(player)
 
 
 #:LALAALALLALALALAL IT WORKS !!!!!!!! no it doesnt
