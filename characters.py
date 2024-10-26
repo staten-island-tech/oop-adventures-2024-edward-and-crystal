@@ -267,6 +267,7 @@ class Menu(Weapon, HealingItem):
                         if confirmB.upper() == 'YES':
                             player.gold -= selecteditem.cost
                             player.inventory.append(selecteditem)
+                            print(f"You have bought the {selecteditem.name}. Now you have {player.gold} gold.")
                             finish = True
                 if isinstance(selecteditem, HealingItem):
                     print(selecteditem.name)
@@ -279,6 +280,7 @@ class Menu(Weapon, HealingItem):
                         if confirmB.upper() == 'YES':
                             player.gold -= selecteditem.cost
                             player.inventory.append(selecteditem)
+                            print(f"You have bought the {selecteditem.name}. Now you have {player.gold} gold.")
                             finish = True
             else:
                 move = input("Press Z to move up the menu and X to move down the menu. ")
@@ -366,7 +368,6 @@ inventory = [woodsword, woodclub, apple]
 
 player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 10)
 print(player.gold)
-
 Menu.Shop(player)
 
 
