@@ -214,6 +214,7 @@ class Menu(Weapon, HealingItem):
                     if equip.upper() == "YES":
                         player.weapon = selecteditem
                         print(f"You have equipped the {selecteditem.name}. ")
+                        finish = True
                 elif isinstance(selecteditem, HealingItem):
                     print(f"name) {selecteditem.name}")
                     print(f"heal amount) {selecteditem.heal}")
@@ -227,6 +228,7 @@ class Menu(Weapon, HealingItem):
                             pass
                         print(player.inventory)
                         print(f"Now you have {player.currenthp} HP! ")
+                        finish = True
             else:
                 move = input("Press Z to move up the menu and X to move down the menu. ")
     
