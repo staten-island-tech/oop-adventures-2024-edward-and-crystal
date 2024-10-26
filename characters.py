@@ -220,7 +220,7 @@ class Menu(Weapon, HealingItem):
                         player.inventory.remove(selecteditem)
                         print(f"You have used the {selecteditem.name}. ")
                         finish = True
-            
+            else:
                 move = input("Press Z to move up the menu and X to move down the menu. ")
     
                 if move.upper() == "Z":
