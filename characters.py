@@ -87,9 +87,6 @@ class MainCharacter(Character):
     def CharacterDeathMessage(self):
         print(f"{self.name} has DIED.")
 
-    def PlayerOpenShop(self):
-        print('shop')
-
     def MainCharacterChooseEnemy(self, enemies):
         selectedenemies = []
         found = False
@@ -107,7 +104,7 @@ class MainCharacter(Character):
         if len(selectedenemies) == 1:
             return selectedenemies[0]
         else:
-           while functiondone == False:
+            while functiondone == False:
                theenemy = 0
                for request in selectedenemies:
                    confirmchoice = input(f"Do you want to attack the {selectedenemies[theenemy].name}? ")
@@ -237,10 +234,70 @@ class Menu(Weapon, HealingItem):
                 else:
                     print("That is not a valid input.")
 
-
+    def Shop(player):
+        woodensword = Weapon('Wooden Sword', 5, 8192, 10)
+        stonesword = Weapon('Stone Sword', 10, 15, 18)
+        goldsword = Weapon('Gold Sword', 35, 6, 20)
+        apple = HealingItem('Apple', 10, 5)
+        healingpotion = HealingItem('Healing Potion', 35, 15)
+        shopitems = [ ]
+        shopitems.append(woodensword)
+        shopitems.append(stonesword)
+        shopitems.append(goldsword)
+        shopitems.append(apple)
+        shopitems.append(healingpotion)
+        for item in shopitems:
+            print(f"{item.name} ) {item.cost} Gold")
+        finish = False
+        x = 0
+        while finish == False:
+            selecteditem = shopitems[x]
+            print(f"You are currently hovering over the {selecteditem.name}. ")
+            confirm = input("Would you like to inspect this item? ")
+            if confirm.upper() == "YES":
+                if isinstance(selecteditem, Weapon):
+                    print(selecteditem.name)
+                    print(f"{selecteditem.strength} Damage")
+                    print(f"{selecteditem.durability} Durability")
+                    print(f"Costs {selecteditem.cost} Gold")
+                    if selecteditem.cost > player.gold:
+                        print("You cannot afford this item. ")
+                    else:
+                        confirmB = input("Would you like to buy this item? ")
+                        if confirmB.upper() == 'YES':
+                            player.gold -= selecteditem.cost
+                            player.inventory.append(selecteditem)
+                            finish = True
+                if isinstance(selecteditem, HealingItem):
+                    print(selecteditem.name)
+                    print(f"Heals {selecteditem.heal} HP")
+                    print(f"Costs {selecteditem.cost} Gold")
+                    if selecteditem.cost > player.gold:
+                        print("You cannot afford this item. ")
+                    else:
+                        confirmB = input("Would you like to buy this item? ")
+                        if confirmB.upper() == 'YES':
+                            player.gold -= selecteditem.cost
+                            player.inventory.append(selecteditem)
+                            finish = True
+            else:
+                move = input("Press Z to move up the menu and X to move down the menu. ")
+    
+                if move.upper() == "Z":
+                    if x != 0:
+                        x -= 1
+                    else:
+                        x = len(shopitems) - 1
+                elif move.upper() == "X":
+                    if x != len(shopitems) - 1:
+                        x += 1
+                    else:
+                        x = 0
+                else:
+                    print("That is not a valid input.")
+                        
     
 class BattleInteractions(MainCharacter, Enemy):
-
     def Battles(player, enemies):
         import random
         players = []
@@ -307,9 +364,10 @@ apple.HealingItemDictionary()
 
 inventory = [woodsword, woodclub, apple]
 
-player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 0)
-print(player.currenthp)
-Menu.Inventory(player)
+player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 10)
+print(player.gold)
+
+Menu.Shop(player)
 
 
 #:LALAALALLALALALAL IT WORKS !!!!!!!! no it doesnt
