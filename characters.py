@@ -1,5 +1,37 @@
 import json
 
+class Weapon:
+    def __init__(self, name, strength, durability, cost):
+        self.name = name
+        self.strength = strength
+        self.durability = durability
+        self.cost = cost
+
+    def WeaponDictionary(self):
+        return {
+            'name': self.name,
+            'strength': self.strength,
+            'durability': self.durability,
+            'cost': self.cost
+        }
+
+class HealingItem:
+    def __init__(self, name, heal, cost):
+        self.name = name
+        self.heal = heal
+        self.cost = cost
+    
+    def HealingItemDictionary(self):
+        return {
+            'name': self.name,
+            'heal': self.heal,
+            'cost': self.cost
+            }
+
+    def UseHealingItem(self, player):
+        healingamount = self.heal
+        player.currenthp += healingamount
+
 class Character:
     def __init__(self, name, maxhp, currenthp, strength, weapon):
         self.name = name
@@ -90,6 +122,7 @@ class MainCharacter(Character):
        print(f"{self.name} attacks {selectedenemy.name}!")
        damage = super().CharacterDamageCalc()
        selectedenemy.currenthp -= damage
+       self.weapon['durability']
        if selectedenemy.currenthp > 0:
            print(f"{selectedenemy.name} now has {selectedenemy.currenthp} health!")
            selectedenemy.dead = True
@@ -157,10 +190,55 @@ class Enemy(Character):
            print(f"{player.name} has died.")
            player.dead = True
 
+class Menu(Weapon, HealingItem):
+    def Inventory(player):
+        inventory = list(player.inventory)
+        finish = False
+        for item in inventory:
+            print(item.name)
+        x = 0
+        while finish == False:
+            selecteditem = inventory[x]
+            print(f"You are currently hovering over the {selecteditem.name}.")
+            confirm = input("Would you like to select this item?")
+            if confirm.upper() == "YES":
+                try: # basically an ifelse statement, tries to see if its a weapon and if it isnt it's gotta be a healing item unless something happened
+                    print(selecteditem.name)
+                    print(selecteditem.strength)
+                    print(selecteditem.durability)
+                    equip = input("Would you like to equip this item? ")
+                    if equip.upper() == "YES":
+                        player.weapon = selecteditem
+                        print(f"You have equipped the {selecteditem.name}. ")
+                        finish = True
+                except ValueError:
+                    print(selecteditem.name)
+                    print(selecteditem.heal)
+                    use = input("Would you like to use this item? ")
+                    if use.upper() == "YES":
+                        player.PlayerHeal(selecteditem['heal'])
+                        player.inventory.remove(selecteditem)
+                        print(f"You have used the {selecteditem.name}. ")
+                        finish = True
+            
+                move = input("Press Z to move up the menu and X to move down the menu. ")
+    
+                if move.upper() == "Z":
+                    if x != 0:
+                        x -= 1
+                    else:
+                        x = len(inventory) - 1
+                elif move.upper() == "X":
+                    if x != len(inventory) - 1:
+                        x += 1
+                    else:
+                        x = 0
+                else:
+                    print("That is not a valid input.")
+
+
     
 class BattleInteractions(MainCharacter, Enemy):
-    def DamageCalc(attacker, defender):
-        damage = attacker.strength + attacker.weapon['strength']
 
     def Battles(player, enemies):
         import random
@@ -219,16 +297,18 @@ class BattleInteractions(MainCharacter, Enemy):
                     previousinputs.append("BLOCK")
 
 
-    
+woodsword = Weapon('woodsword', 10, 10, 10)
+woodclub = Weapon('woodsword', 15, 5, 5)
+apple = HealingItem('apple', 5, 5)
+woodsword.WeaponDictionary()
+woodclub.WeaponDictionary()
+apple.HealingItemDictionary()
 
-                    
-player = MainCharacter('player', 100, 100, 10, {'strength': 100}, [], 0)
-goblin = Enemy('goblin', 115, 10, 10, {'strength': 20}, 10, 'gobbysword')
-goblin2 = Enemy('goblin2', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
-goblin3 = Enemy('goblin3', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
-goblin4 = Enemy('goblin4', 10, 10, 10, {'strength': 20}, 10, 'gobbysword')
+inventory = [woodsword, woodclub, apple]
 
-enemies = [goblin, goblin2, goblin3, goblin4]
+player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 0)
 
-BattleInteractions.Battles(player, enemies)
+Menu.Inventory(player)
+
+
 #:LALAALALLALALALAL IT WORKS !!!!!!!! no it doesnt
