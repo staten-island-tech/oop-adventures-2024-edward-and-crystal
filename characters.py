@@ -360,6 +360,8 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
         players.append(player)
         previousinputs = ['nothing.']
         while len(enemies) != 0 and len(players) > 0:
+            for enemy in enemies:
+                print(f"{enemy.name} ) {enemy.currenthp} HP")
             blockorattack = input("Would you like to block or attack? ")
             if blockorattack.upper() == "ATTACK":
                 player.MainCharacterAttack(enemies)
@@ -412,45 +414,39 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
 
     def BossBattle(player, enemies):
         import random
-        players = []
-        players.append(player)
         previousinputs = ['nothing.']
+        players = [player]
         while len(enemies) != 0 and len(players) > 0:
+            for enemy in enemies:
+                print(f"{enemy.name} ) {enemy.currenthp} HP")
             blockorattack = input("Would you like to block or attack? ")
             if blockorattack.upper() == "ATTACK":
                 player.MainCharacterAttack(enemies)
                 previousinputs.clear()
                 previousinputs.append("ATTACK")
                 for enemy in enemies:
-                    if enemy.currenthp <= 0:
-                        enemy.dead = True
-                    if enemy.dead is True:
-                        enemies.remove(enemy)
+                    if isinstance(enemy, Enemy):
+                        move = random.randint(1,2)
+                        if move == 1:
+                            enemy.EnemyHit(player)
+                        else:
+                            enemy.EnemyHeal(5)
+                    elif isinstance(enemy, BossEnemy):
+                        move = random.randint(1,5)
+                        if move == 1 or move == 2 or move == 3:
+                            enemy.EnemyHit(player)
+                        elif move == 4:
+                            enemy.EnemyHeal(5)
+                        else:
+                            enemy.EnemySummon(enemies)
+                    print(player.currenthp)
+                    if player.currenthp <= 0:
+                            player.CharacterDeathMessage()
+                            enemies.clear()
 
                 if previousinputs[0] == "BLOCK":
                     print("Your block has failed. Literally every video game does this. Do better. ")
-                    for enemy in enemies:
-                        if isinstance(enemy, Enemy):
-                            move = random.randint(1,2)
-                            if move == 1:
-                                enemy.EnemyHit(player)
-                            else:
-                                enemy.EnemyHeal(5)
-                        elif isinstance(enemy, BossEnemy):
-                            move = random.randint(1,5)
-                            if move == 1 or move == 2 or move == 3:
-                                enemy.EnemyHit(player)
-                            elif move == 4:
-                                enemy.EnemyHeal(5)
-                            else:
-                                enemy.EnemySummon(enemy, enemies)
-                    if player.currenthp <= 0:
-                        enemies.clear()
-                        try:
-                            players.remove(player)
-                            player.CharacterDeathMessage()
-                        except ValueError:
-                            pass
+            
 
                 if player.currenthp <= 0:
                     enemies.clear()
@@ -486,14 +482,12 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                                 enemy.EnemyHeal(5)
                         elif isinstance(enemy, BossEnemy):
                             move = random.randint(1, 5)
-                            attack = [1, 2, 3]
                             heal = [4]
                             summon = [5]
                             if move in heal:
                                 enemy.EnemyHeal(10)
                             elif move in summon:
-                                enemies.append(enemy.summonable)
-                                print(f"{enemy.name} has summoned a {enemy.summonable.name}! ")
+                                enemy.EnemySummon(enemies)
                     previousinputs.clear()
                     previousinputs.append("BLOCK")
 
