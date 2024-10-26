@@ -182,19 +182,19 @@ class Enemy(Character):
         player.health -= damage
 
     def EnemyHit(self, player):
-       print(f"{self.name} attacks {player.name}!")
-       damage = super().CharacterDamageCalc()
-       player.currenthp -= damage
-       if player.currenthp > 0:
+        print(f"{self.name} attacks {player.name}!")
+        damage = super().CharacterDamageCalc()
+        player.currenthp -= damage
+        if player.currenthp > 0:
            print(f"{player.name} lost {damage} HP, and now has {player.currenthp} HP!")
-       elif player.currenthp == 0:
+        elif player.currenthp == 0:
            print(f"{player.name} has died.")
            player.dead = True
 
 class BossEnemy(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon):
         super().__init__(name, maxhp, currenthp, strength, weapon)
-        summonable = Enemy("Summoned Orc", 20, 15, 10, {'strength': 5}, 0, 'nothing')
+        self.summonable = Enemy("Summoned Orc", 20, 15, 10, woodclub, 0, 'nothing')
 
     def EnemyHit(self, player):
         print(f"{self.name} attacks {player.name}!")
@@ -214,7 +214,7 @@ class BossEnemy(Character):
     
     def EnemySummon(self, enemies):
         enemies.append(self.summonable)
-        print(f"{self.name} has summoned a {self.summonable}! ")
+        print(f"{self.name} has summoned a {self.summonable.name}! ")
  
 
 class Menu(Weapon, HealingItem):
@@ -416,7 +416,7 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
         import random
         previousinputs = ['nothing.']
         players = [player]
-        while len(enemies) != 0 and len(players) > 0:
+        while len(enemies) != 0 and len(players) == 1:
             for enemy in enemies:
                 print(f"{enemy.name} ) {enemy.currenthp} HP")
             blockorattack = input("Would you like to block or attack? ")
@@ -439,10 +439,6 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                             enemy.EnemyHeal(5)
                         else:
                             enemy.EnemySummon(enemies)
-                    print(player.currenthp)
-                    if player.currenthp <= 0:
-                            player.CharacterDeathMessage()
-                            enemies.clear()
 
                 if previousinputs[0] == "BLOCK":
                     print("Your block has failed. Literally every video game does this. Do better. ")
@@ -482,14 +478,25 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                                 enemy.EnemyHeal(5)
                         elif isinstance(enemy, BossEnemy):
                             move = random.randint(1, 5)
+                            attack = [1, 2, 3]
                             heal = [4]
                             summon = [5]
                             if move in heal:
                                 enemy.EnemyHeal(10)
                             elif move in summon:
                                 enemy.EnemySummon(enemies)
+                            elif move in attack:
+                                print(f"{enemy.name} attempted to strike, but the attack was blocked!")
                     previousinputs.clear()
                     previousinputs.append("BLOCK")
+
+        if player.currenthp > 0:
+            print(f"You have {player.currenthp} HP.")
+        else:
+            player.dead = True
+            player.CharacterDeathMessage()
+            enemies.clear()
+
 
 
 
