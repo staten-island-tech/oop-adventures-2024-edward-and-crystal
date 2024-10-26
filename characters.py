@@ -202,23 +202,24 @@ class Menu(Weapon, HealingItem):
             print(f"You are currently hovering over the {selecteditem.name}.")
             confirm = input("Would you like to select this item?")
             if confirm.upper() == "YES":
-                try: # basically an ifelse statement, tries to see if its a weapon and if it isnt it's gotta be a healing item unless something happened
-                    print(selecteditem.name)
-                    print(selecteditem.strength)
-                    print(selecteditem.durability)
+                if isinstance(selecteditem, Weapon):
+                    print(f"name) {selecteditem.name})")
+                    print(f"strength) {selecteditem.strength}")
+                    print(f"durability) {selecteditem.durability}")
                     equip = input("Would you like to equip this item? ")
                     if equip.upper() == "YES":
                         player.weapon = selecteditem
                         print(f"You have equipped the {selecteditem.name}. ")
                         finish = True
-                except ValueError:
-                    print(selecteditem.name)
-                    print(selecteditem.heal)
+                elif isinstance(selecteditem, HealingItem):
+                    print(f"name) {selecteditem.name}")
+                    print(f"heal amount) {selecteditem.heal}")
                     use = input("Would you like to use this item? ")
                     if use.upper() == "YES":
-                        player.PlayerHeal(selecteditem['heal'])
+                        print(f"You have {player.currenthp}, and use the {selecteditem.name}")
+                        player.PlayerHeal(selecteditem.heal)
                         player.inventory.remove(selecteditem)
-                        print(f"You have used the {selecteditem.name}. ")
+                        print(f"Now you have {player.currenthp} HP! ")
                         finish = True
             else:
                 move = input("Press Z to move up the menu and X to move down the menu. ")
@@ -298,7 +299,7 @@ class BattleInteractions(MainCharacter, Enemy):
 
 
 woodsword = Weapon('woodsword', 10, 10, 10)
-woodclub = Weapon('woodsword', 15, 5, 5)
+woodclub = Weapon('woodclub', 15, 5, 5)
 apple = HealingItem('apple', 5, 5)
 woodsword.WeaponDictionary()
 woodclub.WeaponDictionary()
@@ -307,7 +308,7 @@ apple.HealingItemDictionary()
 inventory = [woodsword, woodclub, apple]
 
 player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 0)
-
+print(player.currenthp)
 Menu.Inventory(player)
 
 
