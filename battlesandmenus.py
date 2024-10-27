@@ -223,8 +223,11 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                         try:
                             enemies.remove(enemy)
                             print(f'{enemy.name} has died!')
-                            player.inventory.append(enemy.weapondrop)
-                            player.gold += enemy.golddrop
+                            try:
+                                player.inventory.append(enemy.weapondrop)
+                                player.gold += enemy.golddrop
+                            except ValueError:
+                                iwouldwin = True
                         except ValueError:
                             iwouldwin = False
                 for enemy in enemies:
@@ -283,8 +286,6 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                 player.CharacterDeathMessage()
                 enemies.clear()
                 break
-
-
 
 woodsword = Weapon('woodsword', 10, 10, 10)
 woodclub = Weapon('woodclub', 15, 5, 5)
