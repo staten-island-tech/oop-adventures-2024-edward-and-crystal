@@ -7,45 +7,65 @@ from charactersitems import MainCharacter
 
 class Menu(Weapon, HealingItem):
     def Inventory(player):
-        inventory = list(player.inventory)
+        inventory = [ ]
+        close = OtherStuff('Close Menu')
+        for item in player.inventory:
+            inventory.append(item)
+        inventory.append(close)
         finish = False
-        for item in inventory:
+        for item in inventory[: - 1]:
             print(item.name)
+        print(close.name)
         x = 0
         while finish == False:
             selecteditem = inventory[x]
-            print(f"You are currently hovering over the {selecteditem.name}.")
-            confirm = input("Would you like to select this item?")
-            if confirm.upper() == "YES":
-                if isinstance(selecteditem, Weapon):
-                    print(f"name) {selecteditem.name})")
-                    print(f"strength) {selecteditem.strength}")
-                    if selecteditem.durability > 500: # nobody is swinging their sword 7700 times in this game.
-                        print("Infinite Durability")
-                    else:
-                        print(f"durability) {selecteditem.durability}")
-                    equip = input("Would you like to equip this item? ")
-                    if equip.upper() == "YES":
-                        player.weapon = selecteditem
-                        print(f"You have equipped the {selecteditem.name}. ")
-                        finish = True
-                elif isinstance(selecteditem, HealingItem):
-                    print(f"name) {selecteditem.name}")
-                    print(f"heal amount) {selecteditem.heal}")
-                    use = input("Would you like to use this item? ")
-                    if use.upper() == "YES":
-                        print(f"You have {player.currenthp}, and use the {selecteditem.name}")
-                        player.PlayerHeal(selecteditem.heal)
-                        try:
-                            player.inventory.remove(selecteditem)
-                        except ValueError:
-                            pass
-                        print(player.inventory)
-                        print(f"Now you have {player.currenthp} HP! ")
-                        finish = True
+            if isinstance(selecteditem, Weapon) or isinstance(selecteditem, HealingItem):
+                print(f"You are currently hovering over the {selecteditem.name}.")
+                confirm = input("Would you like to select this item?")
+                if confirm.upper() == "YES":
+                    if isinstance(selecteditem, Weapon):
+                        print(f"name) {selecteditem.name})")
+                        print(f"strength) {selecteditem.strength}")
+                        if selecteditem.durability > 500: # nobody is swinging their sword 7700 times in this game.
+                            print("Infinite Durability")
+                        else:
+                            print(f"durability) {selecteditem.durability}")
+                        equip = input("Would you like to equip this item? ")
+                        if equip.upper() == "YES":
+                            player.weapon = selecteditem
+                            print(f"You have equipped the {selecteditem.name}. ")
+                            confirm = input("Would you like to close the inventory? ")
+                            if confirm.upper() == "YES":
+                                finish = True
+                                break
+                        
+        
+                    elif isinstance(selecteditem, HealingItem):
+                        print(f"name) {selecteditem.name}")
+                        print(f"heal amount) {selecteditem.heal}")
+                        use = input("Would you like to use this item? ")
+                        if use.upper() == "YES":
+                            print(f"You have {player.currenthp}, and use the {selecteditem.name}")
+                            player.PlayerHeal(selecteditem.heal)
+                            try:
+                                player.inventory.remove(selecteditem)
+                            except ValueError:
+                                pass
+                            print(f"Now you have {player.currenthp} HP! ")
+                            confirm = input("Would you like to close the inventory? ")
+                            if confirm.upper() == "YES":
+                                finish = True
+                                break
+                        
+
+                    elif isinstance(selecteditem, OtherStuff):
+                        print(f"You are currently hovering over the Close Menu option.")
+                        confirm = input("Would you like to select this item?")
+                        if confirm.upper() == "YES":
+                            finish = True
+                            break
             else:
                 move = input("Press Z to move up the menu and X to move down the menu. ")
-    
                 if move.upper() == "Z":
                     if x != 0:
                         x -= 1
@@ -58,7 +78,8 @@ class Menu(Weapon, HealingItem):
                         x = 0
                 else:
                     print("That is not a valid input.")
-
+                
+    
     def Shop(player):
         woodensword = Weapon('Wooden Sword', 5, 8192, 10)
         stonesword = Weapon('Stone Sword', 10, 15, 18)
@@ -154,18 +175,18 @@ class Menu(Weapon, HealingItem):
                 if confirm.upper() == "YES":
                     print(f'{player.name} ) Level {player.level}')
                     print(f'{player.exp} / 75 XP')
-                    print(f'{player.currenthp} / {player.maxhp}')
+                    print(f'{player.currenthp} / {player.maxhp} HP')
                     print(f'Strength: {player.strength}')
                     print(f'{player.gold} Gold')
                     print(player.weapon.name)
             elif selecteditem == inventory:
                 confirm = input("Would you like to inspect your inventory? ")
                 if confirm.upper() == "YES":
-                    player.Inventory()
+                    Menu.Inventory(player)
             elif selecteditem == shop:
-                confirm = input("Would you like to inspect your inventory? ")
+                confirm = input("Would you like to inspect your shop? ")
                 if confirm.upper() == "YES":
-                    player.Shop()
+                    Menu.Shop(player)
             move = input("Press Z to move up the menu and X to move down the menu. ")
             if move.upper() == "Z":
                 if x != 0:
@@ -345,6 +366,6 @@ woodclub.WeaponDictionary()
 apple.HealingItemDictionary()
 
 inventory = [woodsword, woodclub, apple]
-player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 100, 0, 10)
+player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 100, 1, 9)
 
 Menu.OpenMenu(player)
