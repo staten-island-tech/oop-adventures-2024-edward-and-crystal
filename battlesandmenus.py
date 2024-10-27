@@ -38,17 +38,18 @@ class Menu(Weapon, HealingItem):
                             if confirm.upper() == "YES":
                                 finish = True
                                 break
-                        
-        
-                    elif isinstance(selecteditem, HealingItem):
+                    else:
                         print(f"name) {selecteditem.name}")
                         print(f"heal amount) {selecteditem.heal}")
                         use = input("Would you like to use this item? ")
                         if use.upper() == "YES":
                             print(f"You have {player.currenthp}, and use the {selecteditem.name}")
                             player.PlayerHeal(selecteditem.heal)
+                            x += 1
                             try:
                                 player.inventory.remove(selecteditem)
+                                print(player.inventory)
+                                inventory.remove(selecteditem)
                             except ValueError:
                                 pass
                             print(f"Now you have {player.currenthp} HP! ")
@@ -56,28 +57,44 @@ class Menu(Weapon, HealingItem):
                             if confirm.upper() == "YES":
                                 finish = True
                                 break
-                        
 
-                    elif isinstance(selecteditem, OtherStuff):
-                        print(f"You are currently hovering over the Close Menu option.")
-                        confirm = input("Would you like to select this item?")
-                        if confirm.upper() == "YES":
-                            finish = True
-                            break
-            else:
-                move = input("Press Z to move up the menu and X to move down the menu. ")
-                if move.upper() == "Z":
-                    if x != 0:
-                        x -= 1
-                    else:
-                        x = len(inventory) - 1
-                elif move.upper() == "X":
-                    if x != len(inventory) - 1:
-                        x += 1
-                    else:
-                        x = 0
                 else:
-                    print("That is not a valid input.")
+                    move = input("Press Z to move up the menu and X to move down the menu. ")
+                    if move.upper() == "Z":
+                        if x != 0:
+                            x -= 1
+                        else:
+                            x = len(inventory) - 1
+                    elif move.upper() == "X":
+                        if x != len(inventory) - 1:
+                            x += 1
+                        else:
+                            x = 0
+                    else:
+                        print("That is not a valid input.")                     
+
+            elif isinstance(selecteditem, OtherStuff):
+                print(f"You are currently hovering over the Close Inventory option.")
+                confirm = input("Would you like to close the inventory? ")
+                print(confirm.upper())
+                if confirm.upper() == "YES":
+                    finish = True  
+                    break  
+                elif confirm.upper() != "YES":
+                    move = input("Press Z to move up the menu and X to move down the menu. ")
+                    if move.upper() == "Z":
+                        if x != 0:
+                            x -= 1
+                        else:
+                            x = len(inventory) - 1
+                    elif move.upper() == "X":
+                        if x != len(inventory) - 1:
+                            x += 1
+                        else:
+                            x = 0
+                    else:
+                        print("That is not a valid input.")
+
                 
     
     def Shop(player):
