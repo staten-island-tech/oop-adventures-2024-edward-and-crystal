@@ -66,13 +66,7 @@ class Menu(Weapon, HealingItem):
         apple = HealingItem('Apple', 10, 5)
         healingpotion = HealingItem('Healing Potion', 35, 15)
         endshopping = OtherStuff('End Shopping')
-        shopitems = [ ]
-        shopitems.append(woodensword)
-        shopitems.append(stonesword)
-        shopitems.append(goldsword)
-        shopitems.append(apple)
-        shopitems.append(healingpotion)
-        shopitems.append(endshopping)
+        shopitems = [woodensword, stonesword, goldsword, apple, healingpotion]
         for item in shopitems[:5]:
             print(f"{item.name} ) {item.cost} Gold")
         print(endshopping.name)
@@ -122,8 +116,6 @@ class Menu(Weapon, HealingItem):
                                 keepgoing = input("Are you finished shopping? ")
                                 if keepgoing.upper() == "YES":
                                     finish = True
-                    else:
-                        finish = True
                 else:
                     move = input("Press Z to move up the menu and X to move down the menu. ")
     
@@ -139,8 +131,57 @@ class Menu(Weapon, HealingItem):
                             x = 0
                     else:
                         print("That is not a valid input.")
-
     
+    def OpenMenu(player):
+        stats = OtherStuff(f'{player.name}')
+        inventory = OtherStuff('Inventory')
+        shop = OtherStuff('Open Shop')
+        closemenu = OtherStuff('Close')
+        menu = [stats, inventory, shop, closemenu]
+        for item in menu:
+            print(item.name)
+        x = 0
+        done = False
+        while done == False:
+            selecteditem = menu[x]
+            if selecteditem == closemenu:
+                confirm = input("Would you like to close the menu? ")
+                if confirm.upper() == "YES":
+                    done = True
+                    break
+            elif selecteditem == stats:
+                confirm = input("Would you like to view your stats? ")
+                if confirm.upper() == "YES":
+                    print(f'{player.name} ) Level {player.level}')
+                    print(f'{player.exp} / 75 XP')
+                    print(f'{player.currenthp} / {player.maxhp}')
+                    print(f'Strength: {player.strength}')
+                    print(f'{player.gold} Gold')
+                    print(player.weapon.name)
+            elif selecteditem == inventory:
+                confirm = input("Would you like to inspect your inventory? ")
+                if confirm.upper() == "YES":
+                    player.Inventory()
+            elif selecteditem == shop:
+                confirm = input("Would you like to inspect your inventory? ")
+                if confirm.upper() == "YES":
+                    player.Shop()
+            move = input("Press Z to move up the menu and X to move down the menu. ")
+            if move.upper() == "Z":
+                if x != 0:
+                     x -= 1
+                else:
+                    x = len(menu) - 1
+            elif move.upper() == "X":
+                if x != len(menu) - 1:
+                    x += 1
+                else:
+                    x = 0
+            else:
+                print("That is not a valid input.")
+
+
+
 class BattleInteractions(MainCharacter, Enemy, BossEnemy):
     def Battles(player, enemies):
         import random
@@ -156,13 +197,16 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                 previousinputs.clear()
                 previousinputs.append("ATTACK")
                 for enemy in enemies:
-                    if enemy.currenthp < 1:
+                    if enemy.currenthp <= 0:
                         try:
                             enemies.remove(enemy)
+                            print(f'{enemy.name} has died!')
+                        
                             player.inventory.append(enemy.weapondrop)
                             player.gold += enemy.golddrop
+                            player.MainCharacterGetEXP(enemy.expdrop)
                         except ValueError:
-                            wouldyoulose = False
+                            iwouldwin = False
 
                 for enemy in enemies:
                     healorattack = random.randint(1,2)
@@ -186,13 +230,6 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                     for enemy in enemies:
                         enemy.EnemyHit(player)
                         print(f"You currently have {player.currenthp} HP.")
-                    if player.currenthp <= 0:
-                        enemies.clear()
-                        try:
-                            players.remove(player)
-                            player.CharacterDeathMessage()
-                        except ValueError:
-                            pass
                 else:
                     player.PlayerHeal(15)
                     print(f"Blocking has allowed you to regain some stamina. You now have {player.currenthp} health.")
@@ -204,9 +241,17 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                             enemy.EnemyHeal(5)
                     previousinputs.clear()
                     previousinputs.append("BLOCK")
+            if player.currenthp > 0:
+                print(f"You have {player.currenthp} HP.")
+            else:
+                player.dead = True
+                player.CharacterDeathMessage()
+                enemies.clear()
+                break
 
     def BossBattle(player, enemies):
         import random
+        print(player.exp)
         previousinputs = ['nothing.']
         players = [player]
         while len(enemies) != 0 and len(players) == 1:
@@ -224,8 +269,12 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                             enemies.remove(enemy)
                             print(f'{enemy.name} has died!')
                             try:
-                                player.inventory.append(enemy.weapondrop)
-                                player.gold += enemy.golddrop
+                                if isinstance(enemy, Enemy):
+                                    player.inventory.append(enemy.weapondrop)
+                                    player.gold += enemy.golddrop
+                                    player.MainCharacterGetEXP(enemy.expdrop)
+                                else:
+                                    player.MainCharacterGetEXP(enemy.expdrop)
                             except ValueError:
                                 iwouldwin = True
                         except ValueError:
@@ -269,16 +318,15 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                                 enemy.EnemyHeal(5)
 
                         elif isinstance(enemy, BossEnemy):
-                            move = random.randint(1, 5)
-                            attack = [1, 2, 3]
-                            heal = [4]
-                            summon = [5]
-                            if move in heal:
+                            move = random.randint(1, 100)
+                            if move <= 20:
                                 enemy.EnemyHeal(10)
-                            elif move in summon:
+                            elif move in (21, 40):
                                 enemy.EnemySummon(enemies)
-                            elif move in attack:
+                            elif move in (41, 98):
                                 print(f"{enemy.name} attempted to strike, but the attack was blocked!")
+                            else:
+                                enemy.MAKELIFEHELL(enemies)
                     previousinputs.clear()
                     previousinputs.append("BLOCK")
             if player.currenthp > 0:
@@ -297,7 +345,6 @@ woodclub.WeaponDictionary()
 apple.HealingItemDictionary()
 
 inventory = [woodsword, woodclub, apple]
-player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 100)
-boss = BossEnemy('SUPERMAN', 100, 100, 10, woodsword)
-goblin = Enemy('goblin', 10, 10, 10, woodclub, 10, 'nothing')
-BattleInteractions.BossBattle(player, [boss, goblin])
+player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 100, 0, 10)
+
+Menu.OpenMenu(player)
