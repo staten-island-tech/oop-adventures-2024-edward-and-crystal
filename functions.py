@@ -197,6 +197,7 @@ class BossEnemy(Character):
             print(f"{self.name} has restored to full health!")
     
     def EnemySummon(self, enemies):
+        woodclub = Weapon('woodclub', 15, 5, 5)
         summonable = Enemy("Summoned Orc", 20, 15, 10, woodclub, 0, 'nothing')
         enemies.append(summonable)
         print(f"{self.name} has summoned a {summonable.name}! ")
