@@ -239,14 +239,16 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                         else:
                             enemy.EnemyHeal(5)
                     elif isinstance(enemy, BossEnemy):
-                        move = random.randint(1,5)
-                        if move == 1 or move == 2 or move == 3:
+                        move = random.randint(1,100)
+                        if move <= 60:
                             enemy.EnemyHit(player)
                             print(f"You currently have {player.currenthp} HP.")
-                        elif move == 4:
+                        elif move > 60 and move <= 80:
                             enemy.EnemyHeal(5)
-                        else:
+                        elif move > 80 and move < 100:
                             enemy.EnemySummon(enemies)
+                        else:
+                            enemy.MAKELIFEHELL(enemies)
             
             elif blockorattack.upper() == "BLOCK":
                 if previousinputs[0] == "BLOCK":

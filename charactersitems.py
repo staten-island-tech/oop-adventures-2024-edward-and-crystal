@@ -181,7 +181,12 @@ class BossEnemy(Character):
         enemies.append(summonable)
         print(f"{self.name} has summoned a {summonable.name}! ")
 
+    def MAKELIFEHELL(self, enemies):
+        woodclub = Weapon('woodclub', 10, 10, 10)
+        summonable = BossEnemy("Summoned Boss", 100, 50, 20, woodclub, 0, 'nothing')
+        enemies.append(summonable)
+        print(f"{self.name} has summoned a {summonable.name}! Good Luck!!! ")
+
 woodclub = Weapon('woodclub', 10, 10, 10)
 enemies = [ ]
 boss = BossEnemy('a', 1, 1, 1, woodclub)
-boss.EnemySummon(enemies)
