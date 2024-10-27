@@ -125,27 +125,6 @@ class MainCharacter(Character):
        selectedenemy.currenthp -= damage
        self.weapon.durability -= 1
 
-    def PlayerSaveFileReady(self):
-        return {
-            'name': self.name,
-            'strength': self.strength,
-            'maxhp': self.maxhp,
-            'currenthp': self.currenthp,
-            'gold': self.gold,
-            'inventory': self.inventory
-        }
-
-    def PlayerCreateSave(self):
-        savefile = self.PlayerSaveFileReady()
-        with open('charactersave.json', 'w') as file:
-            json.dump(savefile, file)
-
-    def PlayerLoadSave(self): 
-        with open('charactersave.json', 'r') as file:
-            sf = json.load(file)
-            # sf is short for savefile
-        player = MainCharacter(sf['name'], sf['strength'], sf['maxhp'], sf['currenthp'], sf['gold'], sf['inventory'])
-        return player   
 
 class Enemy(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon, golddrop, weapondrop):
@@ -197,6 +176,12 @@ class BossEnemy(Character):
             print(f"{self.name} has restored to full health!")
     
     def EnemySummon(self, enemies):
+        woodclub = Weapon('woodclub', 10, 10, 10)
         summonable = Enemy("Summoned Orc", 20, 15, 10, woodclub, 0, 'nothing')
         enemies.append(summonable)
         print(f"{self.name} has summoned a {summonable.name}! ")
+
+woodclub = Weapon('woodclub', 10, 10, 10)
+enemies = [ ]
+boss = BossEnemy('a', 1, 1, 1, woodclub)
+boss.EnemySummon(enemies)

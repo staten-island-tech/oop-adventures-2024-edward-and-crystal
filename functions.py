@@ -482,6 +482,3 @@ player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 100)
 boss = BossEnemy('SUPERMAN', 100, 100, 10, woodsword)
 goblin = Enemy('goblin', 10, 10, 10, woodclub, 10, 'nothing')
 BattleInteractions.BossBattle(player, [boss, goblin])
-    
-
-
