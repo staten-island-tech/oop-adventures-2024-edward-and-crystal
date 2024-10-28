@@ -4,6 +4,7 @@ from charactersitems import OtherStuff
 from charactersitems import BossEnemy
 from charactersitems import Enemy
 from charactersitems import MainCharacter
+from saveandopenworld import Saves
 
 class Menu(Weapon, HealingItem):
     def Inventory(player):
@@ -92,8 +93,6 @@ class Menu(Weapon, HealingItem):
                             x = 0
                     else:
                         print("That is not a valid input.")
-
-
     
     def Shop(player):
         woodensword = Weapon('Wooden Sword', 5, 8192, 10)
@@ -172,8 +171,9 @@ class Menu(Weapon, HealingItem):
         stats = OtherStuff(f'{player.name}')
         inventory = OtherStuff('Inventory')
         shop = OtherStuff('Open Shop')
+        save = OtherStuff('Save')
         closemenu = OtherStuff('Close')
-        menu = [stats, inventory, shop, closemenu]
+        menu = [stats, inventory, shop, save, closemenu]
         for item in menu:
             print(item.name)
         x = 0
@@ -202,6 +202,10 @@ class Menu(Weapon, HealingItem):
                 confirm = input("Would you like to inspect your shop? ")
                 if confirm.upper() == "YES":
                     Menu.Shop(player)
+            elif selecteditem == save:
+                confirm = input('Would you like to save the game? ')
+                if confirm.upper() == "YES":
+                    player.
             move = input("Press Z to move up the menu and X to move down the menu. ")
             if move.upper() == "Z":
                 if x != 0:
@@ -215,8 +219,6 @@ class Menu(Weapon, HealingItem):
                     x = 0
             else:
                 print("That is not a valid input.")
-
-
 
 class BattleInteractions(MainCharacter, Enemy, BossEnemy):
     def Battles(player, enemies):
@@ -372,15 +374,3 @@ class BattleInteractions(MainCharacter, Enemy, BossEnemy):
                 player.CharacterDeathMessage()
                 enemies.clear()
                 break
-
-woodsword = Weapon('woodsword', 10, 10, 10)
-woodclub = Weapon('woodclub', 15, 5, 5)
-apple = HealingItem('apple', 5, 5)
-woodsword.WeaponDictionary()
-woodclub.WeaponDictionary()
-apple.HealingItemDictionary()
-
-inventory = [woodsword, woodclub, apple]
-player = MainCharacter('player', 100, 100, 10, woodsword, inventory, 100, 1, 9)
-
-Menu.OpenMenu(player)
