@@ -45,7 +45,7 @@ class Menu(Weapon, HealingItem):
                         if use.upper() == "YES":
                             print(f"You have {player.currenthp}, and use the {selecteditem.name}")
                             player.PlayerHeal(selecteditem.heal)
-                            x += 1
+                            x -= 1
                             try:
                                 player.inventory.remove(selecteditem)
                                 print(player.inventory)
@@ -53,13 +53,12 @@ class Menu(Weapon, HealingItem):
                             except ValueError:
                                 pass
                             print(f"Now you have {player.currenthp} HP! ")
-                            confirm = input("Would you like to close the inventory? ")
-                            willclose = "YES"
-                            if confirm.upper() == willclose:
+                            close = input("Would you like to close the inventory? ")
+                            if close.upper() == "YES":
                                 finish = True
                                 break
                 else:
-                    move = input("Press Z to move up the menu and X to move down the menu. ")
+                    move = input("Press Z to move up the menu and X to move down the inventory. ")
                     if move.upper() == "Z":
                         if x != 0:
                             x -= 1
@@ -75,12 +74,12 @@ class Menu(Weapon, HealingItem):
 
             elif isinstance(selecteditem, OtherStuff):
                 print(f"You are currently hovering over the Close Inventory option.")
-                confirm = input("You will close your inventory. You have no choice. Press anything to continue. ")
-                if confirm.upper() == "YES":
+                close = input("Do you want to close your inventory? ")
+                if close.upper() == "YES":
                     finish = True
                     break
                 else:
-                    move = input("Press Z to move up the menu and X to move down the menu. ")
+                    move = input("Press Z to move up the menu and X to move down the inventory. ")
                     if move.upper() == "Z":
                         if x != 0:
                             x -= 1
@@ -94,9 +93,7 @@ class Menu(Weapon, HealingItem):
                     else:
                         print("That is not a valid input.")
 
-                
 
-                
     
     def Shop(player):
         woodensword = Weapon('Wooden Sword', 5, 8192, 10)
@@ -156,7 +153,7 @@ class Menu(Weapon, HealingItem):
                                 if keepgoing.upper() == "YES":
                                     finish = True
                 else:
-                    move = input("Press Z to move up the menu and X to move down the menu. ")
+                    move = input("Press Z to move up the menu and X to move down the shop. ")
     
                     if move.upper() == "Z":
                         if x != 0:
