@@ -15,8 +15,9 @@ def on_yes():
     return "YES"
 
 def on_no():
-    print("NO was clicked!")
-    return "NO"
+    label = tk.Label(window, text='NO YOU MUST PLAY', font=('Arial', 10))
+    label.pack(pady=20)        
+    return True
 
 buttonframe.columnconfigure(0, weight=1)
 buttonframe.columnconfigure(1, weight=1)
@@ -24,7 +25,7 @@ buttonframe.columnconfigure(1, weight=1)
 button_one = tk.Button(buttonframe, text='YESSSS', font=('Arial', 10), command=on_yes)
 button_one.grid(row=0, column=0, sticky='ew')
 
-button_two = tk.Button(buttonframe, text='NOOO', font=('Arial', 10), command=on_yes)
+button_two = tk.Button(buttonframe, text='NOOO', font=('Arial', 10), command=on_no)
 button_two.grid(row=0, column=1, sticky='ew')
 
 
