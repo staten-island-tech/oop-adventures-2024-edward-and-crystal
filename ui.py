@@ -34,13 +34,31 @@ def start_page():
 
 
 def tutorial():
-    #name + instructions
+    #savefiles + instructions
     clear_page()
-    label = tk.Label(window, font=('Arial', 20))
+    save = tk.Label(window, pady=10, text='Time to create your save file!', font=('Arial', 20))
+    save.pack()
+    buttonframe = tk.Frame(window)
+    buttonframe.fill(x)
+
+    label = tk.Label(window, text='Write your username', font=('Arial', 20))
     label.pack()
-    username = tk.StringVar()
-    name = tk.Entry(window, textvariable=username)
+
+    name = tk.Entry(window)
     name.pack()
+    
+    label2 = tk.Label(window, text='', font=('Arial', 30))  #empty text
+
+    def instructions(click): #when bindping it auto puts a argument in so thats why clicks there
+        label.pack_forget()
+        name.pack_forget()
+        label2.config(text=f'Hello, {name.get()}! Your goal is to slay your enemies to progress, upgrading yourself along the way.\nGood luck!')
+        label2.pack() 
+    #when press return/enter, greeting is shown
+    name.bind('<Return>', instructions)
+  
+
+
 
 start_page()
 
