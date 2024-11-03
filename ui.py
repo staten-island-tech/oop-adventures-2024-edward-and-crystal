@@ -39,7 +39,24 @@ def tutorial():
     save = tk.Label(window, pady=10, text='Time to create your save file!', font=('Arial', 20))
     save.pack()
     buttonframe = tk.Frame(window)
-    buttonframe.fill(x)
+    buttonframe.fill('x')
+    savefile_one = tk.Button(buttonframe, text='Save File One', font=('Arial', 10), command=buttonclicked)
+    savefile_one.pack()
+    savefile_two = tk.Button(buttonframe, text='Save File Two', font=('Arial', 10),command=buttonclicked)
+    savefile_two.pack()  
+    savefile_three = tk.Button(buttonframe, text='Save File Three', font=('Arial', 10), command=buttonclicked)
+    savefile_three.pack()
+    def buttonclicked():
+        return True
+    def savefile():
+        label = tk.Label(window, text='What do you want to name this file?', font=('Arial', 10))
+        label.pack()
+        name = tk.Entry(window)
+        name.pack()
+        for savefile in buttonframe:
+            if buttonclicked:
+                savefile.configure(text=f'Save File {len(savefile) + 1}: {name.get()}')
+                         
 
     label = tk.Label(window, text='Write your username', font=('Arial', 20))
     label.pack()
@@ -57,9 +74,6 @@ def tutorial():
     #when press return/enter, greeting is shown
     name.bind('<Return>', instructions)
   
-
-
-
 start_page()
 
 window.mainloop()
