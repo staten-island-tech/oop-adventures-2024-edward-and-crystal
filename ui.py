@@ -40,22 +40,28 @@ def tutorial():
         label.pack()
         name = tk.Entry(window)
         name.pack()
-        button.configure(text=f'{name.get()}')
+        save_number = button.get([-1])
+        #MAKE SAVE FILE NUMVER
+        def rename(event=None):  # event=None allows calling without an event parameter
+            new_name = f'{save_number.get()}: {name.get()}'
+            button.configure(text=new_name)  # Update the button's text with the new name
+            label.destroy()  # Clean up the label
+            name.destroy()  # Clean up the Entry widget
+
+        name.bind('<Return>', rename)
 
     clear_page()
     save = tk.Label(window, pady=10, text='Time to create your save file!', font=('Arial', 20))
     save.pack()
     buttonframe = tk.Frame(window)
     buttonframe.pack(fill='x')
-    savefile_one = tk.Button(buttonframe, text='Save File One', font=('Arial', 10), command=buttonclicked(savefile_one))
+    savefile_one = tk.Button(buttonframe, text='Save File One', font=('Arial', 10), command=lambda: buttonclicked(savefile_one))
     savefile_one.pack()
-    savefile_two = tk.Button(buttonframe, text='Save File Two', font=('Arial', 10),command=buttonclicked(savefile_two))
+    savefile_two = tk.Button(buttonframe, text='Save File Two', font=('Arial', 10),command=lambda: buttonclicked(savefile_two))
     savefile_two.pack()  
-    savefile_three = tk.Button(buttonframe, text='Save File Three', font=('Arial', 10), command=buttonclicked(savefile_three))
+    savefile_three = tk.Button(buttonframe, text='Save File Three', font=('Arial', 10), command=lambda: buttonclicked(savefile_three))
     savefile_three.pack()
   
-
-                         
 
     label = tk.Label(window, text='Write your username', font=('Arial', 20))
     label.pack()
