@@ -1,6 +1,21 @@
+import random
 import tkinter as tk
+from tkinter import font
 window = tk.Tk()
-window.geometry('1800x900')
+window.geometry('900x900')
 window.title('SUPER AWESOME AND VERY REAL GAME by Edward and Crystal!!')
-label = tk.Label(window, text='test test testt')
+
+textfont = font.Font(family='Comic Sans MS', size=100, weight='normal')
+
+def math():
+    buttonvalue = random.randint(1, 10) * random.randint(1, 10)
+    print(buttonvalue)
+
+button = tk.Button(window, text="MATH!bruh", command=math, height=10, width=10)
+button.pack(side='top', padx= 400, pady=400)
+
+button = tk.Button(window, text="MATH!", command=math, height=10, width=10)
+button.pack(side='top', padx= 400, pady=400)
+
+
 window.mainloop()
