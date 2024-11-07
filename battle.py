@@ -153,7 +153,7 @@ class Battles():
                     attack_button.destroy()
                     block_button.destroy()
                     previousinputs = 'block'
-
+        
             print('turn over')
         if len(enemies) == 0:
             print('You won!')
