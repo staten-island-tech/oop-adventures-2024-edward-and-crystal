@@ -132,7 +132,6 @@ class Battles():
         players = [player]
         while len(enemies) > 0 and len(players) > 0:
             action = Battles.PlayerAction(window)
-            print(previousinputs)
             if action == 'attack':
                 previousinputs = 'attack'
                 block_button.destroy()
