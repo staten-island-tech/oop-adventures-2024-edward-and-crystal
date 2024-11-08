@@ -37,31 +37,49 @@ def start_page():
 #naming a save file
 def save_files():
     def buttonclicked(button, button_name):
-        label = tk.Label(window, text='What do you want to name this file?', bg='grey', font=('Papyrus', 10))
+        label = tk.Label(window, text='What do you want to name this file?', bg='grey', font=('Papyrus', 50))
         label.pack()
         name = tk.Entry(window)
         name.pack()
-        def rename(event): #when binding it auto puts a argument in so thats why event here
+        
+        def sure(event):
+            new_name = name.get()
+            global sure
+            sure = tk.Label(window, bg='grey', font='Papyrus', text=f'Are you sure you want "{new_name}" to be the name of your save file?')
+            sure.pack()
+            global buttonframe
+            buttonframe = tk.Frame(window, bg='grey')
+            buttonframe.pack()
+            button_yes = tk.Button(buttonframe, text='Yes', bg='grey', font=('Papyrus', 10), command=rename)
+            button_yes.pack()
+            button_no = tk.Button(buttonframe, text='No', bg='grey', font=('Papyrus', 10), command=lambda: buttonclicked(button_no))
+            button_no.pack()
+                
+        def rename(): #when binding it auto puts a argument in so thats why event here
+            global buttonframe
+            global sure
+            buttonframe.pack_forget()
+            sure.pack_forget()
             new_name = name.get()
             button.configure(text=f'{button_name}: {new_name}') 
             label.pack_forget()
             name.pack_forget()
-            buttonframe.pack_forget()
             save.pack_forget()
             instructions()
 
-        name.bind('<Return>', rename)
+        name.bind('<Return>', sure)
    
     clear_page()
     save = tk.Label(window, pady=10, text='Time to create your save file!', bg='grey', font=('Papyrus', 20))
     save.pack()
     buttonframe = tk.Frame(window)
+    buttonframe.configure(bg='grey')
     buttonframe.pack(fill='x')
-    savefile_one = tk.Button(buttonframe, text='Save File One', bg='grey', font=('Papyrus', 10), command=lambda: buttonclicked(savefile_one, 'Save File One'))
+    savefile_one = tk.Button(buttonframe,  width=20, text='Save File One', bg='grey', font=('Papyrus', 50), command=lambda: buttonclicked(savefile_one, 'Save File One'))
     savefile_one.pack()
-    savefile_two = tk.Button(buttonframe, text='Save File Two', bg='grey', font=('Papyrus', 10),command=lambda: buttonclicked(savefile_two, 'Save File Two'))
+    savefile_two = tk.Button(buttonframe,  width=20, text='Save File Two', bg='grey', font=('Papyrus', 50),command=lambda: buttonclicked(savefile_two, 'Save File Two'))
     savefile_two.pack()  
-    savefile_three = tk.Button(buttonframe, text='Save File Three', bg='grey', font=('Papyrus', 10), command=lambda: buttonclicked(savefile_three, 'Save File Three'))
+    savefile_three = tk.Button(buttonframe, width=20, text='Save File Three', bg='grey', font=('Papyrus', 50), command=lambda: buttonclicked(savefile_three, 'Save File Three'))
     savefile_three.pack()
   
    
