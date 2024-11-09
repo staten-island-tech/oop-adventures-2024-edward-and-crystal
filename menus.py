@@ -19,6 +19,8 @@ class Menu():
             ask = tk.Label(window, text='Would you like to close the menu?')
         elif prompt == 'shop':
             ask = tk.Label(window, text=f'Would you like to purchase the {item.name}')
+        elif prompt == 'return':
+            ask == tk.Label(window, text='Would you like to return ot the main menu?')
         yes_button = tk.Button(window, text="Yes", command=lambda: Menu.SelectItem('YES', menuvar))
         no_button = tk.Button(window, text="No", command=lambda: Menu.SelectItem("NO", menuvar))
         confirmbuttons = [yes_button, no_button]
@@ -49,6 +51,8 @@ class Menu():
         return item
     
     def Inventory(window, player):
+        for button in buttons:
+            button.destroy()
         finish = False
         while finish == False:
             item = Menu.Inventory1(window, player)
@@ -107,21 +111,29 @@ class Menu():
                 ask.destroy()
 
     def Shop(window, player):
+        for button in buttons:
+            button.destroy()
+        global shopitems
         global menubuttons
         woodsword = Weapon('Wooden Sword', 5, 8192, 10)
         stonesword = Weapon('Stone Sword', 10, 15, 18)
         goldsword = Weapon('Gold Sword', 35, 6, 20)
         apple = HealingItem('Apple', 10, 5)
         healingpotion = HealingItem('Healing Potion', 35, 15)
+        returnbutton = tk.Button(window, text='Close Menu', command=lambda: Menu.ShopReturn())
         shopitems = [woodsword, stonesword, goldsword, apple, healingpotion]
-        shopvar = tk.IntVar()  # stores a specific spot in the list of enemies, so we can call it
-        menubuttons = [ ]
+        shopvar = tk.IntVar()
+        menubuttons = []
         finish = False
         while finish == False:
             for index, shopitem in enumerate(shopitems):
                 shop_button = tk.Button(window, text=shopitem.name, command=lambda i=index: Menu.SelectItem(i, shopvar))
                 shop_button.pack()
                 menubuttons.append(shop_button)
+            returnbutton.pack()
+            shopitems.append(returnbutton) # since this button is not based on an object but a button it has no name so it
+            # cannot go in the for loop
+            menubuttons.append(returnbutton)
 
             window.update()
             window.wait_variable(shopvar)
@@ -131,34 +143,92 @@ class Menu():
             if confirm == 'YES':
                 if player.gold >= item.cost:
                     player.PlayerPurchaseItem(item.cost, item)
+                    outcome = tk.Label(window, text=f'You purchased the {item.name}!')
+                    outcome.pack()
                 else:
                     poorhaha = tk.Label(window, text='You cannot purchase that item.')
                     poorhaha.pack()
                 for button in confirmbuttons:
                     button.destroy()
                 ask.destroy()
-                confirm = Menu.Confirm(window, item, 'end')
-                if confirm == 'YES':
-                    for button in confirmbuttons:
-                        button.destroy()
-                    ask.destroy()
-                    try:
-                        poorhaha.destroy()
-                    except:
-                        pass
-                    finish = True
-                elif confirm == 'NO':
-                    for button in confirmbuttons:
-                        button.destroy()
-                    ask.destroy()
+                Menu.ShopReturn()
+
             elif confirm == 'NO':
                 for button in confirmbuttons:
                     button.destroy()
                 ask.destroy()
+    
+    def ShopReturn():
+        for button in menubuttons:
+            button.destroy()
+        Menu.PlayerMenu(window, player)
+
+
+    def Stats(window, player):
+        for button in buttons:
+            button.destroy()
+        global statsvar
+        global statsLabels
+
+        statsvar = tk.StringVar
+
+        name = player.name
+        currenthp = player.currenthp
+        maxhp = player.maxhp
+        item = player.weapon
+        gold = player.gold
+        level = player.level
+        exp = player.exp
+        
+        nameLabel = tk.Label(window, text=name)
+        levelLabel = tk.Label(window, text=f'Level {level}')
+        expLabel = tk.Label(window, text=f'{exp} / 75 EXP')
+        hpLabel = tk.Label(window, text=f'{currenthp} / {maxhp} HP')
+        goldLabel = tk.Label(window, text=f'{gold} Gold')
+        itemLabel = tk.Label(window, text=f'Weapon: {item.name}')
+        returnbutton = tk.Button(window, text='Return to Menu', command=lambda: Menu.StatsReturn(window, player))
+
+        statsLabels = [nameLabel, levelLabel, expLabel, hpLabel, goldLabel, itemLabel, returnbutton]
+
+
+        nameLabel.pack()
+        levelLabel.pack()
+        expLabel.pack()
+        hpLabel.pack()
+        goldLabel.pack()
+        itemLabel.pack()
+        returnbutton.pack()
+
+    def StatsReturn(window, player):
+        for label in statsLabels:
+            label.destroy()
+        Menu.PlayerMenu(window, player)
+
+    def PutButtonsBack():
+        for button in buttons:
+            button.pack()
+        
+    def EndMenu():
+        for button in buttons:
+            button.destroy()
+
+    def PlayerMenu(window, player):
+        global buttons
+        stats = tk.Button(window, text=player.name, command=lambda: Menu.Stats(window, player))
+        inventory = tk.Button(window, text='Inventory', command=lambda: Menu.Inventory(window, player))
+        shop = tk.Button(window, text='Open Shop', command=lambda: Menu.Shop(window, player))
+        close = tk.Button(window, text='Close Menu', command=lambda: Menu.EndMenu())
+
+        buttons = [stats, inventory, shop, close]
+
+        Menu.PutButtonsBack()
+
+
         
 
 
 
+        
     
 window = tk.Tk()
 window.title("Menu")
@@ -167,8 +237,9 @@ weapon = Weapon('weapon', 0, 10, 10)
 apple = HealingItem('apple', 10, 10)
 healingpot = HealingItem('healing potion', 10, 10)
 goblinsword = Weapon('goblin sword', 100, 10, 10000000)
+stonesword = Weapon('stone sword', 10, 10, 10)
 
-player = MainCharacter('name', 10, 10, 10, weapon, [weapon, apple, healingpot, goblinsword], 100, 0, 0)
+player = MainCharacter('Edward', 10, 10, 10, stonesword, [stonesword, weapon, apple, healingpot, goblinsword], 100, 0, 0)
 
-Menu.Shop(window, player)
+Menu.PlayerMenu(window, player)
 window.mainloop()
