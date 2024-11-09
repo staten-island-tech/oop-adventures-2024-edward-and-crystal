@@ -11,20 +11,24 @@ class Menu():
         global confirmbuttons
         global ask
         menuvar = tk.StringVar()
+    
         for button in menubuttons:
             button.destroy()
+    
         if prompt == 'select':
             ask = tk.Label(window, text=f'Would you like to select the {item.name}?')
         elif prompt == 'end':
             ask = tk.Label(window, text='Would you like to close the menu?')
         elif prompt == 'shop':
-            ask = tk.Label(window, text=f'Would you like to purchase the {item.name}')
+            ask = tk.Label(window, text=f'Would you like to purchase the {item.name}?')
         elif prompt == 'return':
-            ask == tk.Label(window, text='Would you like to return ot the main menu?')
+            ask = tk.Label(window, text='Would you like to return to the main menu?')  
+    
         yes_button = tk.Button(window, text="Yes", command=lambda: Menu.SelectItem('YES', menuvar))
         no_button = tk.Button(window, text="No", command=lambda: Menu.SelectItem("NO", menuvar))
+    
         confirmbuttons = [yes_button, no_button]
-
+    
         ask.pack()
         yes_button.pack()
         no_button.pack()
@@ -35,6 +39,7 @@ class Menu():
         return menu
     
     def Inventory1(window, player):
+        global returnbutton
         global menubuttons
         menuvar = tk.IntVar()
         menubuttons = []
@@ -43,6 +48,8 @@ class Menu():
             menubutton = tk.Button(window, text=item.name, command=lambda i=index: Menu.SelectItem(i, menuvar))
             menubutton.pack()
             menubuttons.append(menubutton)
+        returnbutton = tk.Button(window, text='Return To Menu', command=lambda: Menu.ShopReturn())
+        returnbutton.pack()
         
         window.update()
         window.wait_variable(menuvar)
@@ -63,15 +70,17 @@ class Menu():
                     outcome = tk.Label(window, text=f'You equipped the {item.name}!')
                     for button in confirmbuttons:
                         button.destroy()
-                        ask.destroy()
+                    returnbutton.destroy()
+                    ask.destroy()
                     outcome.pack()
-                    confirm = Menu.Confirm(window, item, 'end')
+                    confirm = Menu.Confirm(window, item, 'return')
                     if confirm == 'YES':
                         finish = True
                         for button in confirmbuttons:
                             button.destroy()
                         outcome.destroy()
                         ask.destroy()
+                        Menu.PlayerMenu(window, player)
                         break
                     elif confirm == 'NO':
                         for button in confirmbuttons:
@@ -85,12 +94,12 @@ class Menu():
                     player.inventory.remove(item)
                     outcome = tk.Label(window, text=f'You consumed the {item.name}!')
                     outcome2 = tk.Label(window, text=f'You now have {player.currenthp} HP!')
-                    outcome.pack()
-                    outcome2.pack()
                     for button in confirmbuttons:
                         button.destroy()
-                        ask.destroy()
-                    confirm = Menu.Confirm(window, item, 'end')
+                    outcome.pack()
+                    outcome2.pack()
+                    ask.destroy()
+                    confirm = Menu.Confirm(window, item, 'return')
                     if confirm == 'YES':
                         finish = True
                         for button in confirmbuttons:
@@ -98,6 +107,7 @@ class Menu():
                         outcome.destroy()
                         outcome2.destroy()
                         ask.destroy()
+                        Menu.PlayerMenu(window, player)
                         break
                     elif confirm == 'NO':
                         for button in confirmbuttons:
@@ -109,54 +119,69 @@ class Menu():
                 for button in confirmbuttons:
                     button.destroy()
                 ask.destroy()
+                returnbutton.destroy()
 
     def Shop(window, player):
         for button in buttons:
             button.destroy()
+    
         global shopitems
         global menubuttons
+        shopitems = []  
+        menubuttons = []  
+    
         woodsword = Weapon('Wooden Sword', 5, 8192, 10)
         stonesword = Weapon('Stone Sword', 10, 15, 18)
         goldsword = Weapon('Gold Sword', 35, 6, 20)
         apple = HealingItem('Apple', 10, 5)
         healingpotion = HealingItem('Healing Potion', 35, 15)
-        returnbutton = tk.Button(window, text='Close Menu', command=lambda: Menu.ShopReturn())
+    
         shopitems = [woodsword, stonesword, goldsword, apple, healingpotion]
+    
+        returnbutton = tk.Button(window, text='Return To Menu', command=lambda: Menu.ShopReturn())
+        menubuttons.append(returnbutton)
+    
         shopvar = tk.IntVar()
-        menubuttons = []
-        finish = False
-        while finish == False:
-            for index, shopitem in enumerate(shopitems):
-                shop_button = tk.Button(window, text=shopitem.name, command=lambda i=index: Menu.SelectItem(i, shopvar))
-                shop_button.pack()
-                menubuttons.append(shop_button)
-            returnbutton.pack()
-            shopitems.append(returnbutton) # since this button is not based on an object but a button it has no name so it
-            # cannot go in the for loop
-            menubuttons.append(returnbutton)
-
-            window.update()
-            window.wait_variable(shopvar)
-            index = shopvar.get()  
-            item = shopitems[index]
-            confirm = Menu.Confirm(window, item, 'shop')
+    
+        for index, shopitem in enumerate(shopitems):
+            shop_button = tk.Button(window, text=shopitem.name, command=lambda i=index: Menu.SelectItem(i, shopvar))
+            shop_button.pack()
+            menubuttons.append(shop_button)
+        returnbutton.pack()
+    
+        window.update()
+        window.wait_variable(shopvar)
+        index = shopvar.get()  
+        item = shopitems[index]
+        confirm = Menu.Confirm(window, item, 'shop')
+        if confirm == 'YES':
+            if player.gold >= item.cost:
+                player.PlayerPurchaseItem(item.cost, item)
+                outcome = tk.Label(window, text=f'You purchased the {item.name}!')
+                outcome.pack()
+            else:
+                outcome = tk.Label(window, text='You cannot purchase that item.')
+                outcome.pack()
+            for button in confirmbuttons:
+                button.destroy()
+            ask.destroy()
+            confirm = Menu.Confirm(window, item, 'return')
             if confirm == 'YES':
-                if player.gold >= item.cost:
-                    player.PlayerPurchaseItem(item.cost, item)
-                    outcome = tk.Label(window, text=f'You purchased the {item.name}!')
-                    outcome.pack()
-                else:
-                    poorhaha = tk.Label(window, text='You cannot purchase that item.')
-                    poorhaha.pack()
                 for button in confirmbuttons:
                     button.destroy()
+                outcome.destroy()
                 ask.destroy()
-                Menu.ShopReturn()
-
+                Menu.PlayerMenu(window, player)
             elif confirm == 'NO':
                 for button in confirmbuttons:
                     button.destroy()
+                outcome.destroy()
                 ask.destroy()
+
+        elif confirm == 'NO':
+            for button in confirmbuttons:
+                button.destroy()
+            ask.destroy()
     
     def ShopReturn():
         for button in menubuttons:
@@ -214,6 +239,10 @@ class Menu():
 
     def PlayerMenu(window, player):
         global buttons
+        try:
+            returnbutton.destroy()
+        except:
+            pass
         stats = tk.Button(window, text=player.name, command=lambda: Menu.Stats(window, player))
         inventory = tk.Button(window, text='Inventory', command=lambda: Menu.Inventory(window, player))
         shop = tk.Button(window, text='Open Shop', command=lambda: Menu.Shop(window, player))
