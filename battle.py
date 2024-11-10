@@ -8,11 +8,17 @@ class Battles():
     def BattleAction(action, actionvar):
         actionvar.set(action)
 
-    def PlayerAction(window):
+    def PlayerAction(window, enemies):
         global attack_button
         global block_button
+        global enemylabels
 
         actionvar = tk.StringVar()
+        enemylabels = []
+        for enemy in enemies:
+            enemyLabel = tk.Label(window, text=f'{enemy.name} ) {enemy.currenthp} HP')
+            enemyLabel.pack()
+            enemylabels.append(enemyLabel)
 
         attack_button = tk.Button(window, text="Attack", command=lambda: Battles.BattleAction("attack", actionvar))
         block_button = tk.Button(window, text="Block", command=lambda: Battles.BattleAction("block", actionvar))
@@ -44,15 +50,20 @@ class Battles():
         return enemies[index] 
     
     def EnemyTurn(enemies, player, players, action):
+        global enemylabels
         if action == 'BLOCKFAIL':
-            print('Your block has failed!')
+            blockfail = tk.Label(window, text='Your block has failed!')
+            blockfail.pack()
 
         import random
+        enemylabels = [ ]
         for enemy in enemies:
             if enemy.currenthp <= 0:
                 try:
                     enemies.remove(enemy)
-                    print(f'{enemy.name} has died!')
+                    enemydie = tk.Label(window, text=f'{enemy.name} has died!')
+                    enemydie.pack()
+                    enemylabels.append(enemydie)
                     try:
                         if isinstance(enemy, Enemy):
                            player.inventory.append(enemy.weapondrop)
@@ -70,17 +81,26 @@ class Battles():
                 move = random.randint(1,2)
                 if move == 1:
                     if action == 'BLOCKWORK':
-                        print(f'{enemy.name} attempted to attack, but it was blocked!')
+                        enemyblocked = tk.Label(window, text=f'{enemy.name} tried to attack, but you blocked!')
+                        enemyblocked.pack()
+                        enemylabels.append(enemyblocked)
                     else:
                         enemy.EnemyHit(player)
+                        enemyhit = tk.Label(window, text=f'{enemy.name} attacks you!')
+                        enemyhit.pack()
+                        enemylabels.append(enemyhit)
                         if player.currenthp <= 0:
-                                print(f"You currently have 0 HP.")
-                                player.currenthp = 0
-                                players.remove(player)
-                                break
-                        print(f"You currently have {player.currenthp} HP.")
+                            player.currenthp = 0
+                            players.remove(player)
+                            break
+                        playerhealth = tk.Label(window, text=f'You have {player.currenthp} HP')
+                        playerhealth.pack()
+                        enemylabels.append(playerhealth)
                 else:
                     enemy.EnemyHeal(5)
+                    enemyheal = tk.Label(window, text=f'{enemy.name} healed 5 HP!')
+                    enemyheal.pack()
+                    enemylabels.append(enemyheal)
             elif isinstance(enemy, BossEnemy): # a bunch of boss enemies
                 move = random.randint(1,100)
                 orcnumber = 0 # finding how many orcs there are
@@ -91,48 +111,89 @@ class Battles():
                 if orcnumber < 4: # i like stupidly unfair video games but too many orcs might break the window
                     if move <= 60:
                         if action == 'BLOCKWORK':
-                            print(f'{enemy.name} attempted to attack, but it was blocked!')
+                            enemyblocked = tk.Label(window, text=f'{enemy.name} tried to attack, but you blocked!')
+                            enemyblocked.pack()
+                            enemylabels.append(enemyblocked)
                         else:
                             enemy.EnemyHit(player)
+                            enemyhit = tk.Label(window, text=f'{enemy.name} attacks you!')
+                            enemyhit.pack()
+                            enemylabels.append(enemyhit)
                             if player.currenthp <= 0:
-                                print(f"You currently have 0 HP.")
+                                playerhealth = tk.Label(window, text='You have died!')
+                                playerhealth.pack()
+                                enemylabels.append(playerhealth)
                                 player.currenthp = 0
                                 players.remove(player)
                                 break
-                            print(f"You currently have {player.currenthp} HP.")
+                            playerhealth = tk.Label(window, text=f'You have {player.currenthp} HP')
+                            playerhealth.pack()
+                            enemylabels.append(playerhealth)
                     elif move > 60 and move <= 80:
                         enemy.EnemyHeal(5)
+                        enemyheal = tk.Label(window, text=f'{enemy.name} healed 5 HP!')
+                        enemyheal.pack()
+                        enemylabels.append(enemyheal)
                     elif move > 80 and move < 100:
                         enemy.EnemySummon(enemies)
+                        enemysummon = tk.Label(window, text=f'{enemy.name} summons an Orc!')
+                        enemysummon.pack()
+                        enemylabels.append(enemysummon)
                     else:
                         enemy.MAKELIFEHELL(enemies)
+                        enemybosssummon = tk.Label(window, text=f'{enemy.name} summons another BOSS!')
+                        enemybosssummon.pack()
+                        enemylabels.append(enemysummon)
                 else:
                     if move <= 75:
                         if action == 'BLOCKWORK':
-                            print(f'{enemy.name} attempted to attack, but it was blocked!')
+                            enemyblocked = tk.Label(window, text=f'{enemy.name} tried to attack, but you blocked!')
+                            enemyblocked.pack()
+                            enemylabels.append(enemyblocked)
                         else:
                             enemy.EnemyHit(player)
-                            print(f"You currently have {player.currenthp} HP.")
+                            enemyhit = tk.Label(f'{enemy.name} attacks you!')
+                            enemyhit.pack()
+                            enemylabels.append(enemyhit)
                     else: # ahh but the boss can heal 5x more if there are too many orcs
                         enemy.EnemyHeal(25)
+                        enemyheal = tk.Label(window, text=f'{enemy.name} healed 25 HP!')
+                        enemyheal.pack()
+                        enemylabels.append(enemyheal)
             
-
+    def DeleteThing(label):
+        label.destroy()
+        
+    def DeleteThings(labels):
+        for label in labels:
+            label.destroy()
 
     def MainCharacterAttack(player, enemy):
         damage = player.strength + player.weapon.strength
         enemy.currenthp -= damage
         print(f'You attacked the {enemy.name}')
+    def Continue(continuevar):
+            continuee.destroy()
+            continuevar.set('continue')
 
     def Battle(window, player, enemies):
         global attack_button
         global block_button
         global enemybuttons
+        global continuee
         
         previousinputs = 'attack'
         players = [player]
+
         while len(enemies) > 0 and len(players) > 0:
-            action = Battles.PlayerAction(window)
+            try:
+                Battles.DeleteThings(enemylabels)
+                continuee.destroy()
+            except:
+                pass
+            action = Battles.PlayerAction(window, enemies)
             if action == 'attack':
+                Battles.DeleteThings(enemylabels)
                 previousinputs = 'attack'
                 block_button.destroy()
                 attack_button.destroy()
@@ -143,6 +204,8 @@ class Battles():
                     button.destroy()
 
             elif action == 'block':
+                for label in enemylabels:
+                    label.destroy()
                 if previousinputs == 'attack':
                     Battles.EnemyTurn(enemies, player, players, 'BLOCKWORK')
                     attack_button.destroy()
@@ -153,12 +216,29 @@ class Battles():
                     attack_button.destroy()
                     block_button.destroy()
                     previousinputs = 'block'
-        
-            print('turn over')
+            
+            continuevar = tk.StringVar()
+            continuee = tk.Button(window, text='Continue', command=lambda: Battles.Continue(continuevar))
+            continuee.pack()
+
+            window.wait_variable(continuevar)
+            continuevariable = continuevar.get()
+            if continuevariable == 'continue':
+                for label in enemylabels:
+                    label.destroy()
+                
         if len(enemies) == 0:
-            print('You won!')
+            wow = tk.Label(window, text='You win!')
+            wow.pack()
         if len(players) == 0:
-            print('Womp WOmp')
+            wow = tk.Label(window, text='You died!')
+            wow.pack()
+
+        continuee.pack()
+
+        
+        
+
 
 
 window = tk.Tk()
