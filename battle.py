@@ -51,12 +51,13 @@ class Battles():
     
     def EnemyTurn(enemies, player, players, action):
         global enemylabels
+        import random
+        enemylabels = [ ]
         if action == 'BLOCKFAIL':
             blockfail = tk.Label(window, text='Your block has failed!')
             blockfail.pack()
+            enemylabels.append(blockfail)
 
-        import random
-        enemylabels = [ ]
         for enemy in enemies:
             if enemy.currenthp <= 0:
                 try:
@@ -143,7 +144,7 @@ class Battles():
                         enemy.MAKELIFEHELL(enemies)
                         enemybosssummon = tk.Label(window, text=f'{enemy.name} summons another BOSS!')
                         enemybosssummon.pack()
-                        enemylabels.append(enemysummon)
+                        enemylabels.append(enemybosssummon)
                 else:
                     if move <= 75:
                         if action == 'BLOCKWORK':
@@ -172,15 +173,21 @@ class Battles():
         damage = player.strength + player.weapon.strength
         enemy.currenthp -= damage
         print(f'You attacked the {enemy.name}')
+
     def Continue(continuevar):
             continuee.destroy()
             continuevar.set('continue')
+            try:
+                wow.destroy()
+            except:
+                pass
 
     def Battle(window, player, enemies):
         global attack_button
         global block_button
         global enemybuttons
         global continuee
+        global wow
         
         previousinputs = 'attack'
         players = [player]
@@ -234,7 +241,10 @@ class Battles():
             wow = tk.Label(window, text='You died!')
             wow.pack()
 
+        continuee = tk.Button(window, text='End Battle', command=lambda: Battles.Continue(continuevar))
         continuee.pack()
+
+        window.wait_variable(continuevar)
 
         
         
