@@ -53,6 +53,7 @@ class Menu():
         
         window.update()
         window.wait_variable(menuvar)
+        returnbutton.destroy()
         index = menuvar.get()
         item = player.inventory[index]
         return item
@@ -70,7 +71,6 @@ class Menu():
                     outcome = tk.Label(window, text=f'You equipped the {item.name}!')
                     for button in confirmbuttons:
                         button.destroy()
-                    returnbutton.destroy()
                     ask.destroy()
                     outcome.pack()
                     confirm = Menu.Confirm(window, item, 'return')
@@ -159,6 +159,8 @@ class Menu():
                 player.PlayerPurchaseItem(item.cost, item)
                 outcome = tk.Label(window, text=f'You purchased the {item.name}!')
                 outcome.pack()
+                newgold = tk.Label(window, text=f'Now you have {player.gold} Gold.')
+                newgold.pack()
             else:
                 outcome = tk.Label(window, text='You cannot purchase that item.')
                 outcome.pack()
@@ -169,19 +171,29 @@ class Menu():
             if confirm == 'YES':
                 for button in confirmbuttons:
                     button.destroy()
+                try:
+                    newgold.destroy()
+                except:
+                    pass
                 outcome.destroy()
                 ask.destroy()
                 Menu.PlayerMenu(window, player)
             elif confirm == 'NO':
                 for button in confirmbuttons:
                     button.destroy()
+                try:
+                    newgold.destroy()
+                except:
+                    pass
                 outcome.destroy()
                 ask.destroy()
+                Menu.Shop(window, player)
 
         elif confirm == 'NO':
             for button in confirmbuttons:
                 button.destroy()
             ask.destroy()
+            Menu.Shop(window, player)
     
     def ShopReturn():
         for button in menubuttons:
