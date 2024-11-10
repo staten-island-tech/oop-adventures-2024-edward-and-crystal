@@ -191,6 +191,7 @@ class Battles():
         
         previousinputs = 'attack'
         players = [player]
+        playerbeforelevel = player.level
 
         while len(enemies) > 0 and len(players) > 0:
             try:
@@ -237,6 +238,10 @@ class Battles():
         if len(enemies) == 0:
             wow = tk.Label(window, text='You win!')
             wow.pack()
+            playernewlevel = player.level
+            if playernewlevel > playerbeforelevel:
+                levelup = tk.Label(window, text=f'You have leveled up to Level {player.level}!')
+                levelup.pack()
         if len(players) == 0:
             wow = tk.Label(window, text='You died!')
             wow.pack()
@@ -245,18 +250,17 @@ class Battles():
         continuee.pack()
 
         window.wait_variable(continuevar)
-
+        try:
+            levelup.destroy()
+        except:
+            pass 
         
-        
-
-
-
 window = tk.Tk()
 window.title("Battle Mode")
 
 weapon = Weapon('weapon', 0, 10, 10)
 
-player = MainCharacter('name', 10, 10, 10, weapon, [], 0, 0, 0)
+player = MainCharacter('name', 100, 100, 10, weapon, [], 0, 1, 70)
 enemy1 = Enemy('enemy1', 1, 1, 1, weapon, 10, weapon, 10)
 enemy2 = Enemy('enemy2', 1, 1, 1, weapon, 10, weapon, 10)
 enemy3 = Enemy('enemy3', 1, 1, 1, weapon, 10, weapon, 10)
