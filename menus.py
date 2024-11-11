@@ -63,9 +63,31 @@ class Menu():
             button.destroy()
         finish = False
         while finish == False:
+            labels = [ ]
             item = Menu.Inventory1(window, player)
+            if isinstance(item, Weapon):
+                label1 = tk.Label(window, text=item.name)
+                label2 = tk.Label(window, text=f'Strength: {item.strength}')
+                if item.durability > 8000:
+                    label3 = tk.Label(window, text=f'Durability: Infinite')
+                else:
+                    label3 = tk.Label(window, text=f'Durability: {item.durability}')
+                labels.append(label1)
+                labels.append(label2)
+                labels.append(label3)
+                for label in labels:
+                    label.pack()
+            elif isinstance(item, HealingItem):
+                label1 = tk.Label(window, text=item.name)
+                label2 = tk.Label(window, text=f'Heals {item.heal} HP')
+                labels.append(label1)
+                labels.append(label2)
+                for label in labels:
+                    label.pack()
             confirm = Menu.Confirm(window, item, 'select')
             if confirm == "YES":
+                for label in labels:
+                    label.destroy()
                 if isinstance(item, Weapon):
                     player.weapon = item
                     outcome = tk.Label(window, text=f'You equipped the {item.name}!')
@@ -116,6 +138,8 @@ class Menu():
                         outcome2.destroy()
                         ask.destroy()
             elif confirm == 'NO':
+                for label in labels:
+                    label.destroy()
                 for button in confirmbuttons:
                     button.destroy()
                 ask.destroy()
@@ -153,8 +177,30 @@ class Menu():
         window.wait_variable(shopvar)
         index = shopvar.get()  
         item = shopitems[index]
+        labels = [ ]
+        if isinstance(item, Weapon):
+                label1 = tk.Label(window, text=item.name)
+                label2 = tk.Label(window, text=f'Strength: {item.strength}')
+                if item.durability > 8000:
+                    label3 = tk.Label(window, text='Durability: Infinite')
+                else:
+                    label3 = tk.Label(window, text=f'Durability: {item.durability}')
+                labels.append(label1)
+                labels.append(label2)
+                labels.append(label3)
+                for label in labels:
+                    label.pack()
+        elif isinstance(item, HealingItem):
+            label1 = tk.Label(window, text=item.name)
+            label2 = tk.Label(window, text=f'Heals {item.heal} HP')
+            labels.append(label1)
+            labels.append(label2)
+            for label in labels:
+                label.pack()
         confirm = Menu.Confirm(window, item, 'shop')
         if confirm == 'YES':
+            for label in labels:
+                label.destroy()
             if player.gold >= item.cost:
                 player.PlayerPurchaseItem(item.cost, item)
                 outcome = tk.Label(window, text=f'You purchased the {item.name}!')
@@ -190,6 +236,8 @@ class Menu():
                 Menu.Shop(window, player)
 
         elif confirm == 'NO':
+            for label in labels:
+                label.destroy()
             for button in confirmbuttons:
                 button.destroy()
             ask.destroy()
@@ -263,13 +311,7 @@ class Menu():
         buttons = [stats, inventory, shop, close]
 
         Menu.PutButtonsBack()
-
-
-        
-
-
-
-        
+    
     
 window = tk.Tk()
 window.title("Menu")
