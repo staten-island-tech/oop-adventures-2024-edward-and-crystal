@@ -15,8 +15,10 @@ class Menu():
         for button in menubuttons:
             button.destroy()
     
-        if prompt == 'select':
-            ask = tk.Label(window, text=f'Would you like to select the {item.name}?')
+        if prompt == 'selectweapon':
+            ask = tk.Label(window, text=f'Would you like to equip the {item.name}?')
+        elif prompt == 'selectheal':
+            ask = tk.Label(window, text=f'Would you like to consume the {item.name}?')
         elif prompt == 'end':
             ask = tk.Label(window, text='Would you like to close the menu?')
         elif prompt == 'shop':
@@ -77,6 +79,7 @@ class Menu():
                 labels.append(label3)
                 for label in labels:
                     label.pack()
+                confirm = Menu.Confirm(window, item, 'selectweapon')
             elif isinstance(item, HealingItem):
                 label1 = tk.Label(window, text=item.name)
                 label2 = tk.Label(window, text=f'Heals {item.heal} HP')
@@ -84,7 +87,7 @@ class Menu():
                 labels.append(label2)
                 for label in labels:
                     label.pack()
-            confirm = Menu.Confirm(window, item, 'select')
+                confirm = Menu.Confirm(window, item, 'selectheal')
             if confirm == "YES":
                 for label in labels:
                     label.destroy()
