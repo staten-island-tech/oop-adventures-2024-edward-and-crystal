@@ -71,6 +71,7 @@ class Menu():
         return item
     
     def Inventory(window, player):
+        window.title('Inventory')
         for button in buttons:
             button.destroy()
         finish = False
@@ -159,6 +160,7 @@ class Menu():
                 returnbutton.destroy()
 
     def Shop(window, player):
+        window.title('Shop')
         for button in buttons:
             button.destroy()
     
@@ -267,6 +269,7 @@ class Menu():
 
 
     def Stats(window, player):
+        window.title(f"{player.name}'s Stats")
         for button in buttons:
             button.destroy()
         global statsvar
@@ -314,10 +317,12 @@ class Menu():
             button.pack()
         
     def EndMenu():
+        window.title('Game')
         for button in buttons:
             button.destroy()
 
     def PlayerMenu(window, player):
+        window.title('Menu')
         global buttons
         try:
             returnbutton.destroy()
