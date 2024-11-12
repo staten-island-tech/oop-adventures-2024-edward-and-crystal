@@ -189,6 +189,7 @@ class Battles():
         global continuee
         global wow
         
+        window.title('Battle')
         previousinputs = 'attack'
         players = [player]
         playerbeforelevel = player.level

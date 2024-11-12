@@ -17,6 +17,7 @@ class Menu():
 # dooodledootdooooo
 # do do dunn dunn duuuunn
 # ba boo sh doodle loot do ! ! !! !! !!!! ! !! (BAMMM)
+
     def Confirm(window, item, prompt):
         global confirmbuttons
         global ask
@@ -24,11 +25,12 @@ class Menu():
     
         for button in menubuttons:
             button.destroy()
-    
         if prompt == 'selectweapon':
             ask = tk.Label(window, text=f'Would you like to equip the {item.name}?')
         elif prompt == 'selectheal':
             ask = tk.Label(window, text=f'Would you like to consume the {item.name}?')
+        elif prompt == 'delete':
+            ask == tk.Label(window, text=f'Would you like to delete the {item.name}?')
         elif prompt == 'end':
             ask = tk.Label(window, text='Would you like to close the menu?')
         elif prompt == 'shop':
@@ -77,6 +79,8 @@ class Menu():
         finish = False
         while finish == False:
             labels = [ ]
+            inventoryfulllabel = tk.Label(window, text=f'Inventory Storage: {len(player.inventory)} / 25')
+            labels.append(inventoryfulllabel)
             item = Menu.Inventory1(window, player)
             if isinstance(item, Weapon):
                 label1 = tk.Label(window, text=item.name)
@@ -194,19 +198,19 @@ class Menu():
         item = shopitems[index]
         labels = [ ]
         if isinstance(item, Weapon):
-                label1 = tk.Label(window, text=item.name)
-                label2 = tk.Label(window, text=f'Strength: {item.strength}')
-                if item.durability > 8000:
-                    label3 = tk.Label(window, text='Durability: Infinite')
-                else:
-                    label3 = tk.Label(window, text=f'Durability: {item.durability}')
-                label4 = tk.Label(window, text=f'Costs {item.cost} Gold')
-                labels.append(label1)
-                labels.append(label2)
-                labels.append(label3)
-                labels.append(label4)
-                for label in labels:
-                    label.pack()
+            label1 = tk.Label(window, text=item.name)
+            label2 = tk.Label(window, text=f'Strength: {item.strength}')
+            if item.durability > 8000:
+                label3 = tk.Label(window, text='Durability: Infinite')
+            else:
+                label3 = tk.Label(window, text=f'Durability: {item.durability}')
+            label4 = tk.Label(window, text=f'Costs {item.cost} Gold')
+            labels.append(label1)
+            labels.append(label2)
+            labels.append(label3)
+            labels.append(label4)
+            for label in labels:
+                label.pack()
         elif isinstance(item, HealingItem):
             label1 = tk.Label(window, text=item.name)
             label2 = tk.Label(window, text=f'Heals {item.heal} HP')
@@ -220,7 +224,10 @@ class Menu():
         if confirm == 'YES':
             for label in labels:
                 label.destroy()
-            if player.gold >= item.cost:
+            if len(player.inventory) == 25:
+                outcome = tk.Label(window, text='Your inventory is full!')
+                outcome.pack()
+            elif player.gold >= item.cost:
                 player.PlayerPurchaseItem(item.cost, item)
                 outcome = tk.Label(window, text=f'You purchased the {item.name}!')
                 outcome.pack()
@@ -281,6 +288,7 @@ class Menu():
         currenthp = player.currenthp
         maxhp = player.maxhp
         strength = player.strength
+        inventory = len(player.inventory)
         item = player.weapon
         gold = player.gold
         level = player.level
@@ -293,9 +301,10 @@ class Menu():
         hpLabel = tk.Label(window, text=f'{currenthp} / {maxhp} HP')
         goldLabel = tk.Label(window, text=f'{gold} Gold')
         itemLabel = tk.Label(window, text=f'Weapon: {item.name}')
+        inventoryLabel = tk.Label(window, text=f'Inventory Storage: {inventory} / 25')
         returnbutton = tk.Button(window, text='Return to Menu', command=lambda: Menu.StatsReturn(window, player))
 
-        statsLabels = [nameLabel, strengthLabel, levelLabel, expLabel, hpLabel, goldLabel, itemLabel, returnbutton]
+        statsLabels = [nameLabel, strengthLabel, levelLabel, expLabel, inventoryLabel, hpLabel, goldLabel, itemLabel, returnbutton]
 
 
         nameLabel.pack()
@@ -345,19 +354,7 @@ weapon = Weapon('weapon', 10, 10, 10)
 goldensword = Weapon('weapon', 30, 8, 10)
 stonesword = Weapon('weapon', 20, 15, 10)
 woodensword = Weapon('woodensword', 10, 8192, 0)
-
 player = MainCharacter('edward', 100, 100, 20, weapon, [weapon, woodensword, stonesword, goldensword], 100, 0, 70)
-
-for i in range(100):
-    player.inventory.append(weapon)
-
-scrollbar = tk.Scrollbar(window, orient="vertical", command=window.yview)
-scrollbar.pack(side="right", fill="y")
-
-# Configure the canvas
-window.configure(yscrollcommand=scrollbar.set)
-window.bind("<Configure>", lambda e: window.configure(scrollregion=window.bbox("all")))
-
 
 Menu.PlayerMenu(window, player)
 
