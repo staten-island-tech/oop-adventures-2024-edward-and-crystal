@@ -188,7 +188,7 @@ class Battles():
         global enemybuttons
         global continuee
         global wow
-        
+
         window.title('Battle')
         previousinputs = 'attack'
         players = [player]
@@ -213,9 +213,11 @@ class Battles():
                     button.destroy()
 
             elif action == 'block':
+                import random
                 for label in enemylabels:
                     label.destroy()
                 if previousinputs == 'attack':
+                    player.PlayerHeal(random.randint(5, 10))
                     Battles.EnemyTurn(enemies, player, players, 'BLOCKWORK')
                     attack_button.destroy()
                     block_button.destroy()
