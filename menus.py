@@ -7,6 +7,16 @@ class Menu():
     def SelectItem(item, menuvar):
         menuvar.set(item)
 
+# so let me just explain how the prompt variable works
+# this code does the same thing but grammar and player understanding would be weird if i dont have it
+# (example, would you like to close the menu? even tho you are using an item)
+# so prompt is just a variable that allows me not to recreate the function over and over again :)
+# also for the prompts that dont involve fstrings i just put a random item, typically whatever is assigned to the
+# item variable in the function at that point
+# yeah 
+# dooodledootdooooo
+# do do dunn dunn duuuunn
+# ba boo sh doodle loot do ! ! !! !! !!!! ! !! (BAMMM)
     def Confirm(window, item, prompt):
         global confirmbuttons
         global ask
@@ -188,16 +198,20 @@ class Menu():
                     label3 = tk.Label(window, text='Durability: Infinite')
                 else:
                     label3 = tk.Label(window, text=f'Durability: {item.durability}')
+                label4 = tk.Label(window, text=f'Costs {item.cost} Gold')
                 labels.append(label1)
                 labels.append(label2)
                 labels.append(label3)
+                labels.append(label4)
                 for label in labels:
                     label.pack()
         elif isinstance(item, HealingItem):
             label1 = tk.Label(window, text=item.name)
             label2 = tk.Label(window, text=f'Heals {item.heal} HP')
+            label3 = tk.Label(window, text=f'Costs {item.cost} Gold')
             labels.append(label1)
             labels.append(label2)
+            labels.append(label3)
             for label in labels:
                 label.pack()
         confirm = Menu.Confirm(window, item, 'shop')
@@ -263,12 +277,14 @@ class Menu():
         name = player.name
         currenthp = player.currenthp
         maxhp = player.maxhp
+        strength = player.strength
         item = player.weapon
         gold = player.gold
         level = player.level
         exp = player.exp
         
         nameLabel = tk.Label(window, text=name)
+        strengthLabel = tk.Label(window, text=f'Strength: {strength}')
         levelLabel = tk.Label(window, text=f'Level {level}')
         expLabel = tk.Label(window, text=f'{exp} / 75 EXP')
         hpLabel = tk.Label(window, text=f'{currenthp} / {maxhp} HP')
@@ -276,10 +292,11 @@ class Menu():
         itemLabel = tk.Label(window, text=f'Weapon: {item.name}')
         returnbutton = tk.Button(window, text='Return to Menu', command=lambda: Menu.StatsReturn(window, player))
 
-        statsLabels = [nameLabel, levelLabel, expLabel, hpLabel, goldLabel, itemLabel, returnbutton]
+        statsLabels = [nameLabel, strengthLabel, levelLabel, expLabel, hpLabel, goldLabel, itemLabel, returnbutton]
 
 
         nameLabel.pack()
+        strengthLabel.pack()
         levelLabel.pack()
         expLabel.pack()
         hpLabel.pack()
@@ -319,13 +336,13 @@ class Menu():
 window = tk.Tk()
 window.title("Menu")
 
-weapon = Weapon('weapon', 0, 10, 10)
-apple = HealingItem('apple', 10, 10)
-healingpot = HealingItem('healing potion', 10, 10)
-goblinsword = Weapon('goblin sword', 100, 10, 10000000)
-stonesword = Weapon('stone sword', 10, 10, 10)
+weapon = Weapon('weapon', 10, 10, 10)
+goldensword = Weapon('weapon', 30, 8, 10)
+stonesword = Weapon('weapon', 20, 15, 10)
+woodensword = Weapon('woodensword', 10, 8192, 0)
 
-player = MainCharacter('Edward', 10, 10, 10, stonesword, [stonesword, weapon, apple, healingpot, goblinsword], 100, 0, 0)
+player = MainCharacter('edward', 100, 100, 20, weapon, [weapon, woodensword, stonesword, goldensword], 100, 0, 70)
 
 Menu.PlayerMenu(window, player)
+
 window.mainloop()
