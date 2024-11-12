@@ -261,7 +261,7 @@ class Battles():
         
 window = tk.Tk()
 window.title("Battle Mode")
-
+from menus import Menu
 weapon = Weapon('weapon', 0, 10, 10)
 
 player = MainCharacter('name', 100, 100, 10, weapon, [], 0, 1, 70)
@@ -272,7 +272,7 @@ boss = BossEnemy('boos', 30, 30, 1, weapon, 1)
 enemies = [enemy1, enemy2, enemy3, boss]
 for i in range (25):
     player.inventory.append(Weapon(f'weapon{i}', 1, 1, 1))
+Menu.PlayerMenu(window, player)
 Battles.Battle(window, player, enemies)
-from menus import Menu
 Menu.PlayerMenu(window, player)
 window.mainloop()
