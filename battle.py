@@ -67,9 +67,10 @@ class Battles():
                     enemylabels.append(enemydie)
                     try:
                         if isinstance(enemy, Enemy):
-                           player.inventory.append(enemy.weapondrop)
-                           player.gold += enemy.golddrop
-                           player.MainCharacterGetEXP(enemy.expdrop)
+                            if len(player.inventory) > 25:
+                                player.inventory.append(enemy.weapondrop)
+                            player.gold += enemy.golddrop
+                            player.MainCharacterGetEXP(enemy.expdrop)
                         else:
                             player.MainCharacterGetEXP(enemy.expdrop)
                     except ValueError:
@@ -269,6 +270,9 @@ enemy2 = Enemy('enemy2', 1, 1, 1, weapon, 10, weapon, 10)
 enemy3 = Enemy('enemy3', 1, 1, 1, weapon, 10, weapon, 10)
 boss = BossEnemy('boos', 30, 30, 1, weapon, 1)
 enemies = [enemy1, enemy2, enemy3, boss]
-
+for i in range (25):
+    player.inventory.append(Weapon(f'weapon{i}', 1, 1, 1))
 Battles.Battle(window, player, enemies)
+from menus import Menu
+Menu.PlayerMenu(window, player)
 window.mainloop()
