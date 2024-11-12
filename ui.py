@@ -12,10 +12,10 @@ def math():
     print(buttonvalue)
 
 button = tk.Button(window, text="MATH!bruh", command=math, height=10, width=10)
-button.pack(side='top', padx= 400, pady=400)
+button.pack(side='top', padx= 4, pady=4)
 
 button = tk.Button(window, text="MATH!", command=math, height=10, width=10)
-button.pack(side='top', padx= 400, pady=400)
+button.pack(side='top', padx= 4, pady=4)
 
 
 window.mainloop()

@@ -71,7 +71,7 @@ class Menu():
         return item
     
     def Inventory(window, player):
-        window.title('Inventory')
+        window.title('Menu: Inventory')
         for button in buttons:
             button.destroy()
         finish = False
@@ -160,7 +160,7 @@ class Menu():
                 returnbutton.destroy()
 
     def Shop(window, player):
-        window.title('Shop')
+        window.title('Menu: Shop')
         for button in buttons:
             button.destroy()
     
@@ -269,7 +269,7 @@ class Menu():
 
 
     def Stats(window, player):
-        window.title(f"{player.name}'s Stats")
+        window.title(f"Menu: {player.name}'s Stats")
         for button in buttons:
             button.destroy()
         global statsvar
@@ -347,6 +347,17 @@ stonesword = Weapon('weapon', 20, 15, 10)
 woodensword = Weapon('woodensword', 10, 8192, 0)
 
 player = MainCharacter('edward', 100, 100, 20, weapon, [weapon, woodensword, stonesword, goldensword], 100, 0, 70)
+
+for i in range(100):
+    player.inventory.append(weapon)
+
+scrollbar = tk.Scrollbar(window, orient="vertical", command=window.yview)
+scrollbar.pack(side="right", fill="y")
+
+# Configure the canvas
+window.configure(yscrollcommand=scrollbar.set)
+window.bind("<Configure>", lambda e: window.configure(scrollregion=window.bbox("all")))
+
 
 Menu.PlayerMenu(window, player)
 
