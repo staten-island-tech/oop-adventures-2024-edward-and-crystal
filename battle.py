@@ -95,9 +95,6 @@ class Battles():
                             player.currenthp = 0
                             players.remove(player)
                             break
-                        playerhealth = tk.Label(window, text=f'You have {player.currenthp} HP')
-                        playerhealth.pack()
-                        enemylabels.append(playerhealth)
                 else:
                     enemy.EnemyHeal(5)
                     enemyheal = tk.Label(window, text=f'{enemy.name} healed 5 HP!')
@@ -110,7 +107,7 @@ class Battles():
                     if findorc.name == "Summoned Orc":
                         orcnumber += 1
 
-                if orcnumber < 4: # i like stupidly unfair video games but too many orcs might break the window
+                if orcnumber < 4: # i like stupidly unfair video games but too many orcs would make whalen ragequit maybe?
                     if move <= 60:
                         if action == 'BLOCKWORK':
                             enemyblocked = tk.Label(window, text=f'{enemy.name} tried to attack, but you blocked!')
@@ -162,6 +159,7 @@ class Battles():
                         enemyheal = tk.Label(window, text=f'{enemy.name} healed 25 HP!')
                         enemyheal.pack()
                         enemylabels.append(enemyheal)
+
             
     def DeleteThing(label):
         label.destroy()
@@ -261,7 +259,6 @@ class Battles():
         
 window = tk.Tk()
 window.title("Battle Mode")
-from menus import Menu
 weapon = Weapon('weapon', 0, 10, 10)
 
 player = MainCharacter('name', 100, 100, 10, weapon, [], 0, 1, 70)
@@ -270,9 +267,9 @@ enemy2 = Enemy('enemy2', 1, 1, 1, weapon, 10, weapon, 10)
 enemy3 = Enemy('enemy3', 1, 1, 1, weapon, 10, weapon, 10)
 boss = BossEnemy('boos', 30, 30, 1, weapon, 1)
 enemies = [enemy1, enemy2, enemy3, boss]
-for i in range (25):
+
+for i in range(25):
     player.inventory.append(Weapon(f'weapon{i}', 1, 1, 1))
-Menu.PlayerMenu(window, player)
+
 Battles.Battle(window, player, enemies)
-Menu.PlayerMenu(window, player)
 window.mainloop()
