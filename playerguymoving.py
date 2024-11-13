@@ -3,6 +3,8 @@ import tkinter as tk
 playercoordinates = [1, 2]
 window = tk.Tk()
 
+print(playercoordinates[1])
+
 def Move(x):
     global playercoordinates
     if x == 1:
@@ -31,7 +33,7 @@ rightbutton.pack()
 
 for i in range(10):
     upbutton.pack()
-    downbutton.pack()
+    downbutton.pack( )
     leftbutton.pack()
     rightbutton.pack()
     window.wait_variable(playercoordinates)
