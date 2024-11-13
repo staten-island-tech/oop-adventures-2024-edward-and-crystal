@@ -1,39 +1,43 @@
 import tkinter as tk
 
-playercoordinates = (1, 2)
+playercoordinates = [1, 2]
 window = tk.Tk()
 
 def Move(x):
+    global playercoordinates
     if x == 1:
-        y = playercoordinates[1] + 1
-        playercoordinates.set(playercoordinates[0], y)
+        y = int(playercoordinates[1]) + 1
+        playercoordinates = [playercoordinates[0], y]
     elif x == 2:
-        y = playercoordinates[1] - 1
-        playercoordinates.set(playercoordinates[0], y)
+        y = int(playercoordinates[1]) - 1
+        playercoordinates = [playercoordinates[0], y]
     elif x == 3:
-        x = playercoordinates[0] + 1
-        playercoordinates.set(x, playercoordinates[1])
+        x = int(playercoordinates[0]) + 1
+        playercoordinates = [x, playercoordinates[1]]
     elif x == 4:
-        x = playercoordinates[0] - 1
-        playercoordinates.set(x, playercoordinates[1])
+        x = int(playercoordinates[0]) - 1
+        playercoordinates = [(x, playercoordinates[1])]
 
 
 upbutton = tk.Button(window, text='UP', command=lambda: Move(1))
-downbutton = tk.Button(window, text='DOWN', command=lambda: Move(1))
-leftbutton = tk.Button(window, text='LEFT', command=lambda: Move(1))
-rightbutton = tk.Button(window, text='RIGHT', command=lambda: Move(1))
+downbutton = tk.Button(window, text='DOWN', command=lambda: Move(2))
+leftbutton = tk.Button(window, text='LEFT', command=lambda: Move(3))
+rightbutton = tk.Button(window, text='RIGHT', command=lambda: Move(4))
 
 upbutton.pack()
 downbutton.pack()
 leftbutton.pack()
 rightbutton.pack()
 
-while True:
+for i in range(10):
     upbutton.pack()
     downbutton.pack()
     leftbutton.pack()
     rightbutton.pack()
     window.wait_variable(playercoordinates)
     playercoordinates = playercoordinates.get()
-    
+    upbutton.destroy()
+    downbutton.destroy()
+    leftbutton.destroy()
+    rightbutton.destroy()
     print(playercoordinates)
