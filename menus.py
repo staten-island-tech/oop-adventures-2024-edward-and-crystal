@@ -7,17 +7,6 @@ class Menu():
     def SelectItem(item, menuvar):
         menuvar.set(item)
 
-# so let me just explain how the prompt variable works
-# this code does the same thing but grammar and player understanding would be weird if i dont have it
-# (example, would you like to close the menu? even tho you are using an item)
-# so prompt is just a variable that allows me not to recreate the function over and over again :)
-# also for the prompts that dont involve fstrings i just put a random item, typically whatever is assigned to the
-# item variable in the function at that point
-# yeah 
-# dooodledootdooooo
-# do do dunn dunn duuuunn
-# ba boo sh doodle loot do ! ! !! !! !!!! ! !! (BAMMM)
-
     def Confirm(window, item, prompt):
         global confirmbuttons
         global ask
@@ -355,6 +344,7 @@ goldensword = Weapon('weapon', 30, 8, 10)
 stonesword = Weapon('weapon', 20, 15, 10)
 woodensword = Weapon('woodensword', 10, 8192, 0)
 player = MainCharacter('edward', 100, 100, 20, weapon, [weapon, woodensword, stonesword, goldensword], 100, 0, 70)
+
 
 Menu.PlayerMenu(window, player)
 

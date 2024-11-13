@@ -3,6 +3,7 @@ from charactersitems import Weapon
 from charactersitems import BossEnemy
 from charactersitems import Enemy
 from charactersitems import MainCharacter
+from charactersitems import HealingItem
 
 class Battles():
     def BattleAction(action, actionvar):
@@ -68,12 +69,13 @@ class Battles():
                     enemylabels.append(enemydie)
                     try:
                         if isinstance(enemy, Enemy):
-                            if len(player.inventory) > 25:
+                            droprate = random.randint(1, 6)
+                            if len(player.inventory) <= 25 and droprate == 6:
                                 player.inventory.append(enemy.weapondrop)
+                                print(item)
                             player.gold += enemy.golddrop
                             player.MainCharacterGetEXP(enemy.expdrop)
                         else:
-                            player.gold += enemy.golddrop
                             player.MainCharacterGetEXP(enemy.expdrop)
                     except ValueError:
                         iwouldwin = True
@@ -87,7 +89,6 @@ class Battles():
             enemylabels.append(levelup)
         
         for enemy in enemies:
-            print(f'currenthp: {player.currenthp}, maxhp: {player.maxhp}')
             if isinstance(enemy, Enemy):
                 move = random.randint(1,2)
                 if move == 1:
@@ -251,9 +252,6 @@ class Battles():
             wow = tk.Label(window, text='You win!')
             wow.pack()
             playernewlevel = player.level
-            if playernewlevel > playerbeforelevel:
-                levelup = tk.Label(window, text=f'You have leveled up to Level {player.level}!')
-                levelup.pack()
         if len(players) == 0:
             wow = tk.Label(window, text='You died!')
             wow.pack()
@@ -262,24 +260,32 @@ class Battles():
         continuee.pack()
 
         window.wait_variable(continuevar)
-        try:
-            levelup.destroy()
-        except:
-            pass 
+        for item in player.inventory:
+            if isinstance(item, Weapon) or isinstance(item, HealingItem):
+                print(item.name)
+            else:
+                print(item)
         
 window = tk.Tk()
 window.title("Battle Mode")
 weapon = Weapon('weapon', 0, 10, 10)
+sword = Weapon('sword', 10, 10, 10)
+goblinclub = Weapon('Goblin Club', 100, 10, 10)
 
-player = MainCharacter('name', 100, 100, 10, weapon, [], 0, 1, 70)
-enemy1 = Enemy('enemy1', 1, 1, 1, weapon, 10, weapon, 10)
-enemy2 = Enemy('enemy2', 1, 1, 1, weapon, 10, weapon, 10)
-enemy3 = Enemy('enemy3', 1, 1, 1, weapon, 10, weapon, 10)
+player = MainCharacter('name', 100, 100, 10, weapon, [weapon, sword], 0, 1, 70)
+enemy1 = Enemy('enemy1', 1, 1, 1, weapon, 10, goblinclub, 10)
+enemy2 = Enemy('enemy2', 1, 1, 1, weapon, 10, goblinclub, 10)
+enemy3 = Enemy('enemy3', 1, 1, 1, weapon, 10, goblinclub, 1000)
 boss = BossEnemy('boos', 30, 30, 1, weapon, 1)
 enemies = [enemy1, enemy2, enemy3, boss]
 
-for i in range(25):
-    player.inventory.append(Weapon(f'weapon{i}', 1, 1, 1))
+for i in range(22):
+    stupidgarbage = Weapon(f'Stupid Garbage {i}', 100, 100, 100)
+    player.inventory.append(stupidgarbage)
+
+for item in player.inventory:
+    print(item.name)
 
 Battles.Battle(window, player, enemies)
+
 window.mainloop()
