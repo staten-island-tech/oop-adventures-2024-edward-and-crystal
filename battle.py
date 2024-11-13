@@ -57,7 +57,8 @@ class Battles():
             blockfail = tk.Label(window, text='Your block has failed!')
             blockfail.pack()
             enemylabels.append(blockfail)
-
+        
+        currentlevel = player.level
         for enemy in enemies:
             if enemy.currenthp <= 0:
                 try:
@@ -72,13 +73,21 @@ class Battles():
                             player.gold += enemy.golddrop
                             player.MainCharacterGetEXP(enemy.expdrop)
                         else:
+                            player.gold += enemy.golddrop
                             player.MainCharacterGetEXP(enemy.expdrop)
                     except ValueError:
                         iwouldwin = True
                 except ValueError:
                     iwouldwin = False
+                    
+        newlevel = player.level
+        if newlevel > currentlevel:
+            levelup = tk.Label(window, text=f'You have leveled up to level {newlevel}!')
+            levelup.pack()
+            enemylabels.append(levelup)
         
         for enemy in enemies:
+            print(f'currenthp: {player.currenthp}, maxhp: {player.maxhp}')
             if isinstance(enemy, Enemy):
                 move = random.randint(1,2)
                 if move == 1:
@@ -159,6 +168,7 @@ class Battles():
                         enemyheal = tk.Label(window, text=f'{enemy.name} healed 25 HP!')
                         enemyheal.pack()
                         enemylabels.append(enemyheal)
+            print(f'currenthp: {player.currenthp}, maxhp: {player.maxhp}')
 
             
     def DeleteThing(label):
