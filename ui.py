@@ -35,29 +35,38 @@ def start_page():
 #naming a save file
 def save_files():
     def buttonclicked(button, button_name):
+        global label
         label = tk.Label(window, text='What do you want to name this file?', bg='grey', font=('Papyrus', 50))
         label.pack()
+        global name
         name = tk.Entry(window)
         name.pack()
-        # FIX
-        for each_button in savebuttons:
-            if each_button != button:
-                button.config(state='disabled')
+        def no_to_rename():
+            global label
+            global name
+            global buttonframe
+            label.pack_forget()
+            name.pack_forget()
+            buttonframe.pack_forget()
+
+            sure(None)
+           
         def sure(event):
-            new_name = name.get()
-        
             global sure
+            new_name = name.get()
             sure = tk.Label(window, bg='grey', font='Papyrus', text=f'Are you sure you want "{new_name}" to be the name of your save file?')
             sure.pack()
             global buttonframe
             buttonframe = tk.Frame(window, bg='grey')
             buttonframe.pack()
+        
             button_yes = tk.Button(buttonframe, text='Yes', bg='grey', font=('Papyrus', 10), command=rename)
             button_yes.pack()
-            button_no = tk.Button(buttonframe, text='No', bg='grey', font=('Papyrus', 10), command=lambda: buttonclicked(button_no))
+
+            button_no = tk.Button(buttonframe, text='No', bg='grey', font=('Papyrus', 10), command=no_to_rename)
             button_no.pack()
-                
-        def rename(): #when binding it auto puts a argument in so thats why event here
+
+        def rename(): 
             global buttonframe
             global sure
             buttonframe.pack_forget()
@@ -69,10 +78,13 @@ def save_files():
             save.pack_forget()
             instructions()
         
-
+        for each_button in savebuttons:
+            if each_button != button:
+                each_button.config(state='disabled')
         name.bind('<Return>', sure)
-        
-   
+
+    
+    
     clear_page()
     save = tk.Label(window, pady=10, text='Time to create your save file!', bg='grey', font=('Papyrus', 20))
     save.pack()
@@ -87,6 +99,7 @@ def save_files():
     savefile_three = tk.Button(saveframe, width=20, text='Save File Three', bg='grey', font=('Papyrus', 50), command=lambda: buttonclicked(savefile_three, 'Save File Three'))
     savefile_three.pack()
     savebuttons = [savefile_one, savefile_two, savefile_three]
+
   
    
 def instructions():
