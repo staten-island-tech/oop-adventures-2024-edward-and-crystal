@@ -16,11 +16,6 @@ class Weapon:
             'durability': self.durability,
             'cost': self.cost
         }
-  
-class OtherStuff():
-    def __init__(self, name):
-        self.name = name
-
 
 class HealingItem:
     def __init__(self, name, heal, cost):
@@ -50,11 +45,6 @@ class Character:
         self.weapon = weapon
         self.dead = False
 
-
-    def CharacterDeathMessage(self):
-        print(f"{self.name} has DIED.")
-
-
     def CharacterDamageCalc(self):
         damage = self.strength + self.weapon.strength
         return damage
@@ -74,9 +64,12 @@ class MainCharacter(Character):
             self.CharacterDeathMessage()
 
     def PlayerHeal(self, heal):
-        self.currenthp += heal
-        if self.currenthp > self.maxhp:
-            self.currenthp = self.maxhp  
+        currenthp = self.currenthp
+        maxhp = self.maxhp
+        if currenthp + heal <= maxhp:
+            self.currenthp = currenthp + heal
+        else:
+            self.currenthp = maxhp
 
     def PlayerGainGold(self, newgold):
         self.gold += newgold
@@ -85,15 +78,12 @@ class MainCharacter(Character):
         self.gold -= cost
         self.inventory.append(item)
 
-
     def PlayerGetItem(self, item):
         self.inventory.append(item)
-
 
     def PlayerSellsItem(self, value, item):
         self.gold += value
         self.inventory.remove(item)
-
 
     def PlayerDamageCalc(self, weaponstrength):
         damage = self.strength + weaponstrength
@@ -101,9 +91,6 @@ class MainCharacter(Character):
     
     def PlayerEquipWeapon(self, weapon):
         self.weapon = weapon
-      
-    def CharacterDeathMessage(self):
-        print(f"{self.name} has DIED.")
 
     def MainCharacterAttack(self, enemy):
         print(f"{self.name} attacks {enemy.name}!")
@@ -121,19 +108,19 @@ class MainCharacter(Character):
                 self.inventory.remove(self.weapon)
             except ValueError:
                 pass  
-            self.weapon = Weapon('Nothing', 0, 8192, 0) # sets the weapon to nothing so that the damage calc doesn't break 😧
+            self.weapon = Weapon('Nothing', 0, random.randint(100, 100000000000000000000000), 0) # sets the weapon to nothing so that the damage calc doesn't break 😧
 
     def MainCharacterGetEXP(self, exp):
         self.exp += exp
         if self.exp >= 75:
+            hppercent = self.currenthp / self.maxhp
             levels = int(self.exp / 75)
             self.level += levels
             overflow = self.exp % 75
             self.exp = overflow
             self.strength += 5*levels
             self.maxhp += 10*levels
-            self.currenthp += 5*levels
-            print(f"You have leveled up to {self.level}!")
+            self.currenthp = self.maxhp*hppercent
 
 
 class Enemy(Character):
@@ -161,7 +148,7 @@ class Enemy(Character):
         self.currenthp += heal
         if self.currenthp >= self.maxhp:
             self.currenthp = self.maxhp
-            print(f"{self.name} has restored to full health!")
+            
 
 
     def EnemyDealDamage(self, player):
@@ -174,6 +161,11 @@ class Enemy(Character):
         print(f"{self.name} attacks {player.name}!")
         damage = super().CharacterDamageCalc()
         player.currenthp -= damage
+
+class Grifter(Enemy):
+    def __init__(self, name, maxhp, currenthp, steal, weapon, golddrop, weapondrop, expdrop):
+        super().__init__(name, maxhp, currenthp, steal, weapon, golddrop, weapondrop, expdrop)
+        self.steal = steal
 
 class BossEnemy(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon, expdrop):
@@ -190,17 +182,19 @@ class BossEnemy(Character):
         self.currenthp += heal
         if self.currenthp >= self.maxhp:
             self.currenthp = self.maxhp
-            print(f"{self.name} has restored to full health!")
    
     def EnemySummon(self, enemies):
         woodclub = Weapon('woodclub', 10, 10, 10)
         summonable = Enemy("Summoned Orc", 20, 15, 10, woodclub, 0, 'nothing', 0)
         enemies.append(summonable)
-        print(f"{self.name} has summoned a {summonable.name}! ")
-
 
     def MAKELIFEHELL(self, enemies):
         woodclub = Weapon('woodclub', 10, 10, 10)
         summonable = BossEnemy('SUMMONED BOSS', 100, 100, 10, woodclub, 0)
         enemies.append(summonable)
-        print(f"{self.name} has summoned a {summonable.name}! Good Luck!!! ")
+
+
+grifter = Grifter('g', 100, 100, 100, 100, 100, 100, 100)        
+grifter.EnemyTakeDamage(10)
+print(grifter.maxhp)
+print(grifter.currenthp)
