@@ -94,11 +94,12 @@ class Battles():
         for enemy in enemies:
             if isinstance(enemy, Grifter):
                 move = random.randint(1,10)
+                print(len(player.inventory))
                 if move < 10 or len(player.inventory) == 1: # if the only item in the inventory is their held weapon i wont let them steal
-                    steal = 1 - (enemy.strength / 100)
-                    stolengold = int(steal * player.gold)
+                    steal = (enemy.strength / 100)
+                    stolengold = round(steal * player.gold, 0)
                     player.gold -= stolengold
-                    enemystole = tk.Label(window, f"{enemy.name} stole {stolengold} gold!")
+                    enemystole = tk.Label(window, text=f"{enemy.name} stole {stolengold} gold!")
                     enemystole.pack()
                     enemylabels.append(enemystole)
                 else:
@@ -110,10 +111,10 @@ class Battles():
                     playerinventory = player.inventory
                     playerinventory.remove(weapon)
                     
-                    stolenitem = random.randint(1, len(playerinventory)) - 1
-                    playerinventory.remove(playerinventory[stolenitem])
+                    stolenitem = playerinventory[random.randint(1, len(playerinventory)) - 1]
+                    playerinventory.remove(stolenitem)
                     player.inventory = playerinventory
-                    enemySTOLE = tk.Label(window, f"{enemy.name} stole your {stolenitem.name}!")
+                    enemySTOLE = tk.Label(window, text=f"{enemy.name} stole your {stolenitem.name}!")
                     enemySTOLE.pack()
                     enemylabels.append(enemySTOLE)
                     
@@ -198,7 +199,6 @@ class Battles():
                         enemyheal = tk.Label(window, text=f'{enemy.name} healed 25 HP!')
                         enemyheal.pack()
                         enemylabels.append(enemyheal)
-            print(f'currenthp: {player.currenthp}, maxhp: {player.maxhp}')
 
             
     def DeleteThing(label):
@@ -318,7 +318,7 @@ weapon = Weapon('weapon', 0, 10, 10)
 sword = Weapon('sword', 10, 10, 10)
 goblinclub = Weapon('Goblin Club', 100, 10, 10)
 
-player = MainCharacter('name', 100, 100, 10, weapon, [weapon, sword], 0, 1, 70)
+player = MainCharacter('name', 100, 100, 10, weapon, [weapon, sword], 1000000000, 1, 70)
 enemy1 = Grifter('enemy1', 1, 1, 1, weapon, 10, goblinclub, 10)
 enemy2 = Grifter('enemy2', 1, 1, 1, weapon, 10, goblinclub, 10)
 enemy3 = Grifter('enemy3', 1, 1, 1, weapon, 10, goblinclub, 1000)
