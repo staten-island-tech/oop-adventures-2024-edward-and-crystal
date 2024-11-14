@@ -41,17 +41,11 @@ def save_files():
         global name
         name = tk.Entry(window)
         name.pack()
-        def no_to_rename():
-            global label
-            global name
-            global buttonframe
-            label.pack_forget()
-            name.pack_forget()
-            buttonframe.pack_forget()
-
-            sure(None)
+        global renamevalue
+        renamevalue = False
+        
            
-        def sure(event):
+        def surefunction(event):
             global sure
             new_name = name.get()
             sure = tk.Label(window, bg='grey', font='Papyrus', text=f'Are you sure you want "{new_name}" to be the name of your save file?')
@@ -59,12 +53,32 @@ def save_files():
             global buttonframe
             buttonframe = tk.Frame(window, bg='grey')
             buttonframe.pack()
-        
+    
             button_yes = tk.Button(buttonframe, text='Yes', bg='grey', font=('Papyrus', 10), command=rename)
             button_yes.pack()
 
             button_no = tk.Button(buttonframe, text='No', bg='grey', font=('Papyrus', 10), command=no_to_rename)
             button_no.pack()
+
+        def no_to_rename():
+            global label
+            global buttonframe
+            global sure
+            global name
+            label.pack_forget()
+            buttonframe.pack_forget()
+            sure.pack_forget()
+            name.pack_forget()
+            global renamevalue
+            if renamevalue == True:
+                thenwhat.pack_forget()
+                new_name.pack_forget()
+            thenwhat = tk.Label(window, bg='grey', text='Then what do you name your save file?', font=('Papyrus'))
+            thenwhat.pack()
+            new_name = tk.Entry(window)
+            new_name.pack()
+            renamevalue = True
+            new_name.bind('<Return>', surefunction)
 
         def rename(): 
             global buttonframe
@@ -81,7 +95,7 @@ def save_files():
         for each_button in savebuttons:
             if each_button != button:
                 each_button.config(state='disabled')
-        name.bind('<Return>', sure)
+        name.bind('<Return>', surefunction)
 
     
     
@@ -105,21 +119,28 @@ def save_files():
 def instructions():
     global saveframe
     saveframe.pack_forget()
-    label = tk.Label(window, text='Write your username', bg='grey', font=('Papyrus', 20))
+    label = tk.Label(window, text='Write your username. THINK IT THROUGH. YOU CANNOT CHANGE IT', bg='grey', font=('Papyrus', 20))
     label.pack()
 
-    name = tk.Entry(window)
-    name.pack()
+    username = tk.Entry(window)
+    username.pack()
     
     label2 = tk.Label(window, text='', bg='grey', font=('Papyrus', 30))  #empty text
 
-    def goal(event): #when binding it auto puts a argument in so thats why event here
+    def begin(event): 
         label.pack_forget()
-        name.pack_forget()
-        label2.config(text=f'Hello, {name.get()}! Your goal is to slay your enemies to progress, upgrading yourself along the way.\nGood luck!')
+        username.pack_forget()
+        label2.config(text=f'Hello, {username.get()}! Your goal is to slay your enemies to progress, upgrading yourself along the way.\nGood luck!')
         label2.pack() 
+        #CONNECT THIS BUTTON TO EDWARD'S CODE
+        begin = tk.Button(window, bg='grey', font=('Papyrus', 50), text='Click me to begin!')
+        begin.pack()
+        
     #when press return/enter, greeting is shown
-    name.bind('<Return>', goal)
+    username.bind('<Return>', begin)
+
+
+
 
 start_page()
 
