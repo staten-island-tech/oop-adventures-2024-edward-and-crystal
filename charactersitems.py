@@ -162,10 +162,9 @@ class Enemy(Character):
         damage = super().CharacterDamageCalc()
         player.currenthp -= damage
 
-class Grifter(Enemy):
+class Grifter(Enemy): # grifter hell :D
     def __init__(self, name, maxhp, currenthp, steal, weapon, golddrop, weapondrop, expdrop):
         super().__init__(name, maxhp, currenthp, steal, weapon, golddrop, weapondrop, expdrop)
-        self.steal = steal
 
 class BossEnemy(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon, expdrop):
@@ -195,6 +194,7 @@ class BossEnemy(Character):
 
 
 grifter = Grifter('g', 100, 100, 100, 100, 100, 100, 100)        
+print(grifter.currenthp)
 grifter.EnemyTakeDamage(10)
 print(grifter.maxhp)
 print(grifter.currenthp)
