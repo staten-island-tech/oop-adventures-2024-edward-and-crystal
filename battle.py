@@ -4,6 +4,7 @@ from charactersitems import BossEnemy
 from charactersitems import Enemy
 from charactersitems import MainCharacter
 from charactersitems import HealingItem
+from charactersitems import Grifter
 
 class Battles():
     def BattleAction(action, actionvar):
@@ -50,7 +51,7 @@ class Battles():
         index = enemyvar.get()  
         return enemies[index] 
     
-    def EnemyTurn(enemies, player, players, action):
+    def EnemyTurn(enemies, player, players, action): # action is similar to the prompt command in menus
         global enemylabels
         import random
         enemylabels = [ ]
@@ -68,11 +69,13 @@ class Battles():
                     enemydie.pack()
                     enemylabels.append(enemydie)
                     try:
-                        if isinstance(enemy, Enemy):
+                        if isinstance(enemy, Enemy) or isinstance(enemy, Grifter):
                             droprate = random.randint(1, 6)
                             if len(player.inventory) <= 25 and droprate == 6:
-                                player.inventory.append(enemy.weapondrop)
-                                print(item)
+                                if isinstance(enemy.weapondrop, Weapon) or isinstance(enemy.weapondrop, HealingItem):
+                                    #basically, i have weapondrop listed as 'nothing' for some enemies
+                                    #and ive decided to have some enemies that drop healing items
+                                    player.inventory.append(enemy.weapondrop)
                             player.gold += enemy.golddrop
                             player.MainCharacterGetEXP(enemy.expdrop)
                         else:
@@ -89,7 +92,32 @@ class Battles():
             enemylabels.append(levelup)
         
         for enemy in enemies:
-            if isinstance(enemy, Enemy):
+            if isinstance(enemy, Grifter):
+                move = random.randint(1,10)
+                if move < 10 or len(player.inventory) == 1: # if the only item in the inventory is their held weapon i wont let them steal
+                    steal = 1 - (enemy.strength / 100)
+                    stolengold = int(steal * player.gold)
+                    player.gold -= stolengold
+                    enemystole = tk.Label(window, f"{enemy.name} stole {stolengold} gold!")
+                    enemystole.pack()
+                    enemylabels.append(enemystole)
+                else:
+                    for item in player.inventory: 
+                        if player.weapon.name == item.name: # checking to see if the item in the inventory is the equipped one
+                            weapon = item
+                            break
+                     
+                    playerinventory = player.inventory
+                    playerinventory.remove(weapon)
+                    
+                    stolenitem = random.randint(1, len(playerinventory)) - 1
+                    playerinventory.remove(playerinventory[stolenitem])
+                    player.inventory = playerinventory
+                    enemySTOLE = tk.Label(window, f"{enemy.name} stole your {stolenitem.name}!")
+                    enemySTOLE.pack()
+                    enemylabels.append(enemySTOLE)
+                    
+            elif isinstance(enemy, Enemy):
                 move = random.randint(1,2)
                 if move == 1:
                     if action == 'BLOCKWORK':
@@ -110,6 +138,7 @@ class Battles():
                     enemyheal = tk.Label(window, text=f'{enemy.name} healed 5 HP!')
                     enemyheal.pack()
                     enemylabels.append(enemyheal)
+
             elif isinstance(enemy, BossEnemy): # a bunch of boss enemies
                 move = random.randint(1,100)
                 orcnumber = 0 # finding how many orcs there are
@@ -191,6 +220,27 @@ class Battles():
                 wow.destroy()
             except:
                 pass
+    
+    def BattleInitiation(player, room):
+        import random
+        if player.level <= 4:
+            enemynumber = random.randint(1,2)
+        elif player.level <= 6 and player.level >= 4:
+            enemynumber = random.randint(1,3)
+        elif player.level <= 10 and player.level >= 7:
+            enemynumber = random.randint(2,4)
+        elif player.level <= 15 and player.level >= 11:
+            enemynumber = random.randint(3,4)
+        else:
+            chance = random.randint(1,5)
+            if chance == 5:
+                enemynumber = 5
+            else:
+                enemynumber = 4
+              
+                
+        for enemy in range(enemynumber):
+            pass
 
     def Battle(window, player, enemies):
         global attack_button
@@ -260,11 +310,7 @@ class Battles():
         continuee.pack()
 
         window.wait_variable(continuevar)
-        for item in player.inventory:
-            if isinstance(item, Weapon) or isinstance(item, HealingItem):
-                print(item.name)
-            else:
-                print(item)
+
         
 window = tk.Tk()
 window.title("Battle Mode")
@@ -273,18 +319,10 @@ sword = Weapon('sword', 10, 10, 10)
 goblinclub = Weapon('Goblin Club', 100, 10, 10)
 
 player = MainCharacter('name', 100, 100, 10, weapon, [weapon, sword], 0, 1, 70)
-enemy1 = Enemy('enemy1', 1, 1, 1, weapon, 10, goblinclub, 10)
-enemy2 = Enemy('enemy2', 1, 1, 1, weapon, 10, goblinclub, 10)
-enemy3 = Enemy('enemy3', 1, 1, 1, weapon, 10, goblinclub, 1000)
-boss = BossEnemy('boos', 30, 30, 1, weapon, 1)
-enemies = [enemy1, enemy2, enemy3, boss]
-
-for i in range(22):
-    stupidgarbage = Weapon(f'Stupid Garbage {i}', 100, 100, 100)
-    player.inventory.append(stupidgarbage)
-
-for item in player.inventory:
-    print(item.name)
+enemy1 = Grifter('enemy1', 1, 1, 1, weapon, 10, goblinclub, 10)
+enemy2 = Grifter('enemy2', 1, 1, 1, weapon, 10, goblinclub, 10)
+enemy3 = Grifter('enemy3', 1, 1, 1, weapon, 10, goblinclub, 1000)
+enemies = [enemy1, enemy2, enemy3]
 
 Battles.Battle(window, player, enemies)
 
