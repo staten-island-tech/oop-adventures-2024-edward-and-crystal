@@ -120,7 +120,6 @@ class MainCharacter(Character):
         self.level = level
         self.exp = exp
 
-
     def PlayerTakeDamage(self):
             super().CharacterTakeDamage()
             self.CharacterDeathMessage()
@@ -168,7 +167,7 @@ class MainCharacter(Character):
                 self.inventory.remove(self.weapon)
             except ValueError:
                pass  
-            self.weapon = Weapon('Nothing', 0, random.randint(100, 100000000000000000000000), 0) # sets the weapon to nothing so that the damage calc doesn't break 😧
+            self.weapon = Weapon('Nothing', 0, 100, 0) # sets the weapon to nothing so that the damage calc doesn't break 😧
 
     def MainCharacterGetEXP(self, exp):
         self.exp += exp
@@ -251,10 +250,3 @@ class BossEnemy(Character):
         woodclub = Weapon('woodclub', 10, 10, 10)
         summonable = BossEnemy('SUMMONED BOSS', 100, 100, 10, woodclub, 0)
         enemies.append(summonable)
-        
-
-with open('enemies.json', 'r') as file:
-    enemies = list(json.load(file))  
-
-for enemy in enemies:
-    print(enemy['name'])
