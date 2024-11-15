@@ -253,10 +253,8 @@ class BossEnemy(Character):
         enemies.append(summonable)
         
 
-print('heheheh')
 with open('enemies.json', 'r') as file:
-    enemies = list(json.load(file))
-    
-Character.EnemySpawn(enemies)
+    enemies = list(json.load(file))  
+
 for enemy in enemies:
-    print(enemy.name)
+    print(enemy['name'])
