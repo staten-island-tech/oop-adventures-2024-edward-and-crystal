@@ -181,7 +181,6 @@ class MainCharacter(Character):
             self.maxhp += 10*levels
             self.currenthp = self.maxhp*hppercent
 
-
 class Enemy(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop):
         super().__init__(name, maxhp, currenthp, strength, weapon)
@@ -250,3 +249,10 @@ class BossEnemy(Character):
         woodclub = Weapon('woodclub', 10, 10, 10)
         summonable = BossEnemy('SUMMONED BOSS', 100, 100, 10, woodclub, 0)
         enemies.append(summonable)
+        
+        
+with open('enemies.json', 'r', encoding='utf-8') as file:
+    enemies = json.load(file)
+
+for enemy in enemies:
+    print(enemy['name'])
