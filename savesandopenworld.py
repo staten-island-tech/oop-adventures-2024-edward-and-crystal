@@ -1,7 +1,6 @@
 from charactersitems import MainCharacter
 
 class Saves:
-
     def PlayerSaveFileReady(player):
         return {
             'name': player.name,

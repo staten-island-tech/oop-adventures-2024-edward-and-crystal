@@ -51,7 +51,7 @@ class Menu():
             menubutton = tk.Button(window, text=item.name, command=lambda i=index: Menu.SelectItem(i, menuvar))
             menubutton.pack()
             menubuttons.append(menubutton)
-        returnbutton = tk.Button(window, text='Return To Menu', command=lambda: Menu.ShopReturn())
+        returnbutton = tk.Button(window, text='Return To Menu', command=lambda: Menu.ShopReturn(window, player))
         returnbutton.pack()
         
         window.update()
@@ -170,7 +170,7 @@ class Menu():
     
         shopitems = [woodsword, stonesword, goldsword, apple, healingpotion]
     
-        returnbutton = tk.Button(window, text='Return To Menu', command=lambda: Menu.ShopReturn())
+        returnbutton = tk.Button(window, text='Return To Menu', command=lambda: Menu.ShopReturn(window, player))
         menubuttons.append(returnbutton)
     
         shopvar = tk.IntVar()
@@ -258,7 +258,7 @@ class Menu():
             ask.destroy()
             Menu.Shop(window, player)
     
-    def ShopReturn():
+    def ShopReturn(window, player):
         for button in menubuttons:
             button.destroy()
         Menu.PlayerMenu(window, player)
@@ -335,17 +335,7 @@ class Menu():
 
         Menu.PutButtonsBack()
     
-    
 window = tk.Tk()
 window.title("Menu")
-
-weapon = Weapon('weapon', 10, 10, 10)
-goldensword = Weapon('weapon', 30, 8, 10)
-stonesword = Weapon('weapon', 20, 15, 10)
-woodensword = Weapon('woodensword', 10, 8192, 0)
-player = MainCharacter('edward', 100, 100, 20, weapon, [weapon, woodensword, stonesword, goldensword], 100, 0, 70)
-
-
-Menu.PlayerMenu(window, player)
 
 window.mainloop()

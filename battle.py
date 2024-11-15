@@ -5,6 +5,7 @@ from charactersitems import Enemy
 from charactersitems import MainCharacter
 from charactersitems import HealingItem
 from charactersitems import Grifter
+window = tk.Tk()
 
 class Battles():
     def BattleAction(action, actionvar):
@@ -311,23 +312,3 @@ class Battles():
 
         window.wait_variable(continuevar)
 
-        
-window = tk.Tk()
-window.title("Battle Mode")
-weapon = Weapon('weapon', 0, 10, 10)
-sword = Weapon('sword', 10, 10, 10)
-goblinclub = Weapon('Goblin Club', 100, 10, 10)
-
-player = MainCharacter('name', 100, 100, 10, weapon, [weapon, sword], 1000000000, 1, 70)
-for i in range(8):
-    player.inventory.append(Weapon('name', 10, 10, 10))
-enemy1 = Grifter('enemy1', 1, 1, 1, weapon, 10, goblinclub, 10)
-enemy2 = Grifter('enemy2', 1, 1, 1, weapon, 10, goblinclub, 10)
-enemy3 = Grifter('enemy3', 1, 1, 1, weapon, 10, goblinclub, 1000)
-enemies = [enemy1, enemy2, enemy3]
-
-Battles.Battle(window, player, enemies)
-print(player.gold)
-for i in player.inventory:
-    print(i.name)
-window.mainloop()

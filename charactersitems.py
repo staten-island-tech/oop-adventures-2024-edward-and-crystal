@@ -8,7 +8,6 @@ class Weapon:
         self.durability = durability
         self.cost = cost
 
-
     def WeaponDictionary(self):
         return {
             'name': self.name,
@@ -48,6 +47,69 @@ class Character:
     def CharacterDamageCalc(self):
         damage = self.strength + self.weapon.strength
         return damage
+
+    def EnemySpawn(enemies):
+        for enemy in enemies:
+            enemytype = enemy['type']
+            if enemytype == 'REGULAR':
+                name = enemy['name']
+                maxhp = enemy['maxhp']
+                currenthp = enemy['currenthp']
+                strength = enemy['strength']
+                golddrop = enemy['golddrop']
+                expdrop = enemy['expdrop']
+            
+                weapon = Weapon(enemy['weapon']['name'], enemy['weapon']['strength'], enemy['weapon']['durability'], 0)
+
+                drop = enemy['weapondrop']
+                droptype = drop['type']
+                if droptype == 'WEAPON':
+                    itemname = drop['name']
+                    itemstrength = drop['strength']
+                    itemdurability = drop['durability']
+                    itemcost = drop['cost']
+                    weapondrop = Weapon(itemname, itemstrength, itemdurability, itemcost)
+                elif droptype == 'HEALING ITEM':
+                    itemname = drop['name']
+                    itemheal = drop['heal']
+                    itemcost = drop['cost']
+                    weapondrop = HealingItem(itemname, itemheal, itemcost)
+                else:
+                    weapondrop = 'nothing'
+            
+
+                enemies.append(Enemy(name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop))
+        
+            elif enemytype == 'GRIFTER':
+                name = enemy['name']
+                maxhp = enemy['maxhp']
+                currenthp = enemy['currenthp']
+                steal = enemy['steal']
+                golddrop = enemy['golddrop']
+                expdrop = enemy['expdrop']
+                weapon = Weapon(enemy['weapon']['name'], enemy['weapon']['strength'], enemy['weapon']['durability'], 0)
+            
+                drop = enemy['weapondrop']
+                itemname = drop['name']
+                itemstrength = drop['strength']
+                itemdurability = drop['durability']
+                itemcost = drop['cost']
+                weapondrop = Weapon(itemname, itemstrength, itemdurability, itemcost)
+
+                enemies.append(Grifter(name, maxhp, currenthp, steal, weapon, golddrop, weapondrop, expdrop))
+
+            elif enemytype == 'BOSS':
+                name = enemy['name']
+                maxhp = enemy['maxhp']
+                currenthp = enemy['currenthp']
+                strength = enemy['strength']
+                expdrop = enemy['expdrop']
+                weapon = Weapon(enemy['weapon']['name'], enemy['weapon']['strength'], enemy['weapon']['durability'], 0)
+            
+                enemies.append(BossEnemy(name, maxhp, currenthp, strength, weapon, expdrop))
+
+            else:
+                print('bad this is bad this is pretty darn bad :(')
 
 
 class MainCharacter(Character):
@@ -97,17 +159,15 @@ class MainCharacter(Character):
         damage = super().CharacterDamageCalc()
         import random
         if random.randint(1,10) == 10:
-            print('You landed a critical hit!')
             enemy.currenthp -= 2*damage
         else:
             enemy.currenthp -= damage
         self.weapon.durability -= 1
         if self.weapon.durability == 0:
-            print(f'Your {self.weapon.name} has broken!')
             try:
                 self.inventory.remove(self.weapon)
             except ValueError:
-                pass  
+               pass  
             self.weapon = Weapon('Nothing', 0, random.randint(100, 100000000000000000000000), 0) # sets the weapon to nothing so that the damage calc doesn't break 😧
 
     def MainCharacterGetEXP(self, exp):
@@ -191,10 +251,12 @@ class BossEnemy(Character):
         woodclub = Weapon('woodclub', 10, 10, 10)
         summonable = BossEnemy('SUMMONED BOSS', 100, 100, 10, woodclub, 0)
         enemies.append(summonable)
+        
 
-
-grifter = Grifter('g', 100, 100, 100, 100, 100, 100, 100)        
-print(grifter.currenthp)
-grifter.EnemyTakeDamage(10)
-print(grifter.maxhp)
-print(grifter.currenthp)
+print('heheheh')
+with open('enemies.json', 'r') as file:
+    enemies = list(json.load(file))
+    
+Character.EnemySpawn(enemies)
+for enemy in enemies:
+    print(enemy.name)
