@@ -311,4 +311,3 @@ class Battles():
         continuee.pack()
 
         window.wait_variable(continuevar)
-
