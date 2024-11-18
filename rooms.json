@@ -1,0 +1,16 @@
+[{
+    "name" : "StartArea",
+    "spawntable" : [{
+        "name" : "Goblin",
+        "spawnrate" : 60
+    }, {
+        "name" : "Slime",
+        "spawnrate" : 35
+    }, {
+        "name" : "Orc",
+        "spawnrate" : 4
+    }, {
+        "name" : "Grifter",
+        "spawnrate" : 1
+    }]
+}]
