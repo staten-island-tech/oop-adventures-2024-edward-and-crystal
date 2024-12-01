@@ -7,7 +7,7 @@ running = True
 
 class OpenWorld():
     def CreateMoveButton(direction, events, room):
-        global playerx, playery
+        global playerx, playery, itworks
         buttonfont = pygame.font.Font(None, 36)
         if direction == "LEFT":
             buttonrect = pygame.Rect(10, 640, 180, 60)
@@ -33,19 +33,15 @@ class OpenWorld():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttonrect.collidepoint(pygame.mouse.get_pos()):
                     if direction == "LEFT":
-                        print(direction)
                         testplayerx = playerx - 10
                         testplayery = playery
                     elif direction == "UP":
-                        print(direction)
                         testplayery = playery - 10
                         testplayerx = playerx
                     elif direction == "DOWN":
-                        print(direction)
                         testplayery = playery + 10
                         testplayerx = playerx
                     elif direction == "RIGHT":
-                        print(direction)
                         testplayerx = playerx + 10
                         testplayery = playery
                         
@@ -59,6 +55,12 @@ class OpenWorld():
                     if itworks:
                         playerx = testplayerx
                         playery = testplayery
+                        youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
+                        pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
+                        import random
+                        enemychance = random.randint(1, 18)
+                        if enemychance == 18:
+                            print("ENEMY!")
                            
     def LoadRoom(room):
         global playerx, playery
@@ -83,15 +85,12 @@ class OpenWorld():
             playerlocation = pygame.Rect(playerx, playery, 10, 10)
             pygame.draw.rect(screen, (255, 255, 255), playerlocation)
             pygame.display.update()
-            
-    def Movement(player):
-        pass
-    
+
+ 
 room = {
     "rectangles" : [
     (100, 100, 100, 400),
     (200, 200, 400, 50)]
     }   
-    
-OpenWorld.LoadRoom(room)
 
+OpenWorld.LoadRoom(room)
