@@ -9,7 +9,7 @@ running = True
 
 class OpenWorld():
     def CreateMoveButton(direction, events, room, player):
-        global playerx, playery, itworks # i need these variables in both this function and the load room one
+        global playerx, playery, itworks
         buttonfont = pygame.font.Font(None, 36)
         if direction == "LEFT":
             buttonrect = pygame.Rect(10, 640, 90, 60)
@@ -18,21 +18,21 @@ class OpenWorld():
         elif direction == "DOWN":
             buttonrect = pygame.Rect(210, 640, 90, 60)
         elif direction == "RIGHT":
-            buttonrect = pygame.Rect(310, 640, 90, 60) # loading all the buttons in
+            buttonrect = pygame.Rect(310, 640, 90, 60)
         
         mouseposition = pygame.mouse.get_pos()
-        if buttonrect.collidepoint(mouseposition): # if the mouse is on one of the buttons,
-            buttoncolor = (40, 54, 60) # the color is lighter
-        else: # if not
-            buttoncolor = (20, 27, 30) # it isnt
+        if buttonrect.collidepoint(mouseposition):
+            buttoncolor = (40, 54, 60)
+        else:
+            buttoncolor = (20, 27, 30)
         
-        pygame.draw.rect(screen, buttoncolor, buttonrect)  # making the buttons, this is the rectangle that the text will go on
-        buttonsurface = buttonfont.render(direction, True, (245, 245, 255)) # the text
-        buttontextrect = buttonsurface.get_rect(center=buttonrect.center) # placing it on the rectangle
-        screen.blit(buttonsurface, buttontextrect) # uppdating the screen so its there
+        pygame.draw.rect(screen, buttoncolor, buttonrect)     
+        buttonsurface = buttonfont.render(direction, True, (245, 245, 255))
+        buttontextrect = buttonsurface.get_rect(center=buttonrect.center)
+        screen.blit(buttonsurface, buttontextrect)
         
-        for event in events: # notice how i use events and not pygame.event.get(), that will be important ill explain later
-            if event.type == pygame.MOUSEBUTTONDOWN: # if the mouse is down and the mouse is on the button
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttonrect.collidepoint(pygame.mouse.get_pos()):
                     if direction == "LEFT":
                         testplayerx = playerx - 10
@@ -45,7 +45,7 @@ class OpenWorld():
                         testplayerx = playerx
                     elif direction == "RIGHT":
                         testplayerx = playerx + 10
-                        testplayery = playery # the coordinates change, but these are just placeholder coordinates and dont change the actual ones yet
+                        testplayery = playery
                         
                     playerlocation = (testplayerx, testplayery)
                     itworks = False
@@ -53,61 +53,67 @@ class OpenWorld():
                         rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
                         if rectcoords.collidepoint(playerlocation):
                             itworks = True
-                    # if the player's location is in at least one of the rectangles they can walk on, it does work
+                    
                     if itworks:
                         playerx = testplayerx
-                        playery = testplayery # if it works then it actually changes the coordinates
+                        playery = testplayery
+                        youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
+                        pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
                         import random
-                        enemychance = random.randint(1, 18) # 1/18 chance to spawn enemy
+                        enemychance = random.randint(1, 18)
                         if enemychance == 18:
-                            print("ENEMY!") # placeholder for the function
-                    else: # if the new player location is outside of the bounds, that means they walked into the wall
-                        player.currenthp -= 3 # so they hit their head lolol
+                            print("ENEMY!")
+                    else:
+                        player.currenthp -= 3
                         if player.currenthp < 10:
                             player.currenthp = 10 # i'm not SO evil...
     
-    def CreateMenuButton(events):
-        menufont = pygame.font.Font(None, 36) # this code is to open the menu from the screen
-        menurect = pygame.Rect(800, 640, 180, 60) # same code to make a rectangle, get text, place text, whatever
+    def CreateMenuButton(events): # opening the menu
+        menufont = pygame.font.Font(None, 36) # most of this code is the same
+        menurect = pygame.Rect(800, 640, 180, 60)
         menutext = menufont.render("Open Menu", True, (255, 255, 255))
         menusurface = menutext.get_rect(center=menurect.center)
-        if menurect.collidepoint(pygame.mouse.get_pos()): # same hover color base color code
+        if menurect.collidepoint(pygame.mouse.get_pos()):
             color = (40, 54, 60)
+            for event in events: # if we are hovering over the button and we click it the menu gets printed
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    print('menu') # sample function
         else:
             color = (20, 27, 30)
-        for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print('menu')
             
-        pygame.draw.rect(screen, color, menurect) 
+        pygame.draw.rect(screen, color, menurect)
         screen.blit(menutext, menusurface)
                            
-    def LoadRoom(room, player, playerx, playery):
-        while running:
+    def LoadRoom(room, player):
+        global playerx, playery
+        playerx = 100
+        playery = 100 # you may have to recode this depending on what entrance they come from, and what room they are in
+        # thats your problem have fun :D
+        while running: 
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    exit()
+                    exit() # if we exit out the window it closes
             
-            screen.fill((20, 20, 25))
-            for rect in room['rectangles']:
+            screen.fill((20, 20, 25)) # background
+            for rect in room['rectangles']:  # each room has a list of rectangles, which are tuples, see the room example at the bottom
                 pygame.draw.rect(screen, (40, 40, 50), rect)
             
-            pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100))
+            pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100)) # this draws the light bar at the bottom that the buttons sit on
             directions = ["LEFT", "UP", "DOWN", "RIGHT"]
-            for direction in directions:
+            for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
                 OpenWorld.CreateMoveButton(direction, events, room, player)
             OpenWorld.CreateMenuButton(events)
             
-            playerinfofont = pygame.font.Font(None, 36)
+            playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
             playerinforect = pygame.Rect(410, 640, 360, 60)
             playerinfotext = playerinfofont.render(f"{player.name}: {player.currenthp}/{player.maxhp}", True, (255, 255, 255))
             playerinfosurface = playerinfotext.get_rect(center=playerinforect.center)
             pygame.draw.rect(screen, (20, 27, 30), playerinforect)
             screen.blit(playerinfotext, playerinfosurface)
             
-            playerlocation = pygame.Rect(playerx, playery, 10, 10)
+            playerlocation = pygame.Rect(playerx, playery, 10, 10) # a square where the player is
             pygame.draw.rect(screen, (255, 255, 255), playerlocation)
             pygame.display.update()
  
@@ -119,4 +125,4 @@ room = {
 
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 
-OpenWorld.LoadRoom(room, player, 100, 100)
+OpenWorld.LoadRoom(room, player)
