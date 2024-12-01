@@ -75,11 +75,11 @@ class OpenWorld():
         menusurface = menutext.get_rect(center=menurect.center)
         if menurect.collidepoint(pygame.mouse.get_pos()):
             color = (40, 54, 60)
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    print('menu')
         else:
             color = (20, 27, 30)
-        for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print('menu')
             
         pygame.draw.rect(screen, color, menurect)
         screen.blit(menutext, menusurface)
