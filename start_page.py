@@ -8,6 +8,7 @@ window.title('SUPER AWESOME AND VERY REAL GAME by Edward and Crystal!!')
 def clear_page():
     for widget in window.winfo_children():
         widget.destroy()
+
  
 #says game name, asks if you want to play. if yes, create a save file. if no, they cant do anything until they press yes
 def start_page():
@@ -138,9 +139,6 @@ def instructions():
         
     #when press return/enter, greeting is shown
     username.bind('<Return>', begin)
-
-
-
 
 start_page()
 
