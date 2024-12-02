@@ -51,8 +51,14 @@ class Battles:
                 xcoordinate += 30
                 pygame.draw.circle(screen, (150, 50, 55), (xcoordinate+75, 150), 70)
                 pygame.draw.line(screen, (150, 50, 55), (xcoordinate+75, 210), (xcoordinate+75, 320), 50)
-                
-                
+                pygame.draw.line(screen, (150, 50, 55), (xcoordinate+75, 320), (xcoordinate+35, 405), 45)
+                pygame.draw.line(screen, (150, 50, 55), (xcoordinate+75, 320), (xcoordinate+115, 405), 45)
+                pygame.draw.line(screen, (150, 50, 55), (xcoordinate+35, 405), (xcoordinate+35, 435), 47)
+                pygame.draw.line(screen, (150, 50, 55), (xcoordinate+115, 405), (xcoordinate+115, 435), 47)
+                pygame.draw.line(screen, (150, 50, 55), (xcoordinate+75, 210), (xcoordinate+25, 360), 42)
+                pygame.draw.line(screen, (150, 50, 55), (xcoordinate+75, 210), (xcoordinate+125, 360), 42)
+            
+            # make this its own function 
             nametagrect = pygame.Rect(xcoordinate+15, 450, 120, 40)
             listname = len((enemy.name))
             if listname < 7:
