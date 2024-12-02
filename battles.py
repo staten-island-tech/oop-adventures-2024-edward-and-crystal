@@ -12,7 +12,8 @@ battle = True
 running = True
 
 class Battles:
-    def DrawActionButton(action, events):
+    def DrawActionButton(player, enemies, action, events):
+        global wasactiondone
         if action == 'ATTACK':
             buttonrect = pygame.Rect((220, 635, 150, 50))
         elif action == 'BLOCK':
@@ -33,7 +34,34 @@ class Battles:
         
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and buttonrect.collidepoint(mousepos):
-                print(action)
+                if action == 'FLEE (coward)':
+                    Battles.FleeCoward(player)
+                    wasactiondone = True
+                elif action == 'ATTACK':
+                    Battles.Attack(player, enemies)
+                    wasactiondone = True
+                else:
+                    Battles.Block(player, enemies)
+                    wasactiondone = True
+                
+    def FleeCoward(player):
+        global battle
+        import random
+        chancetoflee = 100 - (100*(player.currenthp / player.maxhp))
+        if chancetoflee < 35:
+            chancetoflee = 35
+            
+        areyarunning = random.randint(1, 100)
+        if areyarunning >= chancetoflee:
+            battle = False
+            
+    def Attack(player, enemies):
+        print(player.name)
+    # make a makeshift for loop that waits for confirm buttons to be pressed
+    
+    def Block(player, enemies):
+        for enemy in enemies:
+            print(enemy.name)
     
     def MakeEnemies(enemies):
         xcoordinate = 0
@@ -74,10 +102,13 @@ class Battles:
             pygame.draw.rect(screen, (30, 30, 37.5), nametagrect)
             screen.blit(nametagtext, nametagsurface)
             xcoordinate += 150
+            if isinstance(enemy, BossEnemy):
+                xcoordinate +=30
     
     def BattleMenu(player, enemies):
-        global running
+        global wasactiondone, running
         running = False
+        wasactiondone = False
         while battle:
             screen.fill((20, 20, 25))
             events = pygame.event.get()
@@ -111,16 +142,20 @@ class Battles:
             screen.blit(nameunderhealthbartext, nameunderhbsurface)
             screen.blit(hptext, hpsurface)
             
-            Battles.DrawActionButton("ATTACK", events)
-            Battles.DrawActionButton("BLOCK", events)
-            Battles.DrawActionButton("FLEE (coward)", events)
+            if wasactiondone == False:
+                Battles.DrawActionButton(player, enemies, "ATTACK", events)
+                Battles.DrawActionButton(player, enemies, "BLOCK", events)
+                Battles.DrawActionButton(player, enemies, "FLEE (coward)", events)
+            
             Battles.MakeEnemies(enemies)
             
             pygame.display.update()      
                 
-player = MainCharacter('edward', 100, 40, 20, 'nothing', [], 100, 10, 1) 
+player = MainCharacter('edward', 100, 90, 20, 'nothing', [], 100, 10, 1) 
 goblin = Enemy('GoblinAAA', 1, 1, 1, 1, 1, 1, 1)
 goblina = Enemy('Goblin', 1, 1, 1, 1, 1, 1, 1)
 goblinb = BossEnemy('GoblinAAAAAAAAAA', 1, 1, 1, 1, 1)
-enemies = [goblin, goblina, goblinb]
+goblinc = Enemy('Goblin', 1, 1, 1, 1, 1, 1, 1)
+goblind = Enemy('Goblin', 1, 1, 1, 1, 1, 1, 1)
+enemies = [goblin, goblina, goblinb, goblinc, goblind]
 Battles.BattleMenu(player, enemies)
