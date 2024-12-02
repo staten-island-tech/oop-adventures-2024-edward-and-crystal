@@ -36,7 +36,8 @@ class Battles:
                 print(action)
     
     def MakeEnemies(enemies):
-        pass
+        for enemy in len(enemies):
+            pass
     
     def BattleMenu(player, enemies):
         global running
