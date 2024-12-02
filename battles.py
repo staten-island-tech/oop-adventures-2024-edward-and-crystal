@@ -36,8 +36,38 @@ class Battles:
                 print(action)
     
     def MakeEnemies(enemies):
-        for enemy in len(enemies):
-            pass
+        xcoordinate = 0
+        for enemy in enemies:
+            if isinstance(enemy, Enemy):
+                pygame.draw.circle(screen, (200, 90, 75), (xcoordinate+75, 200), 50)
+                pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 225), (xcoordinate+75, 340), 35)
+                pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 340), (xcoordinate+35, 400), 30)
+                pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 340), (xcoordinate+115, 400), 30)
+                pygame.draw.line(screen, (200, 90, 75), (xcoordinate+35, 400), (xcoordinate+35, 425), 30)
+                pygame.draw.line(screen, (200, 90, 75), (xcoordinate+115, 400), (xcoordinate+115, 425), 30)
+                pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 225), (xcoordinate+35, 340), 27)
+                pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 225), (xcoordinate+115, 340), 27)
+            elif isinstance(enemy, BossEnemy):
+                xcoordinate += 30
+                pygame.draw.circle(screen, (150, 50, 55), (xcoordinate+75, 150), 70)
+                pygame.draw.line(screen, (150, 50, 55), (xcoordinate+75, 210), (xcoordinate+75, 320), 50)
+                
+                
+            nametagrect = pygame.Rect(xcoordinate+15, 450, 120, 40)
+            listname = len((enemy.name))
+            if listname < 7:
+                nametagfont = pygame.font.Font(None, 36)
+            elif listname > 6 and listname < 10:
+                nametagfont = pygame.font.Font(None, 28)
+            elif listname > 9 and listname < 15:
+                nametagfont = pygame.font.Font(None, 21)
+            else:
+                nametagfont = pygame.font.Font(None, 16)
+            nametagtext = nametagfont.render(f'{enemy.name}', True, (225, 10, 10))
+            nametagsurface = nametagtext.get_rect(center=nametagrect.center)
+            pygame.draw.rect(screen, (30, 30, 37.5), nametagrect)
+            screen.blit(nametagtext, nametagsurface)
+            xcoordinate += 150
     
     def BattleMenu(player, enemies):
         global running
@@ -83,5 +113,8 @@ class Battles:
             pygame.display.update()      
                 
 player = MainCharacter('edward', 100, 40, 20, 'nothing', [], 100, 10, 1) 
-enemies = ['hi', 'hi', 'hi']
+goblin = Enemy('GoblinAAA', 1, 1, 1, 1, 1, 1, 1)
+goblina = Enemy('Goblin', 1, 1, 1, 1, 1, 1, 1)
+goblinb = BossEnemy('GoblinAAAAAAAAAA', 1, 1, 1, 1, 1)
+enemies = [goblin, goblina, goblinb]
 Battles.BattleMenu(player, enemies)
