@@ -82,7 +82,10 @@ class OpenWorld():
         pygame.draw.rect(screen, color, menurect) 
         screen.blit(menutext, menusurface)
                            
-    def LoadRoom(room, player, playerx, playery):
+    def LoadRoom(room, player):
+        global playerx, playery # sets their location at the start
+        playerx = 100 # may be changed but you do the function :D
+        playery = 100
         while running:
             events = pygame.event.get()
             for event in events:
@@ -91,8 +94,10 @@ class OpenWorld():
                     exit()
             
             screen.fill((20, 20, 25))
+            for rect in room['rectangles']: # makes an outline to make the game look slightly nicer
+                pygame.draw.rect(screen, (32, 32, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
             for rect in room['rectangles']:
-                pygame.draw.rect(screen, (40, 40, 50), rect)
+                pygame.draw.rect(screen, (60, 60, 75), rect)
             
             pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100))
             directions = ["LEFT", "UP", "DOWN", "RIGHT"]
@@ -119,4 +124,4 @@ room = {
 
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 
-OpenWorld.LoadRoom(room, player, 100, 100)
+OpenWorld.LoadRoom(room, player)

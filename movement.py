@@ -98,9 +98,13 @@ class OpenWorld():
             
             screen.fill((20, 20, 25)) # background
             for rect in room['rectangles']:  # each room has a list of rectangles, which are tuples, see the room example at the bottom
+                pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[2] + 20))
+            for rect in room['rectangles']:
                 pygame.draw.rect(screen, (40, 40, 50), rect)
             
             pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100)) # this draws the light bar at the bottom that the buttons sit on
+            pygame.draw.line(screen, (145, 180, 200), (0, 620), (1280, 620), 10)
+            
             directions = ["LEFT", "UP", "DOWN", "RIGHT"]
             for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
                 OpenWorld.CreateMoveButton(direction, events, room, player)
