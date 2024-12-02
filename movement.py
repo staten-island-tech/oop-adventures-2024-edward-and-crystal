@@ -98,7 +98,7 @@ class OpenWorld():
             
             screen.fill((20, 20, 25)) # background
             for rect in room['rectangles']:  # each room has a list of rectangles, which are tuples, see the room example at the bottom
-                pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[2] + 20))
+                pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
             for rect in room['rectangles']:
                 pygame.draw.rect(screen, (40, 40, 50), rect)
             
