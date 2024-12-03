@@ -125,9 +125,12 @@ class Battles:
     
     def AttackStepThree(player, enemies):
         global battle, x, y
-        
+
+        if y == len(enemies):
+            return
         enemy = enemies[y]
-        
+        if enemy.currenthp <= 0:
+            return
         events = pygame.event.get()
         textbox = pygame.Rect(220, 630, 1000, 80) # !
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
@@ -163,16 +166,9 @@ class Battles:
                 elif action == 5:
                     enemy.EnemyHeal(5)
                     print('heal')
-                print(y)
-                print(x)
-                print(len(enemies))
-            if y < (len(enemies) - 1):
-                y += 1
-            else:
-                x = 2
-                y = 0
-                battle = False
-                Battles.BattleMenu(player, enemies)
+            x += 1
+            y += 1
+            
         
         textfont = pygame.font.Font(None, 36)
         hawk1 = textfont.render(f"{enemy.name} attacks you!", True, (255, 255, 255))
@@ -310,19 +306,23 @@ class Battles:
                 Battles.DrawActionButton(player, enemies, "FLEE (coward)", events)
             
             if attack == True:
-                Battles.AttackStepTwo(player, enemy, enemies)
+                Battles.AttackStepTwo(player, enemy, enemies)          
             
             if attacksteptwo == True:
-                Battles.AttackStepThree(player, enemies)
-                x += 1
+                Battles.AttackStepThree(player, enemies)  
             
             Battles.MakeEnemies(enemies)
             
-            pygame.display.update()      
+            pygame.display.update() 
+        while not battle:
+            screen.fill((0, 0, 0))
+        
                 
 player = MainCharacter('edward', 100, 90, 20, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
-goblin = Enemy('GoblinAAA', 2, 1, 40, Weapon('supersword', 1, 1, 1), 5, 6, 7)
-goblina = Enemy('Goblin', 2, 1, 40, Weapon('supersword', 1, 1, 1), 5, 6, 7)
+goblin = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
+goblina = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
+goblinb = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
+goblinc = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
 
-enemies = [goblin, goblina]
+enemies = [goblin, goblina, goblinb, goblinc]
 Battles.BattleMenu(player, enemies)
