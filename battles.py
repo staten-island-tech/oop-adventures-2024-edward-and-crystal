@@ -265,8 +265,8 @@ class Battles:
         global battle
         youwinrect = pygame.Rect(20, 20, 1240, 480)
         youwinfont = pygame.font.Font(None, 200)
-        youwintext = youwinfont.render('YOU WIN!! Click to continue.')
-        youwinsurface = youwinfont.get_rect(center=youwinrect.center)
+        youwintext = youwinfont.render('YOU WIN!! Click to continue.', True, (255, 255, 255))
+        youwinsurface = youwintext.get_rect(center=youwinrect.center)
         screen.blit(youwintext, youwinsurface)
         events = pygame.event.get()
         for event in events:
@@ -340,5 +340,5 @@ goblina = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
 goblinb = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
 goblinc = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
 
-enemies = [goblin, goblina, goblinb, goblinc]
+enemies = [goblin]
 Battles.BattleMenu(player, enemies)
