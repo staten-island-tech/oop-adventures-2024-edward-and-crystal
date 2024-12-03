@@ -83,8 +83,7 @@ class Battles:
                     
                         
     def AttackStepTwo(player, enemy, enemies):
-        global attacksteptwo, attack, hi
-        hi = ['oneelement']
+        global attacksteptwo, attack
         events = pygame.event.get()
         damage = Character.CharacterDamageCalc(player)
         enemy.currenthp -= damage
@@ -164,11 +163,16 @@ class Battles:
                 elif action == 5:
                     enemy.EnemyHeal(5)
                     print('heal')
-                    
+                print(y)
+                print(x)
+                print(len(enemies))
             if y < (len(enemies) - 1):
                 y += 1
             else:
                 x = 2
+                y = 0
+                battle = False
+                Battles.BattleMenu(player, enemies)
         
         textfont = pygame.font.Font(None, 36)
         hawk1 = textfont.render(f"{enemy.name} attacks you!", True, (255, 255, 255))
@@ -311,6 +315,7 @@ class Battles:
             if attacksteptwo == True:
                 Battles.AttackStepThree(player, enemies)
                 x += 1
+            
             Battles.MakeEnemies(enemies)
             
             pygame.display.update()      
