@@ -124,9 +124,12 @@ class Battles:
                 x = 1
     
     def AttackStepThree(player, enemies):
-        global battle, x, y
+        global battle, x, y, attacksteptwo, wasactiondone
 
         if y == len(enemies):
+            wasactiondone = False
+            attacksteptwo = False
+            y = 0
             return
         enemy = enemies[y]
         if enemy.currenthp <= 0:
@@ -257,7 +260,19 @@ class Battles:
             xcoordinate += 150
             if isinstance(enemy, BossEnemy):
                 xcoordinate +=30
-    
+                
+    def EndBattle():
+        global battle
+        youwinrect = pygame.Rect(20, 20, 1240, 480)
+        youwinfont = pygame.font.Font(None, 200)
+        youwintext = youwinfont.render('YOU WIN!! Click to continue.')
+        youwinsurface = youwinfont.get_rect(center=youwinrect.center)
+        screen.blit(youwintext, youwinsurface)
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                battle = False
+        
     def BattleMenu(player, enemies):
         global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y
         running = False
@@ -265,6 +280,7 @@ class Battles:
         attackpressed = False
         attack = False
         attacksteptwo = False
+        battle = True
         x = 1
         y = 0
         while battle:
@@ -274,6 +290,9 @@ class Battles:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+            if len(enemies) == 0:
+                Battles.EndBattle()
+                wasactiondone = True
             
             pygame.draw.rect(screen, (200, 220, 240), (0, 620, 1280, 200))
             
@@ -314,9 +333,6 @@ class Battles:
             Battles.MakeEnemies(enemies)
             
             pygame.display.update() 
-        while not battle:
-            screen.fill((0, 0, 0))
-        
                 
 player = MainCharacter('edward', 100, 90, 20, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
 goblin = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
