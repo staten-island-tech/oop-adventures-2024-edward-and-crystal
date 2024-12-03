@@ -1,4 +1,6 @@
 import pygame
+import json
+import random
 
 pygame.init()
 
@@ -6,6 +8,13 @@ screen = pygame.display.set_mode((1280, 720))
 gray = (169, 169, 169)
 screen.fill(gray)
 running = True
+mobs = []
+
+def load_enemy_data():
+    with open('enemies.json') as f:
+        return json.load(f)
+
+enemy_data = load_enemy_data()
 
 #MAKE ROOMS AND SPAWN TABLES (the percent chance each enemy will spawn in a partricular area), DESIGNS
 #3 rooms, 1 boss, 3 rooms, 1 boss
@@ -34,55 +43,6 @@ class Button:
             return True
         return False
 
-"""
-‘id’ : 2
-‘name’ : “slime”
-‘maxhp’: 20
-‘currenthp’: 20 (will change)
-‘strength’: 5
-‘golddrop’: 10
-‘weapondrop’ : “nothing”
-
-‘id’ : 3
-‘name’ : “goblin”
-‘maxhp’: 25
-‘currenthp’: 25 (will change)
-‘strength’: 10
-‘golddrop’: 15
-‘weapondrop’ : “badclub”
-
-‘id’ : 4
-‘name’ : “strong slime”
-‘maxhp’: 40
-‘currenthp’: 40 (will change)
-‘strength’: 10
-‘golddrop’: 25
-‘weapondrop’ : “slime fist”
-	
-‘id’ : 5
-‘name’ : “orc”
-‘maxhp’: 35
-‘currenthp’: 35 (will change)
-‘strength’: 20
-‘golddrop’: 35
-‘weapondrop’ : “good club”
-	
-‘id’ : 6
-‘name’ : “grifter”
-‘maxhp’: 100
-‘currenthp’: 100 (will change)
-‘strength’: 0
-‘golddrop’: 50
-‘weapondrop’ : “nothing”
-	
-‘id’ : 7
-‘name’ : “boss grifter”
-‘maxhp’: 200
-‘currenthp’: 200 (will change)
-‘strength’: 5
-‘golddrop’: 100
-‘weapondrop’ : “grifter staff”
-"""
 spawn_table = [
     {'name': 'slime', 'chanceofspawning': 0.3},
     {'name': 'goblin', 'chanceofspawning': 0.3},
@@ -90,10 +50,36 @@ spawn_table = [
     {'name': 'orc', 'chanceofspawning': 0.2}
 ]
 
+def get_random_enemy(enemy_data):
+    total_chance = sum(mob['chanceofspawning'] for mob in enemy_data)
+    random_value = random.uniform(0, total_chance)
+
+    cumulative_chance = 0.0
+    for mob in enemy_data:
+        cumulative_chance += mob['chanceofspawning']
+        if random_value <= cumulative_chance:
+            # Load the enemy type data (health, speed, etc.)
+            return mob
+
+    return enemy_data[0] 
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        for i in range(4):
+            random.choice(i['name'], weights=spawn_table['chanceofspawning'])
+        if len(mobs) < max_mobs:
+            selected_enemy = get_random_enemy(enemy_data)  # Get enemy data
+            enemy = Enemy(
+                name=selected_enemy['name'],
+                color=selected_enemy['color'],
+                health=selected_enemy['health'],
+                speed=selected_enemy['speed']
+            )
+            mobs.append(enemy)
+
+
         
     pygame.display.flip()
 
