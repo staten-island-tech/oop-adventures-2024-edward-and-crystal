@@ -179,11 +179,12 @@ class MainCharacter(Character):
             self.currenthp = self.maxhp*hppercent
 
 class Enemy(Character):
-    def __init__(self, name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop):
+    def __init__(self, name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop, lastaction):
         super().__init__(name, maxhp, currenthp, strength, weapon)
         self.golddrop = golddrop
         self.weapondrop = weapondrop
         self.expdrop = expdrop
+        self.lastaction = lastaction
 
 
     def EnemyTakeDamage(self, damage):

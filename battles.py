@@ -14,7 +14,7 @@ battle = True
 running = True
 
 class Battles:
-    def DrawActionButton(player, enemies, action, events):
+    def DrawActionButton(player, enemies, action, events, previousinputs):
         global wasactiondone, attackpressed, attack, enemy
         menufont = pygame.font.Font(None, 30)
         actiontext = menufont.render(action, True, (255, 255, 255))
@@ -47,7 +47,8 @@ class Battles:
                     else:
                         attackpressed = True
                 else:
-                    Battles.Block(player, enemies)
+                    print('hi')
+                    Battles.Block(player, enemies, previousinputs)
                     wasactiondone = True
         
         if attackpressed == True:
@@ -118,14 +119,15 @@ class Battles:
         pygame.draw.rect(screen, go_onCOLOR, go_onHITBOX)
         screen.blit(go_on, go_onsurface)
         for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN and go_onHITBOX.collidepoint(pygame.mouse.get_pos()):
+            if event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180):
                 attacksteptwo = True
                 attack = False 
                 x = 1
     
     def AttackStepThree(player, enemies):
-        global battle, x, y, attacksteptwo, wasactiondone
-
+        global battle, x, y, attacksteptwo, wasactiondone, previousinputs
+        previousinputs = 'ATTACK'
+        
         if y == len(enemies):
             wasactiondone = False
             attacksteptwo = False
@@ -148,8 +150,9 @@ class Battles:
         go_onsurface = go_on.get_rect(center=go_onHITBOX.center)
         pygame.draw.rect(screen, go_onCOLOR, go_onHITBOX)
         screen.blit(go_on, go_onsurface)
+        textfont = pygame.font.Font(None, 36)
         for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN and go_onHITBOX.collidepoint(pygame.mouse.get_pos()):
+            if event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180):
                 x = 1  
         if x == 1:
             x + 1
@@ -160,7 +163,7 @@ class Battles:
                 if action in [1, 2, 3, 4]:
                     damage = Character.CharacterDamageCalc(enemy)
                     player.currenthp -= damage
-                    
+                    enemy.lastaction = 'attack'
                     if player.currenthp < 1:
                         print('HAHAHAHAHA')
                         battle = False
@@ -169,16 +172,23 @@ class Battles:
                 elif action == 5:
                     enemy.EnemyHeal(5)
                     print('heal')
+                    enemy.lastaction = 'heal'
+                print(enemy.lastaction)
             x += 1
             y += 1
-            
+        if enemy.lastaction == 'attack':
+            hawk1 = textfont.render(f"{enemy.name} attacks you!", True, (255, 255, 255))
+            hawk1surface = hawk1.get_rect(center=(720, 655)) # don't ask
+            screen.blit(hawk1, hawk1surface)
+        elif enemy.lastaction == 'heal':
+            hawk1 = textfont.render(f"{enemy.name} heals!", True, (255, 255, 255))
+            hawk1surface = hawk1.get_rect(center=(720, 655)) # don't ask
+            screen.blit(hawk1, hawk1surface)
         
-        textfont = pygame.font.Font(None, 36)
-        hawk1 = textfont.render(f"{enemy.name} attacks you!", True, (255, 255, 255))
+        
+    
         hawk2 = textfont.render(f"You now have {player.currenthp} HP!", True, (255, 255, 255))
-        hawk1surface = hawk1.get_rect(center=(720, 655))
         hawk2uhsurface = hawk2.get_rect(center=(720, 685))
-        screen.blit(hawk1, hawk1surface)
         screen.blit(hawk2, hawk2uhsurface)
         
     def FleeCoward(player):
@@ -196,14 +206,44 @@ class Battles:
             
     # make a makeshift for loop that waits for confirm buttons to be pressed
     
-    def Block(player, enemies):
-        for enemy in enemies:
-            print(enemy.name)
+    def Block(player, enemies, previousinputs):
+        events = pygame.event.get()
+        textbox = pygame.Rect(220, 630, 1000, 80) # !
+        pygame.draw.rect(screen, (40, 40, 60), textbox) # !
+        font = pygame.font.Font(None, 36)
+        if previousinputs != 'BLOCK':
+            enemy.currenthp = 0
+            youractiontwo = font.render(f'Your block was a success!', True, (255, 255, 255))
+            block = True
+            
+        else:
+            youractiontwo = font.render(f'It sure was an attempt. A bad one at that.', True, (255, 255, 255))
+            block = False
+        youractionone = font.render(f"You attempt to block!", True, (255, 255, 255))
+        youractiononesurface = youractionone.get_rect(center=(720, 655))
+        youractiontwosurface = youractiontwo.get_rect(center=(720, 685))
+        arrowfont = pygame.font.SysFont(None, 100, bold=True)
+        
+        screen.blit(youractionone, youractiononesurface)
+        screen.blit(youractiontwo, youractiontwosurface)
+              
+        go_onHITBOX = pygame.Rect(1185, 625, 90, 90)
+        if go_onHITBOX.collidepoint(pygame.mouse.get_pos()):
+            go_onCOLOR = (120, 120, 180)
+        else:
+            go_onCOLOR = (80, 80, 120)
+        go_on = arrowfont.render(">", True, (255, 255, 255)) # notice my use of the critical underscore lmao
+        go_onsurface = go_on.get_rect(center=go_onHITBOX.center)
+        pygame.draw.rect(screen, go_onCOLOR, go_onHITBOX)
+        screen.blit(go_on, go_onsurface)
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180):
+                x = 1
     
     def MakeEnemies(enemies):
         xcoordinate = 0
         for enemy in enemies:
-            if isinstance(enemy, Enemy):
+            if isinstance(enemy, Enemy) or isinstance(enemy, Grifter):
                 pygame.draw.circle(screen, (200, 90, 75), (xcoordinate+75, 200), 50)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 225), (xcoordinate+75, 340), 35)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 340), (xcoordinate+35, 400), 30)
@@ -265,24 +305,31 @@ class Battles:
         global battle
         youwinrect = pygame.Rect(20, 20, 1240, 480)
         youwinfont = pygame.font.Font(None, 200)
-        youwintext = youwinfont.render('YOU WIN!! Click to continue.', True, (255, 255, 255))
+        youwin2font = pygame.font.Font(None, 40)
+        youwintext = youwinfont.render('YOU WIN!!', True, (255, 255, 255))
+        youwin2text = youwin2font.render('Click to continue.', True, (255, 255, 255))
+        youwin2surface = youwin2text.get_rect(centerx=youwinrect.centerx, centery=youwinrect.centery + 100)
         youwinsurface = youwintext.get_rect(center=youwinrect.center)
         screen.blit(youwintext, youwinsurface)
+        screen.blit(youwin2text, youwin2surface)
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 battle = False
+                thisvariableisuselesswhalenspareme = 1
+                print(thisvariableisuselesswhalenspareme)
+                
         
     def BattleMenu(player, enemies):
-        global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y
-        running = False
+        global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y # im gonna be real i would be 
+        # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
         wasactiondone = False
         attackpressed = False
         attack = False
         attacksteptwo = False
-        battle = True
         x = 1
         y = 0
+        previousinputs = 'NOTHING'
         while battle:
             screen.fill((20, 20, 25))
             events = pygame.event.get()
@@ -293,6 +340,9 @@ class Battles:
             if len(enemies) == 0:
                 Battles.EndBattle()
                 wasactiondone = True
+            if battle == False:
+                print('hello')
+                break # idk maybe
             
             pygame.draw.rect(screen, (200, 220, 240), (0, 620, 1280, 200))
             
@@ -320,9 +370,9 @@ class Battles:
             screen.blit(hptext, hpsurface)
             
             if wasactiondone == False:
-                Battles.DrawActionButton(player, enemies, "ATTACK", events)
-                Battles.DrawActionButton(player, enemies, "BLOCK", events)
-                Battles.DrawActionButton(player, enemies, "FLEE (coward)", events)
+                Battles.DrawActionButton(player, enemies, "ATTACK", events, previousinputs)
+                Battles.DrawActionButton(player, enemies, "BLOCK", events, previousinputs)
+                Battles.DrawActionButton(player, enemies, "FLEE (coward)", events, previousinputs)
             
             if attack == True:
                 Battles.AttackStepTwo(player, enemy, enemies)          
@@ -333,12 +383,29 @@ class Battles:
             Battles.MakeEnemies(enemies)
             
             pygame.display.update() 
+    
+        while True: # placeholder until i figure out how i will set you back in the open world
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+            screen.fill((255, 255, 255)) # flashbanging me constantly as i debug bruh / do i change it? of course not
+            pygame.display.update()
+    
+    def Battle(player, enemies):
+        global running, wasactiondone, battle
+        running = False
+        battle = True
+        Battles.BattleMenu(player, enemies)
+        
                 
 player = MainCharacter('edward', 100, 90, 20, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
-goblin = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
-goblina = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
-goblinb = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
-goblinc = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7)
+goblin = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblina = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblinb = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblinc = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
 
-enemies = [goblin]
+enemies = [goblin, goblina, goblinb, goblinc]
+
 Battles.BattleMenu(player, enemies)
