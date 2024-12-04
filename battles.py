@@ -207,13 +207,14 @@ class Battles:
         textbox = pygame.Rect(220, 630, 1000, 80) # !
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
         font = pygame.font.Font(None, 36)
-        if x == 1:
+        if x == 1: 
+            x += 1
             if block == False:
                 youractiontwo = font.render(f'Your block was a success! You healed 5HP', True, (255, 255, 255))
-            
+                player.PlayerHeal(5)
             else:
                 youractiontwo = font.render(f'It sure was an attempt. A bad one at that. You Healed 2HP.', True, (255, 255, 255))
-            
+                player.PlayerHeal(2)
         youractionone = font.render(f"You attempt to block!", True, (255, 255, 255))
         youractiononesurface = youractionone.get_rect(center=(720, 655))
         youractiontwosurface = youractiontwo.get_rect(center=(720, 685))
@@ -238,12 +239,13 @@ class Battles:
                 blockdone = True
 
     def BlockTwo(player, enemies):
-        global x, y, battle, wasactiondone, block, theyblocking, blockdone # i might well explain what x and y are
+        global x, y, z, battle, wasactiondone, block, theyblocking, blockdone, action # i might well explain what x and y are
         # x is just a check so it only runs action calculations once in the while loop
         # y is the index of the enemy within the enemy list, i can't use a for loop bc i cant repeat it until its done
         # whatevs chat
         events = pygame.event.get()
         textbox = pygame.Rect(220, 630, 1000, 80) # !
+        textboxfont = pygame.font.Font(None, 36)
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
         go_onHITBOX = pygame.Rect(1185, 625, 90, 90)
         if go_onHITBOX.collidepoint(pygame.mouse.get_pos()):
@@ -255,17 +257,30 @@ class Battles:
         go_onsurface = go_on.get_rect(center=go_onHITBOX.center)
         pygame.draw.rect(screen, go_onCOLOR, go_onHITBOX)
         screen.blit(go_on, go_onsurface)
-    
-        if x == 1:
-            x += 1
-            print(block)
+        enemy = enemies[y]
+        if z == 1:
+            z += 1
+
             if block == False: # if they blocked last time
                 block = True # changes it to they blocked this time, so if they attempt again, it wont work
             else:
                 block = False # i could code it so if it failed last time it would work but the player should learn their lesson, don't be a b!ч
-            
+        if x == 1:
+            x += 1
             if block == True:
-                pass
+                if isinstance(enemy, Enemy):
+                    import random
+                    action = random.randint(1, 5)
+                    if action in [1, 2, 3, 4]:
+                        damage = Character.CharacterDamageCalc(enemy)
+                        enemy.lastaction = 'tried to attack, but was blocked!'
+                        action = 'tried to attack, but was blocked!'
+                        
+                    elif action == 5:
+                        enemy.EnemyHeal(5)
+                        enemy.lastaction = 'healed!'
+                        action = 'healed!'
+                    
             else:
                 enemy = enemies[y]
                 if isinstance(enemy, Enemy):
@@ -283,20 +298,22 @@ class Battles:
                             pass
                     elif action == 5:
                         enemy.EnemyHeal(5)
-                        print('heal')
                         enemy.lastaction = 'healed!'
                         action = 'healed!'
+            
             if y == len(enemies) - 1:
                 for event in events:
                     if event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180):
                         x = 1
-                        print('hello')
                         wasactiondone = False
                         theyblocking = False
                         blockdone = False
             else:
                 y += 1
-        
+                x = 1
+        text = textboxfont.render(f'{enemy.name} {action}', True, (255, 255, 255))
+        textsurface = text.get_rect(center=textbox.center)
+        screen.blit(text, textsurface)
                 
     
     def MakeEnemies(enemies):
@@ -380,7 +397,7 @@ class Battles:
                 
         
     def BattleMenu(player, enemies):
-        global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block # im gonna be real i would be 
+        global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, z, theyblocking, block # im gonna be real i would be 
         # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
         global blockdone
         wasactiondone = False
@@ -392,6 +409,7 @@ class Battles:
         blockdone = False
         x = 1
         y = 0
+        z = 1
         while battle:
             screen.fill((20, 20, 25))
             events = pygame.event.get()
