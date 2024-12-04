@@ -129,7 +129,7 @@ class Battles:
         global battle, x, y, attacksteptwo, wasactiondone, previousinputs, action
         previousinputs = 'ATTACK'
         
-        if y == len(enemies):
+        if y == len(enemies) - 1:
             wasactiondone = False
             attacksteptwo = False
             y = 0
@@ -202,7 +202,7 @@ class Battles:
     # make a makeshift for loop that waits for confirm buttons to be pressed
     
     def Block(player):
-        global block, x, y, youractiontwo, blockdone
+        global block, x, y, youractiontwo, blockdone, theyblocking
         events = pygame.event.get()
         textbox = pygame.Rect(220, 630, 1000, 80) # !
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
@@ -237,6 +237,8 @@ class Battles:
                 x = 1
                 y = 0
                 blockdone = True
+                theyblocking = False
+                
 
     def BlockTwo(player, enemies):
         global x, y, z, battle, wasactiondone, block, theyblocking, blockdone, action # i might well explain what x and y are
@@ -257,7 +259,7 @@ class Battles:
         go_onsurface = go_on.get_rect(center=go_onHITBOX.center)
         pygame.draw.rect(screen, go_onCOLOR, go_onHITBOX)
         screen.blit(go_on, go_onsurface)
-        enemy = enemies[y]
+        enemy = enemies[y-1]
         if z == 1:
             z += 1
 
@@ -302,19 +304,22 @@ class Battles:
                         action = 'healed!'
             
             if y == len(enemies) - 1:
+                print('salutations!')
                 for event in events:
-                    if event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180):
-                        x = 1
+                    if event.type == pygame.MOUSEBUTTONDOWN:
                         wasactiondone = False
                         theyblocking = False
                         blockdone = False
             else:
-                y += 1
-                x = 1
+                events = pygame.event.get()
+                for event in events:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        y += 1
+                        x = 1
+                        print(f'x {x}, y {y}')
         text = textboxfont.render(f'{enemy.name} {action}', True, (255, 255, 255))
         textsurface = text.get_rect(center=textbox.center)
         screen.blit(text, textsurface)
-                
     
     def MakeEnemies(enemies):
         xcoordinate = 0
@@ -453,6 +458,7 @@ class Battles:
                 Battles.DrawActionButton(player, enemies, "ATTACK", events)
                 Battles.DrawActionButton(player, enemies, "BLOCK", events)
                 Battles.DrawActionButton(player, enemies, "FLEE (coward)", events)
+                
             if theyblocking == True:
                 Battles.Block(player)
                 
