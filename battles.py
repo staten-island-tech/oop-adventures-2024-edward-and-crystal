@@ -129,11 +129,6 @@ class Battles:
         global battle, x, y, attacksteptwo, wasactiondone, previousinputs, action
         previousinputs = 'ATTACK'
         
-        if y == len(enemies) - 1:
-            wasactiondone = False
-            attacksteptwo = False
-            y = 0
-            return
         enemy = enemies[y]
         if enemy.currenthp <= 0:
             return
@@ -160,6 +155,7 @@ class Battles:
             import random
             if isinstance(enemy, Enemy):
                 action = random.randint(1, 5)
+                print(enemy.name)
                 if action in [1, 2, 3, 4]:
                     damage = Character.CharacterDamageCalc(enemy)
                     player.currenthp -= damage
@@ -177,14 +173,18 @@ class Battles:
                     action = 'healed!'
             x += 1
             y += 1
-        hawk1 = textfont.render(f"{enemy.name} has {action}", True, (255, 255, 255))
+        hawk1 = textfont.render(f"{enemies[y-1].name} has {action}", True, (255, 255, 255))
         hawk1surface = hawk1.get_rect(center=(720, 655)) # don't ask
         screen.blit(hawk1, hawk1surface)
-        
     
         hawk2 = textfont.render(f"You now have {player.currenthp} HP!", True, (255, 255, 255))
         hawk2uhsurface = hawk2.get_rect(center=(720, 685))
         screen.blit(hawk2, hawk2uhsurface)
+        if y == len(enemies):
+            wasactiondone = False
+            attacksteptwo = False
+            y = 0
+            return
         
     def FleeCoward(player):
         global battle
@@ -492,10 +492,10 @@ class Battles:
         
                 
 player = MainCharacter('edward', 100, 90, 20, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
-goblin = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
-goblina = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
-goblinb = Enemy('GoblinAAA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
-goblinc = Enemy('Goblin', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblin = Enemy('GoblinA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblina = Enemy('GoblinB', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblinb = Enemy('GoblinC', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblinc = Enemy('GoblinD', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
 
 enemies = [goblin, goblina, goblinb, goblinc]
 
