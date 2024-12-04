@@ -15,9 +15,10 @@ running = True
 
 class Battles:
     def DrawActionButton(player, enemies, action):
-        global wasactiondone, attackpressed, attack, enemy, theyblocking, events, x, y
+        global wasactiondone, attackpressed, attack, enemy, theyblocking, events, x, y, z
         x = 1
         y = 0
+        z = 1
         menufont = pygame.font.Font(None, 30)
         actiontext = menufont.render(action, True, (255, 255, 255))
         if action == 'ATTACK':
@@ -50,9 +51,9 @@ class Battles:
                         attackpressed = True
                 else:
                     print('hi')
-                    Battles.Block(player)
                     wasactiondone = True
                     theyblocking = True
+                    Battles.Block(player)
         
         if attackpressed == True:
             xcoordinate = 0
@@ -81,8 +82,6 @@ class Battles:
                         attackpressed = False
                         wasactiondone = True
                         attack = True
-                if attack == True:
-                    break
                     
                         
     def AttackStepTwo(player, enemy, enemies):
@@ -160,18 +159,16 @@ class Battles:
                     enemy.lastaction = 'attacked you!'
                     action = 'attacked you!'
                     if player.currenthp < 1:
-                        print('HAHAHAHAHA')
                         battle = False
                     else:
                         pass
                 elif action == 5:
                     enemy.EnemyHeal(5)
-                    print('heal')
                     enemy.lastaction = 'healed!'
                     action = 'healed!'
             x += 1
             y += 1
-        if y == len(enemies) + 1:
+        if y == len(enemies):
             wasactiondone = False
             attacksteptwo = False
             y = 0
@@ -210,18 +207,22 @@ class Battles:
             if block == False:
                 youractiontwo = font.render(f'Your block was a success! You healed 10HP', True, (255, 255, 255))
                 player.PlayerHeal(5)
+                print('block worked')
                 block = True
-            else:
+            if block == False:
                 youractiontwo = font.render(f'It sure was an attempt. A bad one at that. You Healed 2HP.', True, (255, 255, 255))
                 player.PlayerHeal(1)
-                
+                print('block fail')
+                block = False
+            print(block)
+        
         youractionone = font.render(f"You attempt to block!", True, (255, 255, 255))
         youractiononesurface = youractionone.get_rect(center=(720, 655))
-        youractiontwosurface = youractiontwo.get_rect(center=(720, 685))
+        youractiontwosurface = youractionone.get_rect(center=(720, 685)) # fix
         arrowfont = pygame.font.SysFont(None, 100, bold=True)
         
         screen.blit(youractionone, youractiononesurface)
-        screen.blit(youractiontwo, youractiontwosurface)
+        screen.blit(youractionone, youractiontwosurface) # fix
               
         go_onHITBOX = pygame.Rect(1185, 625, 90, 90)
         if go_onHITBOX.collidepoint(pygame.mouse.get_pos()):
@@ -403,10 +404,11 @@ class Battles:
         attack = False
         attacksteptwo = False
         theyblocking = False
-        block = False
+        block = True
         blockdone = False
         x = 1
         y = 0
+        z = 1
         while battle:
             screen.fill((20, 20, 25))
             events = pygame.event.get()
@@ -418,7 +420,6 @@ class Battles:
                 Battles.EndBattle()
                 wasactiondone = True
             if battle == False:
-                print('hello')
                 break # idk maybe
             
             pygame.draw.rect(screen, (200, 220, 240), (0, 620, 1280, 200))
@@ -455,8 +456,8 @@ class Battles:
                 Battles.Block(player)
                 
             if blockdone == True:
-                Battles.BlockTwo(player, enemies)
-            
+                    Battles.BlockTwo(player, enemies)
+                    
             if attack == True:
                 Battles.AttackStepTwo(player, enemy, enemies)          
             
@@ -482,7 +483,7 @@ class Battles:
         Battles.BattleMenu(player, enemies)
         
                 
-player = MainCharacter('edward', 100, 90, 20, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
+player = MainCharacter('edward', 100, 50, 20, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
 goblin = Enemy('GoblinA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
 goblina = Enemy('GoblinB', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
 goblinb = Enemy('GoblinC', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
