@@ -160,7 +160,6 @@ class Battles:
             import random
             if isinstance(enemy, Enemy):
                 action = random.randint(1, 5)
-                print('action')
                 if action in [1, 2, 3, 4]:
                     damage = Character.CharacterDamageCalc(enemy)
                     player.currenthp -= damage
@@ -176,7 +175,6 @@ class Battles:
                     print('heal')
                     enemy.lastaction = 'healed!'
                     action = 'healed!'
-                print(f'{enemy.name} + {enemy.lastaction}')
             x += 1
             y += 1
         hawk1 = textfont.render(f"{enemy.name} has {action}", True, (255, 255, 255))
@@ -204,7 +202,7 @@ class Battles:
     # make a makeshift for loop that waits for confirm buttons to be pressed
     
     def Block(player):
-        global block, x, youractiontwo
+        global block, x, y, youractiontwo, blockdone
         events = pygame.event.get()
         textbox = pygame.Rect(220, 630, 1000, 80) # !
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
@@ -212,7 +210,6 @@ class Battles:
         if x == 1:
             if block == False:
                 youractiontwo = font.render(f'Your block was a success! You healed 5HP', True, (255, 255, 255))
-                
             
             else:
                 youractiontwo = font.render(f'It sure was an attempt. A bad one at that. You Healed 2HP.', True, (255, 255, 255))
@@ -237,6 +234,70 @@ class Battles:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180):
                 x = 1
+                y = 0
+                blockdone = True
+
+    def BlockTwo(player, enemies):
+        global x, y, battle, wasactiondone, block, theyblocking, blockdone # i might well explain what x and y are
+        # x is just a check so it only runs action calculations once in the while loop
+        # y is the index of the enemy within the enemy list, i can't use a for loop bc i cant repeat it until its done
+        # whatevs chat
+        events = pygame.event.get()
+        textbox = pygame.Rect(220, 630, 1000, 80) # !
+        pygame.draw.rect(screen, (40, 40, 60), textbox) # !
+        go_onHITBOX = pygame.Rect(1185, 625, 90, 90)
+        if go_onHITBOX.collidepoint(pygame.mouse.get_pos()):
+            go_onCOLOR = (120, 120, 180)
+        else:
+            go_onCOLOR = (80, 80, 120)
+        arrowfont = pygame.font.SysFont(None, 100, bold=True)
+        go_on = arrowfont.render(">", True, (255, 255, 255)) # notice my use of the critical underscore lmao
+        go_onsurface = go_on.get_rect(center=go_onHITBOX.center)
+        pygame.draw.rect(screen, go_onCOLOR, go_onHITBOX)
+        screen.blit(go_on, go_onsurface)
+    
+        if x == 1:
+            x += 1
+            print(block)
+            if block == False: # if they blocked last time
+                block = True # changes it to they blocked this time, so if they attempt again, it wont work
+            else:
+                block = False # i could code it so if it failed last time it would work but the player should learn their lesson, don't be a b!ч
+            
+            if block == True:
+                pass
+            else:
+                enemy = enemies[y]
+                if isinstance(enemy, Enemy):
+                    import random
+                    action = random.randint(1, 5)
+                    if action in [1, 2, 3, 4]:
+                        damage = Character.CharacterDamageCalc(enemy)
+                        player.currenthp -= damage
+                        enemy.lastaction = 'attacked you!'
+                        action = 'attacked you!'
+                        if player.currenthp < 1:
+                            print('HAHAHAHAHA')
+                            battle = False
+                        else:
+                            pass
+                    elif action == 5:
+                        enemy.EnemyHeal(5)
+                        print('heal')
+                        enemy.lastaction = 'healed!'
+                        action = 'healed!'
+            if y == len(enemies) - 1:
+                for event in events:
+                    if event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180):
+                        x = 1
+                        print('hello')
+                        wasactiondone = False
+                        theyblocking = False
+                        blockdone = False
+            else:
+                y += 1
+        
+                
     
     def MakeEnemies(enemies):
         xcoordinate = 0
@@ -321,12 +382,14 @@ class Battles:
     def BattleMenu(player, enemies):
         global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block # im gonna be real i would be 
         # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
+        global blockdone
         wasactiondone = False
         attackpressed = False
         attack = False
         attacksteptwo = False
         theyblocking = False
-        block = True
+        block = False
+        blockdone = False
         x = 1
         y = 0
         while battle:
@@ -374,6 +437,9 @@ class Battles:
                 Battles.DrawActionButton(player, enemies, "FLEE (coward)", events)
             if theyblocking == True:
                 Battles.Block(player)
+                
+            if blockdone == True:
+                Battles.BlockTwo(player, enemies)
             
             if attack == True:
                 Battles.AttackStepTwo(player, enemy, enemies)          
