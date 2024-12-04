@@ -14,8 +14,8 @@ battle = True
 running = True
 
 class Battles:
-    def DrawActionButton(player, enemies, action, events, previousinputs):
-        global wasactiondone, attackpressed, attack, enemy
+    def DrawActionButton(player, enemies, action, events):
+        global wasactiondone, attackpressed, attack, enemy, theyblocking
         menufont = pygame.font.Font(None, 30)
         actiontext = menufont.render(action, True, (255, 255, 255))
         if action == 'ATTACK':
@@ -48,8 +48,9 @@ class Battles:
                         attackpressed = True
                 else:
                     print('hi')
-                    Battles.Block(player, enemies, previousinputs)
+                    Battles.Block(player)
                     wasactiondone = True
+                    theyblocking = True
         
         if attackpressed == True:
             xcoordinate = 0
@@ -125,7 +126,7 @@ class Battles:
                 x = 1
     
     def AttackStepThree(player, enemies):
-        global battle, x, y, attacksteptwo, wasactiondone, previousinputs
+        global battle, x, y, attacksteptwo, wasactiondone, previousinputs, action
         previousinputs = 'ATTACK'
         
         if y == len(enemies):
@@ -163,7 +164,8 @@ class Battles:
                 if action in [1, 2, 3, 4]:
                     damage = Character.CharacterDamageCalc(enemy)
                     player.currenthp -= damage
-                    enemy.lastaction = 'attack'
+                    enemy.lastaction = 'attacked you!'
+                    action = 'attacked you!'
                     if player.currenthp < 1:
                         print('HAHAHAHAHA')
                         battle = False
@@ -172,19 +174,14 @@ class Battles:
                 elif action == 5:
                     enemy.EnemyHeal(5)
                     print('heal')
-                    enemy.lastaction = 'heal'
-                print(enemy.lastaction)
+                    enemy.lastaction = 'healed!'
+                    action = 'healed!'
+                print(f'{enemy.name} + {enemy.lastaction}')
             x += 1
             y += 1
-        if enemy.lastaction == 'attack':
-            hawk1 = textfont.render(f"{enemy.name} attacks you!", True, (255, 255, 255))
-            hawk1surface = hawk1.get_rect(center=(720, 655)) # don't ask
-            screen.blit(hawk1, hawk1surface)
-        elif enemy.lastaction == 'heal':
-            hawk1 = textfont.render(f"{enemy.name} heals!", True, (255, 255, 255))
-            hawk1surface = hawk1.get_rect(center=(720, 655)) # don't ask
-            screen.blit(hawk1, hawk1surface)
-        
+        hawk1 = textfont.render(f"{enemy.name} has {action}", True, (255, 255, 255))
+        hawk1surface = hawk1.get_rect(center=(720, 655)) # don't ask
+        screen.blit(hawk1, hawk1surface)
         
     
         hawk2 = textfont.render(f"You now have {player.currenthp} HP!", True, (255, 255, 255))
@@ -206,19 +203,20 @@ class Battles:
             
     # make a makeshift for loop that waits for confirm buttons to be pressed
     
-    def Block(player, enemies, previousinputs):
+    def Block(player):
+        global block, x, youractiontwo
         events = pygame.event.get()
         textbox = pygame.Rect(220, 630, 1000, 80) # !
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
         font = pygame.font.Font(None, 36)
-        if previousinputs != 'BLOCK':
-            enemy.currenthp = 0
-            youractiontwo = font.render(f'Your block was a success!', True, (255, 255, 255))
-            block = True
+        if x == 1:
+            if block == False:
+                youractiontwo = font.render(f'Your block was a success! You healed 5HP', True, (255, 255, 255))
+                
             
-        else:
-            youractiontwo = font.render(f'It sure was an attempt. A bad one at that.', True, (255, 255, 255))
-            block = False
+            else:
+                youractiontwo = font.render(f'It sure was an attempt. A bad one at that. You Healed 2HP.', True, (255, 255, 255))
+            
         youractionone = font.render(f"You attempt to block!", True, (255, 255, 255))
         youractiononesurface = youractionone.get_rect(center=(720, 655))
         youractiontwosurface = youractiontwo.get_rect(center=(720, 685))
@@ -321,15 +319,16 @@ class Battles:
                 
         
     def BattleMenu(player, enemies):
-        global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y # im gonna be real i would be 
+        global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block # im gonna be real i would be 
         # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
         wasactiondone = False
         attackpressed = False
         attack = False
         attacksteptwo = False
+        theyblocking = False
+        block = True
         x = 1
         y = 0
-        previousinputs = 'NOTHING'
         while battle:
             screen.fill((20, 20, 25))
             events = pygame.event.get()
@@ -370,9 +369,11 @@ class Battles:
             screen.blit(hptext, hpsurface)
             
             if wasactiondone == False:
-                Battles.DrawActionButton(player, enemies, "ATTACK", events, previousinputs)
-                Battles.DrawActionButton(player, enemies, "BLOCK", events, previousinputs)
-                Battles.DrawActionButton(player, enemies, "FLEE (coward)", events, previousinputs)
+                Battles.DrawActionButton(player, enemies, "ATTACK", events)
+                Battles.DrawActionButton(player, enemies, "BLOCK", events)
+                Battles.DrawActionButton(player, enemies, "FLEE (coward)", events)
+            if theyblocking == True:
+                Battles.Block(player)
             
             if attack == True:
                 Battles.AttackStepTwo(player, enemy, enemies)          
