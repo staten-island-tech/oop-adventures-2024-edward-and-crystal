@@ -87,13 +87,15 @@ class Battles:
                     
                         
     def AttackStepTwo(player, enemy, enemies):
-        global attacksteptwo, attack, events
-        damage = Character.CharacterDamageCalc(player)
-        enemy.currenthp -= damage
+        global attacksteptwo, attack, events, x, damage
+        if x == 1:
+            x += 1
+            damage = Character.CharacterDamageCalc(player)
+            enemy.currenthp -= damage
         textbox = pygame.Rect(220, 630, 1000, 80) # !
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
         font = pygame.font.Font(None, 36)
-        if enemy.currenthp < 0:
+        if enemy.currenthp <= 0:
             enemy.currenthp = 0
             youractiontwo = font.render(f'The {enemy.name} has died!', True, (255, 255, 255))
             
@@ -170,7 +172,11 @@ class Battles:
                 return
             if isinstance(enemy, Enemy):
                 action = random.randint(1, 5)
-                if action in [1, 2, 3, 4]:
+                if (enemy.currenthp/enemy.maxhp) <= 0.2:
+                    enemy.EnemyHeal(5)
+                    enemy.lastaction = 'healed!'
+                    action = 'healed!'
+                elif action in [1, 2, 3, 4] or (enemy.currenthp/enemy.maxhp) >= 1:
                     damage = Character.CharacterDamageCalc(enemy)
                     player.currenthp -= damage
                     enemy.lastaction = 'attacked you!'
@@ -293,7 +299,11 @@ class Battles:
                 if isinstance(enemy, Enemy):
                     import random
                     action = random.randint(1, 5)
-                    if action in [1, 2, 3, 4]:
+                    if (enemy.currenthp/enemy.maxhp) <= 0.2:
+                        enemy.EnemyHeal(5)
+                        enemy.lastaction = 'healed!'
+                        action = 'healed!'
+                    elif action in [1, 2, 3, 4] or (enemy.currenthp/enemy.maxhp) >= 1:
                         damage = Character.CharacterDamageCalc(enemy)
                         enemy.lastaction = 'tried to attack, but was blocked!'
                         action = 'tried to attack, but was blocked!'
@@ -307,7 +317,11 @@ class Battles:
                 if isinstance(enemy, Enemy):
                     import random
                     action = random.randint(1, 5)
-                    if action in [1, 2, 3, 4]:
+                    if (enemy.currenthp/enemy.maxhp) <= 0.2:
+                        enemy.EnemyHeal(5)
+                        enemy.lastaction = 'healed!'
+                        action = 'healed!'
+                    elif action in [1, 2, 3, 4] or (enemy.currenthp/enemy.maxhp) >= 1:
                         damage = Character.CharacterDamageCalc(enemy)
                         player.currenthp -= damage
                         enemy.lastaction = 'attacked you!'
@@ -516,11 +530,11 @@ class Battles:
         Battles.BattleMenu(player, enemies)
         
                 
-player = MainCharacter('edward', 10000, 9999, 20, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
-goblin = Enemy('GoblinA', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
-goblina = Enemy('GoblinB', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
-goblinb = Enemy('GoblinC', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
-goblinc = Enemy('GoblinD', 2, 1, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+player = MainCharacter('edward', 10000, 9999, 29, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
+goblin = Enemy('GoblinA', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblina = Enemy('GoblinB', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblinb = Enemy('GoblinC', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+goblinc = Enemy('GoblinD', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
 
 enemies = [goblin, goblina, goblinb, goblinc]
 
