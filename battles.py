@@ -186,8 +186,8 @@ class Battles:
         global battle, block, blockdone
         import random
         chancetoflee = 100 - (100*(player.currenthp / player.maxhp))
-        if chancetoflee < 99:
-            chancetoflee = 99
+        if chancetoflee < 45:
+            chancetoflee = 45
             
         areyarunning = random.randint(1, 100)
         if areyarunning >= chancetoflee:
