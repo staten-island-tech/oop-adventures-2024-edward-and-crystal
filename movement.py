@@ -68,16 +68,16 @@ class OpenWorld():
                         if player.currenthp < 10:
                             player.currenthp = 10 # i'm not SO evil...
     
-    def CreateMenuButton(events):
-        menufont = pygame.font.Font(None, 36)
+    def CreateMenuButton(events): # opening the menu
+        menufont = pygame.font.Font(None, 36) # most of this code is the same
         menurect = pygame.Rect(800, 640, 180, 60)
         menutext = menufont.render("Open Menu", True, (255, 255, 255))
         menusurface = menutext.get_rect(center=menurect.center)
         if menurect.collidepoint(pygame.mouse.get_pos()):
             color = (40, 54, 60)
-            for event in events:
+            for event in events: # if we are hovering over the button and we click it the menu gets printed
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print('menu')
+                    print('menu') # sample function
         else:
             color = (20, 27, 30)
             
@@ -87,42 +87,45 @@ class OpenWorld():
     def LoadRoom(room, player):
         global playerx, playery
         playerx = 100
-        playery = 100
-        while running:
+        playery = 100 # you may have to recode this depending on what entrance they come from, and what room they are in
+        # thats your problem have fun :D
+        while running: 
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    exit()
+                    exit() # if we exit out the window it closes
             
-            screen.fill((20, 20, 25))
+            screen.fill((20, 20, 25)) # background
+            for rect in room['rectangles']:  # each room has a list of rectangles, which are tuples, see the room example at the bottom
+                pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
             for rect in room['rectangles']:
                 pygame.draw.rect(screen, (40, 40, 50), rect)
             
-            pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100))
+            pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100)) # this draws the light bar at the bottom that the buttons sit on
+            pygame.draw.line(screen, (145, 180, 200), (0, 620), (1280, 620), 10)
+            
             directions = ["LEFT", "UP", "DOWN", "RIGHT"]
-            for direction in directions:
+            for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
                 OpenWorld.CreateMoveButton(direction, events, room, player)
             OpenWorld.CreateMenuButton(events)
             
-            playerinfofont = pygame.font.Font(None, 36)
+            playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
             playerinforect = pygame.Rect(410, 640, 360, 60)
             playerinfotext = playerinfofont.render(f"{player.name}: {player.currenthp}/{player.maxhp}", True, (255, 255, 255))
             playerinfosurface = playerinfotext.get_rect(center=playerinforect.center)
             pygame.draw.rect(screen, (20, 27, 30), playerinforect)
             screen.blit(playerinfotext, playerinfosurface)
             
-            playerlocation = pygame.Rect(playerx, playery, 10, 10)
+            playerlocation = pygame.Rect(playerx, playery, 10, 10) # a square where the player is
             pygame.draw.rect(screen, (255, 255, 255), playerlocation)
             pygame.display.update()
-
  
 room = {
     "rectangles" : [
     (100, 100, 100, 400),
     (200, 200, 400, 50)]
     }   
-
 
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 

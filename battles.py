@@ -15,7 +15,7 @@ running = True
 
 class Battles:
     def DrawActionButton(player, enemies, action):
-        global wasactiondone, attackpressed, attack, enemy, theyblocking, events, x, y, z
+        global wasactiondone, attackpressed, attack, enemy, theyblocking, events, x, y, z, chosenenemy
         x = 1
         y = 0
         z = 1
@@ -73,7 +73,7 @@ class Battles:
                 pygame.draw.rect(screen, color, attackenemy)
                 textsurface = text.get_rect(center=attackenemy.center)
                 screen.blit(text, textsurface)
-            
+
                 xcoordinate += 150
                 if isinstance(enemy, BossEnemy):
                     xcoordinate += 30
@@ -82,6 +82,8 @@ class Battles:
                         attackpressed = False
                         wasactiondone = True
                         attack = True
+                        if enemy:
+                            chosenenemy = enemy
                     
                         
     def AttackStepTwo(player, enemy, enemies):
@@ -128,9 +130,15 @@ class Battles:
         global battle, x, y, attacksteptwo, wasactiondone, previousinputs, action, events, block
         previousinputs = 'ATTACK'
         block = False
-        enemy = enemies[y-1]
-        if enemy.currenthp <= 0:
-            return
+        if y <= len(enemies) - 1:
+            enemy = enemies[y]  
+        else:
+            pass
+        try:
+            if enemy.currenthp <= 0:
+                return
+        except UnboundLocalError:
+            pass
         textbox = pygame.Rect(220, 630, 1000, 80) # !
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
         go_onHITBOX = pygame.Rect(1185, 625, 90, 90)
@@ -146,11 +154,20 @@ class Battles:
         screen.blit(go_on, go_onsurface)
         textfont = pygame.font.Font(None, 36)
         for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180):
-                x = 1  
+            if event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180) and y <= len(enemies) - 1:
+                x = 1 
+            elif event.type == pygame.MOUSEBUTTONDOWN and go_onCOLOR == (120, 120, 180):
+                wasactiondone = False
+                attacksteptwo = False
+                y = 0
+                return
         if x == 1:
             x + 1
             import random
+            try:
+                print(enemy.name)
+            except UnboundLocalError:
+                return
             if isinstance(enemy, Enemy):
                 action = random.randint(1, 5)
                 if action in [1, 2, 3, 4]:
@@ -168,7 +185,7 @@ class Battles:
                     action = 'healed!'
             x += 1
             y += 1
-        if y == len(enemies):
+        if y == len(enemies) + 2:
             wasactiondone = False
             attacksteptwo = False
             y = 0
@@ -176,7 +193,7 @@ class Battles:
         hawk1 = textfont.render(f"{enemies[y-1].name} has {action}", True, (255, 255, 255))
         hawk1surface = hawk1.get_rect(center=(720, 655)) # don't ask
         screen.blit(hawk1, hawk1surface)
-    
+        
         hawk2 = textfont.render(f"You now have {player.currenthp} HP!", True, (255, 255, 255))
         hawk2surface = hawk2.get_rect(center=(720, 685))
         screen.blit(hawk2, hawk2surface)
@@ -259,7 +276,7 @@ class Battles:
         go_onsurface = go_on.get_rect(center=go_onHITBOX.center)
         pygame.draw.rect(screen, go_onCOLOR, go_onHITBOX)
         screen.blit(go_on, go_onsurface)
-  
+        
         if y < len(enemies):
             enemy = enemies[y]  
         else:
@@ -310,9 +327,8 @@ class Battles:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     y += 1
                     x = 1
-        if block == False and action == 'tried to attack, but was blocked!':
+        if block == False:
             action = 'attacked you!'
-            print(action)
         try:
             text = textboxfont.render(f'{enemy.name} {action}', True, (255, 255, 255))
             textsurface = text.get_rect(center=textbox.center)
@@ -410,7 +426,7 @@ class Battles:
     def BattleMenu(player, enemies):
         global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block, events # im gonna be real i would be 
         # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
-        global blockdone
+        global blockdone, chosenenemy
         wasactiondone = False
         attackpressed = False
         attack = False
@@ -418,6 +434,7 @@ class Battles:
         theyblocking = False
         block = False
         blockdone = False
+        chosenenemy = None
         x = 1
         y = 0
         z = 1
@@ -468,10 +485,14 @@ class Battles:
                 Battles.Block(player)
                 
             if blockdone == True:
-                    Battles.BlockTwo(player, enemies)
+                if z == 1:
+                    z += 1
+                    y = 0
+                Battles.BlockTwo(player, enemies)
                     
             if attack == True:
-                Battles.AttackStepTwo(player, enemy, enemies)          
+                if chosenenemy != None:
+                    Battles.AttackStepTwo(player, chosenenemy, enemies)          
             
             if attacksteptwo == True:
                 Battles.AttackStepThree(player, enemies)  

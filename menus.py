@@ -1,1 +1,0 @@
-from charactersitems import MainCharacter
