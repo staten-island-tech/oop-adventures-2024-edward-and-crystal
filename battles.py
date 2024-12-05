@@ -4,9 +4,14 @@ from charactersitems import Enemy
 from charactersitems import BossEnemy
 from charactersitems import Grifter
 from charactersitems import Weapon
+from charactersitems import HealingItem
 import pygame
-import time
 pygame.init()
+
+# is this code good?
+# no
+# does it work
+# of course it does im an awesome programmer 👍
 
 screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption('Game')
@@ -189,6 +194,44 @@ class Battles:
                     enemy.EnemyHeal(5)
                     enemy.lastaction = 'healed!'
                     action = 'healed!'
+            elif isinstance(enemy, BossEnemy):
+                import random
+                action = random.randint(1, 100)
+                if (enemy.currenthp/enemy.maxhp) <= 0.3:
+                    enemy.EnemyHeal(15)
+                    enemy.lastaction = 'healed!'
+                    action = 'healed!'
+                elif enemy.currenthp/enemy.maxhp >= 1:
+                    if action < 90:
+                        damage = Character.CharacterDamageCalc(enemy)
+                        player.currenthp -= damage
+                        enemy.lastaction = 'attacked you!'
+                        action = 'attacked you!'
+                        if player.currenthp < 1:
+                            print('HAHAHAHAHA')
+                            battle = False
+                    else:
+                        BossEnemy.EnemySummon(enemy)
+                        enemy.lastaction = 'spawned an Orc!'
+                        action = 'spawned an Orc!'
+                        
+                else:
+                    if action < 71:
+                        damage = Character.CharacterDamageCalc(enemy)
+                        player.currenthp -= damage
+                        enemy.lastaction = 'attacked you!'
+                        action = 'attacked you!'
+                        if player.currenthp < 1:
+                            print('HAHAHAHAHA')
+                            battle = False
+                    elif action < 91 and action > 70:
+                        enemy.EnemyHeal(15)
+                        enemy.lastaction = 'healed!'
+                        action = 'healed!'
+                    else:
+                        BossEnemy.EnemySummon(enemies)
+                        enemy.lastaction = 'spawned an Orc!'
+                        action = 'spawned an Orc!'
             x += 1
             y += 1
         if y == len(enemies) + 2:
@@ -312,7 +355,36 @@ class Battles:
                         enemy.EnemyHeal(5)
                         enemy.lastaction = 'healed!'
                         action = 'healed!'
-                    
+                elif isinstance(enemy, BossEnemy):
+                    import random
+                    action = random.randint(1, 100)
+                    if (enemy.currenthp/enemy.maxhp) <= 0.3:
+                        enemy.EnemyHeal(15)
+                        enemy.lastaction = 'healed!'
+                        action = 'healed!'
+                    elif enemy.currenthp/enemy.maxhp >= 1:
+                        if action < 90:
+                            damage = Character.CharacterDamageCalc(enemy)
+                            enemy.lastaction = 'tried to attack, but was blocked!'
+                            action = 'tried to attack, but was blocked!'
+                        else:
+                            BossEnemy.EnemySummon(enemy)
+                            enemy.lastaction = 'spawned an Orc!'
+                            action = 'spawned an Orc!'
+                        
+                    else:
+                        if action < 71:
+                            damage = Character.CharacterDamageCalc(enemy)
+                            enemy.lastaction = 'tried to attack, but was blocked!'
+                            action = 'tried to attack, but was blocked!'
+                        elif action < 91 and action > 70:
+                            enemy.EnemyHeal(15)
+                            enemy.lastaction = 'healed!'
+                            action = 'healed!'
+                        else:
+                            BossEnemy.EnemySummon(enemies)
+                            enemy.lastaction = 'spawned an Orc!'
+                            action = 'spawned an Orc!'
             else:
                 if isinstance(enemy, Enemy):
                     import random
@@ -335,14 +407,51 @@ class Battles:
                         enemy.EnemyHeal(5)
                         enemy.lastaction = 'healed!'
                         action = 'healed!'   
+                        
+                elif isinstance(enemy, BossEnemy):
+                    import random
+                    action = random.randint(1, 100)
+                    if (enemy.currenthp/enemy.maxhp) <= 0.3:
+                        enemy.EnemyHeal(15)
+                        enemy.lastaction = 'healed!'
+                        action = 'healed!'
+                    elif enemy.currenthp/enemy.maxhp >= 1:
+                        if action < 90:
+                            damage = Character.CharacterDamageCalc(enemy)
+                            player.currenthp -= damage
+                            enemy.lastaction = 'attacked you!'
+                            action = 'attacked you!'
+                            if player.currenthp < 1:
+                                print('HAHAHAHAHA')
+                                battle = False
+                        else:
+                            BossEnemy.EnemySummon(enemy)
+                            enemy.lastaction = 'spawned an Orc!'
+                            action = 'spawned an Orc!'
+                        
+                    else:
+                        if action < 71:
+                            damage = Character.CharacterDamageCalc(enemy)
+                            player.currenthp -= damage
+                            enemy.lastaction = 'attacked you!'
+                            action = 'attacked you!'
+                            if player.currenthp < 1:
+                                print('HAHAHAHAHA')
+                                battle = False
+                        elif action < 91 and action > 70:
+                            enemy.EnemyHeal(15)
+                            enemy.lastaction = 'healed!'
+                            action = 'healed!'
+                        else:
+                            BossEnemy.EnemySummon(enemies)
+                            enemy.lastaction = 'spawned an Orc!'
+                            action = 'spawned an Orc!'
             
         else:
             for event in events:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     y += 1
                     x = 1
-        if block == False:
-            action = 'attacked you!'
         try:
             text = textboxfont.render(f'{enemy.name} {action}', True, (255, 255, 255))
             textsurface = text.get_rect(center=textbox.center)
@@ -375,7 +484,7 @@ class Battles:
                 pygame.draw.rect(screen, (100, 130, 140), healthbarrect)
                 pygame.draw.rect(screen, (150, 195, 240), (xcoordinate+15, 530, (enemy.currenthp / enemy.maxhp) * 120, 30))
                 
-                font = pygame.font.Font(None, 36)
+                font = pygame.font.Font(None, 28)
                 healthbartext = font.render(f"{enemy.currenthp} / {enemy.maxhp} HP", True, (255, 255, 255))
                 healthbarsurface = healthbartext.get_rect(center=healthbarrect.center)
                 screen.blit(healthbartext, healthbarsurface)
@@ -419,7 +528,7 @@ class Battles:
             if isinstance(enemy, BossEnemy):
                 xcoordinate +=30
                 
-    def EndBattle():
+    def EndBattle(enemiesfought):
         global battle, events
         youwinrect = pygame.Rect(20, 20, 1240, 480)
         youwinfont = pygame.font.Font(None, 200)
@@ -433,14 +542,20 @@ class Battles:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 battle = False
-                thisvariableisuselesswhalenspareme = 1
-                print(thisvariableisuselesswhalenspareme)
-                
+        if len(enemies) != 0:
+            for enemy in enemiesfought:
+                print('hello')
+                player.MainCharacterGetEXP(enemy.expdrop)
+                if isinstance(enemy, Weapon) or isinstance(enemy, HealingItem):
+                    player.inventory.append(enemy.weapondrop)
+                enemiesfought.remove(enemy)
+                for item in player.inventory:
+                    print(item.name)
         
     def BattleMenu(player, enemies):
         global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block, events # im gonna be real i would be 
         # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
-        global blockdone, chosenenemy
+        global blockdone, chosenenemy, enemiesfought
         wasactiondone = False
         attackpressed = False
         attack = False
@@ -449,6 +564,7 @@ class Battles:
         block = False
         blockdone = False
         chosenenemy = None
+        enemiesfought = enemies
         x = 1
         y = 0
         z = 1
@@ -460,7 +576,10 @@ class Battles:
                     pygame.quit()
                     exit()
             if len(enemies) == 0:
-                Battles.EndBattle()
+                if z == 1:
+                    z += 1
+                    x = 1
+                Battles.EndBattle(enemiesfought)
                 wasactiondone = True
             if battle == False:
                 break # idk maybe
@@ -512,14 +631,17 @@ class Battles:
                 Battles.AttackStepThree(player, enemies)  
             
             Battles.MakeEnemies(enemies)
-            
             pygame.display.update() 
-    
-        while True: # placeholder until i figure out how i will set you back in the open world
+
+        endingbattle = True
+        while endingbattle: # placeholder until i figure out how i will set you back in the open world
             for event in events:
                 if event.type == pygame.QUIT:
+                    endingbattle = False
                     pygame.quit()
                     exit()
+                    break
+                    
             screen.fill((255, 255, 255)) # flashbanging me constantly as i debug bruh / do i change it? of course not
             pygame.display.update()
     
@@ -528,13 +650,13 @@ class Battles:
         running = False
         battle = True
         Battles.BattleMenu(player, enemies)
-        
+
                 
-player = MainCharacter('edward', 10000, 9999, 29, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
-goblin = Enemy('GoblinA', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
-goblina = Enemy('GoblinB', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
-goblinb = Enemy('GoblinC', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
-goblinc = Enemy('GoblinD', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, 6, 7, None)
+player = MainCharacter('edward', 10000, 9999, 99, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
+goblin = Enemy('GoblinA', 100, 50, 10, Weapon('supersword', 1, 1, 1), 5, Weapon('supersword', 1, 1, 1), 7, None)
+goblina = Enemy('GoblinB', 100, 50, 10, Weapon('supersword', 1, 1, 1), 5, Weapon('supersword', 1, 1, 1), 7, None)
+goblinb = Enemy('GoblinC', 100, 50, 10, Weapon('supersword', 1, 1, 1), 5, Weapon('supersword', 1, 1, 1), 7, None)
+goblinc = BossEnemy('BossGoblinA', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, None)
 
 enemies = [goblin, goblina, goblinb, goblinc]
 

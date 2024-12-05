@@ -186,7 +186,6 @@ class Enemy(Character):
         self.expdrop = expdrop
         self.lastaction = lastaction
 
-
     def EnemyTakeDamage(self, damage):
         self.currenthp -= damage
         if self.currenthp < 0:
@@ -223,9 +222,10 @@ class Grifter(Enemy): # grifter hell :D
         super().__init__(name, maxhp, currenthp, steal, weapon, golddrop, weapondrop, expdrop)
 
 class BossEnemy(Character):
-    def __init__(self, name, maxhp, currenthp, strength, weapon, expdrop):
+    def __init__(self, name, maxhp, currenthp, strength, weapon, expdrop, lastaction):
         super().__init__(name, maxhp, currenthp, strength, weapon)
         self.expdrop = expdrop
+        self.lastaction = lastaction
 
     def EnemyHit(self, player):
         print(f"{self.name} attacks {player.name}!")
