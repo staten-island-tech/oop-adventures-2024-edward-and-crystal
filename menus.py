@@ -71,7 +71,7 @@ class Menu:
                 elif buttontitle == 'INVENTORY':
                     inventory = True
                 elif buttontitle == 'SHOP':
-                    inventory = True
+                    shop = True
                 elif buttontitle == 'SAVE':
                     save = True
     
@@ -219,7 +219,63 @@ class Menu:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
                 mainmenu = True
-                statsrunning = False               
+                statsrunning = False   
+    
+    def DrawInventoryButtons(player, events):
+        global inventory, inventoryselectscreen, selecteditem
+        xcoordinate = 10
+        ycoordinate = 150
+        
+        for item in range(len(player.inventory)): # this will make sense
+            theitem = player.inventory[item]
+            
+            size = 50 - int(1.5*len(theitem.name))
+            if size < 17:
+                size = 17
+            itemfont = pygame.font.Font(None, size)
+            
+            # getting the coordinate
+            itemxcoordinate = (item % 6) 
+            itemycoordinate = int(item / 6) 
+                
+            itemrect = pygame.Rect(xcoordinate + 210*itemxcoordinate, ycoordinate + 110*itemycoordinate, 200, 100)
+            itemrectinside = pygame.Rect(xcoordinate + 10 + 210*itemxcoordinate, ycoordinate + 10 + 110*itemycoordinate, 180, 80)
+            
+            
+            if itemrect.collidepoint(pygame.mouse.get_pos()):
+                color = (60, 60, 90)
+            else:
+                color = (40, 40, 60)
+                
+            pygame.draw.rect(screen, (30, 30, 40), itemrect)
+            pygame.draw.rect(screen, color, itemrectinside)
+            
+            itemtext = itemfont.render(f'{theitem.name}', True, (255, 255, 255))
+            itemsurface = itemtext.get_rect(center=itemrect.center)
+            screen.blit(itemtext, itemsurface)
+            
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONDOWN and itemrect.collidepoint(pygame.mouse.get_pos()):
+                    if isinstance(theitem, Weapon):
+                        inventory = False
+                        inventoryselectscreen = True
+                        selecteditem = theitem
+                    else:
+                        inventory = False
+                        inventoryselectscreen = True
+                        selecteditem = theitem
+                        
+    def RouteInventoryFunction(selecteditem, events):
+        if isinstance(selecteditem, Weapon):
+            Menu.EquipWeapon(selecteditem, events)
+        elif isinstance(selecteditem, HealingItem):
+            Menu.HealingMenu(selecteditem, events)
+            
+    def EquipWeapon(selecteditem, events):
+        pass
+    
+    def HealingMenu(selecteditem, events):
+        pass        
     
     def Inventory(player, events):
         global inventory, mainmenu, inventoryselectscreen, selecteditem
@@ -250,7 +306,8 @@ class Menu:
             if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
                 mainmenu = True
                 inventory = False 
-        
+                
+        Menu.DrawInventoryButtons(player, events)     
 
     def OpenMenuScreen(player):
         global menurunning, mainmenu, statsrunning, shop, inventory, inventoryselectscreen, save, selecteditem
@@ -303,7 +360,7 @@ class Menu:
             elif inventory == True:
                 Menu.Inventory(player, events)
             elif inventoryselectscreen == True:
-                pass
+                Menu.RouteInventoryFunction(selecteditem, events)
             
             elif save == True:
                 pass
@@ -318,11 +375,22 @@ class Menu:
 
             x += 1
             print(x)
-            if x > 100:
+            if x > 99:
                 ending = False
                 break
             screen.fill((20, 20, 25))
             pygame.display.update()
 
-player = MainCharacter('player', 100, 59, 0, Weapon('aaaaaaaaaaaa', 1, 1, 1), [], 20, 20, 80)
+weaponA = Weapon('AHHH', 1, 1, 1)
+weaponB = Weapon('AHHH', 1, 1, 1)
+weaponC = Weapon('AHHHHHHsadofjadslkfjadsk;lf', 1, 1, 1)
+weaponD = Weapon('AHHH', 1, 1, 1)
+weaponE = Weapon('AHHH', 1, 1, 1)
+weaponF = Weapon('AHHH', 1, 1, 1)
+weaponG = Weapon('AHHH', 1, 1, 1)
+healingitem = HealingItem('AHHH', 1, 1)
+weaponI = Weapon('AHHH', 1, 1, 1)
+
+
+player = MainCharacter('player', 100, 59, 0, Weapon('aaaaaaaaaaaa', 1, 1, 1), [weaponA, weaponB, weaponC, weaponD, weaponE, weaponF, weaponG, healingitem, weaponI], 20, 20, 80)
 Menu.OpenMenuScreen(player)
