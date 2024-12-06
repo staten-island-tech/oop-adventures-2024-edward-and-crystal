@@ -551,7 +551,8 @@ class Battles:
                 player.MainCharacterGetEXP(enemy.expdrop)
                 if isinstance(enemy, Enemy):
                     if isinstance(enemy.weapondrop, Weapon) or isinstance(enemy.weapondrop, HealingItem):
-                        player.inventory.append(enemy.weapondrop)
+                        if len(player.inventory) < 30: # capacity
+                            player.inventory.append(enemy.weapondrop)
                     enemiesfought.remove(enemy)
         
     def BattleMenu(player, enemies):
