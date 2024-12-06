@@ -272,10 +272,56 @@ class Menu:
             Menu.HealingMenu(selecteditem, events)
             
     def EquipWeapon(selecteditem, events):
-        pass
+        global inventoryselectscreen, mainmenu
+        titlefont = pygame.font.SysFont(None, 110, bold = True)
+        subtitlefont = pygame.font.SysFont(None, 80, bold = True)
+        littletitlefont = pygame.font.SysFont(None, 50, bold = True)
+        textfont = pygame.font.Font(None, 45)
+        
+        # title
+        titlerect = pygame.Rect(0, 110, 400, 100)
+        title = titlefont.render("EQUIP WEAPON", True, (255, 255, 255))
+        offset = len(player.name)
+        titlesurface = title.get_rect(centerx=titlerect.centerx+(offset*23), centery = 60)
+        screen.blit(title, titlesurface)
+        
+        # putting the name of the weapon
+        weapontitlerect = pygame.Rect(100, 135, 1060, 200)
+        pygame.draw.rect(screen, (30, 30, 40), weapontitlerect)
+        
     
     def HealingMenu(selecteditem, events):
-        pass        
+        global inventoryselectscreen, mainmenu
+        
+        titlefont = pygame.font.SysFont(None, 110, bold = True)
+        subtitlefont = pygame.font.SysFont(None, 80, bold = True)
+        littletitlefont = pygame.font.SysFont(None, 50, bold = True)
+        textfont = pygame.font.Font(None, 45)
+        
+        # title
+        titlerect = pygame.Rect(0, 110, 400, 100)
+        title = titlefont.render("HEALING MENU", True, (255, 255, 255))
+        offset = len(player.name)
+        titlesurface = title.get_rect(centerx=titlerect.centerx+(offset*23), centery = 60)
+        screen.blit(title, titlesurface)
+        
+        backbutton = pygame.Rect(850, 25, 400, 90)
+        if backbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+
+
+        # backbutton
+        pygame.draw.rect(screen, color, backbutton)
+        backbuttontext = subtitlefont.render('MENU', True, (255, 255, 255))
+        backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
+        screen.blit(backbuttontext, backbuttontextsurface)
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
+                mainmenu = True
+                inventoryselectscreen = False   
+              
     
     def Inventory(player, events):
         global inventory, mainmenu, inventoryselectscreen, selecteditem
@@ -307,7 +353,21 @@ class Menu:
                 mainmenu = True
                 inventory = False 
                 
-        Menu.DrawInventoryButtons(player, events)     
+        Menu.DrawInventoryButtons(player, events) 
+        backbutton = pygame.Rect(850, 25, 400, 90)
+        if backbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+
+        pygame.draw.rect(screen, color, backbutton)
+        backbuttontext = subtitlefont.render('MENU', True, (255, 255, 255))
+        backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
+        screen.blit(backbuttontext, backbuttontextsurface)
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
+                mainmenu = True
+                inventory = False       
 
     def OpenMenuScreen(player):
         global menurunning, mainmenu, statsrunning, shop, inventory, inventoryselectscreen, save, selecteditem
