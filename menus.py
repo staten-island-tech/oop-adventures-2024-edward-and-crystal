@@ -272,7 +272,7 @@ class Menu:
             Menu.HealingMenu(selecteditem, events)
             
     def EquipWeapon(selecteditem, events):
-        global inventoryselectscreen, mainmenu
+        global inventoryselectscreen, inventory
         titlefont = pygame.font.SysFont(None, 110, bold = True)
         subtitlefont = pygame.font.SysFont(None, 80, bold = True)
         littletitlefont = pygame.font.SysFont(None, 50, bold = True)
@@ -302,9 +302,10 @@ class Menu:
         pygame.draw.rect(screen, (40, 40, 60), statsbox)
         
         # damage
+        
         damagerect = pygame.Rect(50, 320, 840, 100)
         damagepercentage = selecteditem.strength / 100
-        print(selecteditem.strength)
+
         damagerectinside = pygame.Rect(60, 330, (840*damagepercentage) - 20, 80)
         pygame.draw.rect(screen, (20, 20, 30), damagerect)
         pygame.draw.rect(screen, (60, 60, 90), damagerectinside)
@@ -313,9 +314,25 @@ class Menu:
         damagesurface = damage.get_rect(center=damagerect.center)
         screen.blit(damage, damagesurface)
         
-    def HealingMenu(selecteditem, events):
-        global inventoryselectscreen, mainmenu
+        # back button
+        backbutton = pygame.Rect(850, 25, 400, 90)
+        if backbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+
+        pygame.draw.rect(screen, color, backbutton)
+        backbuttontext = subtitlefont.render('INVENTORY', True, (255, 255, 255))
+        backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
+        screen.blit(backbuttontext, backbuttontextsurface)
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
+                inventory = True
+                inventoryselectscreen = False
         
+    def HealingMenu(selecteditem, events):
+        global inventoryselectscreen, inventory
+
         titlefont = pygame.font.SysFont(None, 110, bold = True)
         subtitlefont = pygame.font.SysFont(None, 80, bold = True)
         littletitlefont = pygame.font.SysFont(None, 50, bold = True)
@@ -328,24 +345,21 @@ class Menu:
         titlesurface = title.get_rect(centerx=titlerect.centerx+(offset*23), centery = 60)
         screen.blit(title, titlesurface)
         
+        # back button
         backbutton = pygame.Rect(850, 25, 400, 90)
         if backbutton.collidepoint(pygame.mouse.get_pos()):
             color = (100, 110, 140)
         else:
             color = (50, 50, 75)
-
-
-        # backbutton
         
         pygame.draw.rect(screen, color, backbutton)
-        backbuttontext = subtitlefont.render('MENU', True, (255, 255, 255))
+        backbuttontext = subtitlefont.render('INVENTORY', True, (255, 255, 255))
         backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
         screen.blit(backbuttontext, backbuttontextsurface)
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
-                mainmenu = True
+                inventory = True
                 inventoryselectscreen = False   
-              
     
     def Inventory(player, events):
         global inventory, mainmenu, inventoryselectscreen, selecteditem
@@ -465,15 +479,16 @@ class Menu:
             screen.fill((20, 20, 25))
             pygame.display.update()
 
-weaponA = Weapon('AHHH', 1, 1, 1)
-weaponB = Weapon('AHHH', 1, 1, 1)
-weaponC = Weapon('AHHHHHHsadofjadslkfjadsk;lf', 1, 1, 1)
-weaponD = Weapon('AHHH', 1, 1, 1)
-weaponE = Weapon('AHHH', 1, 1, 1)
-weaponF = Weapon('AHHH', 1, 1, 1)
-weaponG = Weapon('AHHH', 1, 1, 1)
-healingitem = HealingItem('AHHH', 1, 1)
-weaponI = Weapon('AHHH', 1, 1, 1)
+weaponA = Weapon('AHHH', 40, 1, 1)
+weaponB = Weapon('AHHH', 30, 1, 1)
+weaponC = Weapon('AHHHHHHsadofjadslkfjadsk;lf', 100, 1, 1)
+weaponD = Weapon('AHHH', 105, 1, 1)
+weaponE = Weapon('AHHH', 90, 1, 1)
+weaponF = Weapon('AHHH', 10, 1, 1)
+weaponG = Weapon('AHHH', 19, 1, 1)
+healingitem = HealingItem('AHHH', 37, 1)
+weaponI = Weapon('AHHH', 32, 1, 1)
 
 player = MainCharacter('player', 100, 59, 0, Weapon('aaaaaaaaaaaa', 100, 20, 30), [weaponA, weaponB, weaponC, weaponD, weaponE, weaponF, weaponG, healingitem, weaponI], 20, 20, 80)
+
 Menu.OpenMenuScreen(player)
