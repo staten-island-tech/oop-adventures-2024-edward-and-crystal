@@ -281,15 +281,38 @@ class Menu:
         # title
         titlerect = pygame.Rect(0, 110, 400, 100)
         title = titlefont.render("EQUIP WEAPON", True, (255, 255, 255))
-        offset = len(player.name)
-        titlesurface = title.get_rect(centerx=titlerect.centerx+(offset*23), centery = 60)
+        titlesurface = title.get_rect(centerx=titlerect.centerx+130, centery = 60)
         screen.blit(title, titlesurface)
         
         # putting the name of the weapon
-        weapontitlerect = pygame.Rect(100, 135, 1060, 200)
+        weapontitlerect = pygame.Rect(100, 135, 1060, 120)
         pygame.draw.rect(screen, (30, 30, 40), weapontitlerect)
         
-    
+        weapontitletext = subtitlefont.render(f'WEAPON: {selecteditem.name.upper()}', True, (255, 255, 255))
+        weapontitlesurface = weapontitletext.get_rect(center = weapontitlerect.center)
+        screen.blit(weapontitletext, weapontitlesurface)
+        
+        # 
+        # STATS
+        #
+        
+        statsboxoutline = pygame.Rect(20, 300, 900, 400)
+        pygame.draw.rect(screen, (30, 30, 40), statsboxoutline)
+        statsbox = pygame.Rect(30, 310, 880, 380)
+        pygame.draw.rect(screen, (40, 40, 60), statsbox)
+        
+        # damage
+        damagerect = pygame.Rect(50, 320, 840, 100)
+        damagepercentage = selecteditem.strength / 100
+        print(selecteditem.strength)
+        damagerectinside = pygame.Rect(60, 330, (840*damagepercentage) - 20, 80)
+        pygame.draw.rect(screen, (20, 20, 30), damagerect)
+        pygame.draw.rect(screen, (60, 60, 90), damagerectinside)
+                
+        damage = subtitlefont.render(f"DAMAGE: {selecteditem.strength}", True, (255, 255, 255))
+        damagesurface = damage.get_rect(center=damagerect.center)
+        screen.blit(damage, damagesurface)
+        
     def HealingMenu(selecteditem, events):
         global inventoryselectscreen, mainmenu
         
@@ -313,6 +336,7 @@ class Menu:
 
 
         # backbutton
+        
         pygame.draw.rect(screen, color, backbutton)
         backbuttontext = subtitlefont.render('MENU', True, (255, 255, 255))
         backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
@@ -451,6 +475,5 @@ weaponG = Weapon('AHHH', 1, 1, 1)
 healingitem = HealingItem('AHHH', 1, 1)
 weaponI = Weapon('AHHH', 1, 1, 1)
 
-
-player = MainCharacter('player', 100, 59, 0, Weapon('aaaaaaaaaaaa', 1, 1, 1), [weaponA, weaponB, weaponC, weaponD, weaponE, weaponF, weaponG, healingitem, weaponI], 20, 20, 80)
+player = MainCharacter('player', 100, 59, 0, Weapon('aaaaaaaaaaaa', 100, 20, 30), [weaponA, weaponB, weaponC, weaponD, weaponE, weaponF, weaponG, healingitem, weaponI], 20, 20, 80)
 Menu.OpenMenuScreen(player)
