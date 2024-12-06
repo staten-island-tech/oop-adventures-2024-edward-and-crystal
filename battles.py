@@ -92,7 +92,7 @@ class Battles:
                     
                         
     def AttackStepTwo(player, enemy, enemies):
-        global attacksteptwo, attack, events, x, damage
+        global attacksteptwo, attack, events, x, damage, enemiesfought
         if x == 1:
             x += 1
             damage = Character.CharacterDamageCalc(player)
@@ -106,6 +106,7 @@ class Battles:
             
             try:
                 enemies.remove(enemy)
+                enemiesfought.append(enemy)
             except ValueError: #bc this code is gonna run over and over
                 pass
         else:
@@ -143,6 +144,7 @@ class Battles:
             pass
         try:
             if enemy.currenthp <= 0:
+                enemiesfought.append(enemy)
                 return
         except UnboundLocalError:
             pass
@@ -172,8 +174,8 @@ class Battles:
             x + 1
             import random
             try:
-                print(enemy.name)
-            except UnboundLocalError:
+                enemy.currenthp += 0
+            except UnboundLocalError: 
                 return
             if isinstance(enemy, Enemy):
                 action = random.randint(1, 5)
@@ -211,7 +213,7 @@ class Battles:
                             print('HAHAHAHAHA')
                             battle = False
                     else:
-                        BossEnemy.EnemySummon(enemy)
+                        enemy.EnemySummon(enemies)
                         enemy.lastaction = 'spawned an Orc!'
                         action = 'spawned an Orc!'
                         
@@ -229,7 +231,7 @@ class Battles:
                         enemy.lastaction = 'healed!'
                         action = 'healed!'
                     else:
-                        BossEnemy.EnemySummon(enemies)
+                        enemy.EnemySummon(enemies)
                         enemy.lastaction = 'spawned an Orc!'
                         action = 'spawned an Orc!'
             x += 1
@@ -368,7 +370,7 @@ class Battles:
                             enemy.lastaction = 'tried to attack, but was blocked!'
                             action = 'tried to attack, but was blocked!'
                         else:
-                            BossEnemy.EnemySummon(enemy)
+                            enemy.EnemySummon(enemies)
                             enemy.lastaction = 'spawned an Orc!'
                             action = 'spawned an Orc!'
                         
@@ -382,7 +384,7 @@ class Battles:
                             enemy.lastaction = 'healed!'
                             action = 'healed!'
                         else:
-                            BossEnemy.EnemySummon(enemies)
+                            enemy.EnemySummon(enemies)
                             enemy.lastaction = 'spawned an Orc!'
                             action = 'spawned an Orc!'
             else:
@@ -425,7 +427,7 @@ class Battles:
                                 print('HAHAHAHAHA')
                                 battle = False
                         else:
-                            BossEnemy.EnemySummon(enemy)
+                            enemy.EnemySummon(enemies)
                             enemy.lastaction = 'spawned an Orc!'
                             action = 'spawned an Orc!'
                         
@@ -443,7 +445,7 @@ class Battles:
                             enemy.lastaction = 'healed!'
                             action = 'healed!'
                         else:
-                            BossEnemy.EnemySummon(enemies)
+                            enemy.EnemySummon(enemies)
                             enemy.lastaction = 'spawned an Orc!'
                             action = 'spawned an Orc!'
             
@@ -529,7 +531,7 @@ class Battles:
                 xcoordinate +=30
                 
     def EndBattle(enemiesfought):
-        global battle, events
+        global battle, events, x
         youwinrect = pygame.Rect(20, 20, 1240, 480)
         youwinfont = pygame.font.Font(None, 200)
         youwin2font = pygame.font.Font(None, 40)
@@ -542,15 +544,15 @@ class Battles:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 battle = False
-        if len(enemies) != 0:
+        
+        if x == 1:
+            x += 1
             for enemy in enemiesfought:
-                print('hello')
                 player.MainCharacterGetEXP(enemy.expdrop)
-                if isinstance(enemy, Weapon) or isinstance(enemy, HealingItem):
-                    player.inventory.append(enemy.weapondrop)
-                enemiesfought.remove(enemy)
-                for item in player.inventory:
-                    print(item.name)
+                if isinstance(enemy, Enemy):
+                    if isinstance(enemy.weapondrop, Weapon) or isinstance(enemy.weapondrop, HealingItem):
+                        player.inventory.append(enemy.weapondrop)
+                    enemiesfought.remove(enemy)
         
     def BattleMenu(player, enemies):
         global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block, events # im gonna be real i would be 
@@ -564,7 +566,7 @@ class Battles:
         block = False
         blockdone = False
         chosenenemy = None
-        enemiesfought = enemies
+        enemiesfought = []
         x = 1
         y = 0
         z = 1
@@ -634,30 +636,25 @@ class Battles:
             pygame.display.update() 
 
         endingbattle = True
-        while endingbattle: # placeholder until i figure out how i will set you back in the open world
+        while endingbattle:
+            # placeholder until i figure out how i will set you back in the open world
+            screen.fill((255, 255, 255)) # flashbanging me constantly as i debug bruh / do i change it? of course not
             for event in events:
                 if event.type == pygame.QUIT:
                     endingbattle = False
                     pygame.quit()
                     exit()
                     break
-                    
-            screen.fill((255, 255, 255)) # flashbanging me constantly as i debug bruh / do i change it? of course not
+        
+            Battles.EndBattle(enemiesfought)        
             pygame.display.update()
-    
+            x += 1
+            if x == 100:
+                endingbattle = False
+                break
+
     def Battle(player, enemies):
         global running, wasactiondone, battle
         running = False
         battle = True
         Battles.BattleMenu(player, enemies)
-
-                
-player = MainCharacter('edward', 10000, 9999, 99, Weapon('supersword', 1, 1, 1), [], 100, 10, 1) 
-goblin = Enemy('GoblinA', 100, 50, 10, Weapon('supersword', 1, 1, 1), 5, Weapon('supersword', 1, 1, 1), 7, None)
-goblina = Enemy('GoblinB', 100, 50, 10, Weapon('supersword', 1, 1, 1), 5, Weapon('supersword', 1, 1, 1), 7, None)
-goblinb = Enemy('GoblinC', 100, 50, 10, Weapon('supersword', 1, 1, 1), 5, Weapon('supersword', 1, 1, 1), 7, None)
-goblinc = BossEnemy('BossGoblinA', 100, 100, 10, Weapon('supersword', 1, 1, 1), 5, None)
-
-enemies = [goblin, goblina, goblinb, goblinc]
-
-Battles.BattleMenu(player, enemies)

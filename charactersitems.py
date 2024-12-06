@@ -176,7 +176,7 @@ class MainCharacter(Character):
             self.exp = overflow
             self.strength += 5*levels
             self.maxhp += 10*levels
-            self.currenthp = self.maxhp*hppercent
+            self.currenthp = round(self.maxhp*hppercent, 0)
 
 class Enemy(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop, lastaction):
@@ -240,7 +240,7 @@ class BossEnemy(Character):
    
     def EnemySummon(self, enemies):
         woodclub = Weapon('woodclub', 10, 10, 10)
-        summonable = Enemy("Summoned Orc", 20, 15, 10, woodclub, 0, 'nothing', 0)
+        summonable = Enemy("Summoned Orc", 20, 15, 10, woodclub, 0, 'nothing', 0, None)
         enemies.append(summonable)
 
     def MAKELIFEHELL(self, enemies):
