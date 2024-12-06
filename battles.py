@@ -14,7 +14,7 @@ pygame.init()
 # of course it does im an awesome programmer 👍
 
 screen = pygame.display.set_mode((1280, 720))
-pygame.display.set_caption('Game')
+pygame.display.set_caption('Battles')
 battle = True
 running = True
 
@@ -658,3 +658,5 @@ class Battles:
         running = False
         battle = True
         Battles.BattleMenu(player, enemies)
+
+player = MainCharacter('placeholder so there are no undefined errors', 1, 1, 1, 1, [], 1, 1, 1)
