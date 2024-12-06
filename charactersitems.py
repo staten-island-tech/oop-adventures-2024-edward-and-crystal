@@ -168,7 +168,8 @@ class MainCharacter(Character):
 
     def MainCharacterGetEXP(self, exp):
         self.exp += exp
-        if self.exp >= 75:
+        expneeded = 75 + 5*self.level
+        if self.exp >= expneeded:
             hppercent = self.currenthp / self.maxhp
             levels = int(self.exp / 75)
             self.level += levels
