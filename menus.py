@@ -74,24 +74,21 @@ class Menu:
                     inventory = True
                 elif buttontitle == 'SAVE':
                     save = True
-            
-    def MakeEverythingElseFalse(setting):
-        global mainmenu, statsrunning, shop, inventory, save
-        thethings = [mainmenu, statsrunning, shop, inventory, save]
-        thethings.remove(setting)
     
-    def StatScreen(player):
+    def StatScreen(player, events):
+        global mainmenu, statsrunning
+        
+        titlefont = pygame.font.SysFont(None, 110, bold = True)
+        subtitlefont = pygame.font.SysFont(None, 80, bold = True)
+        littletitlefont = pygame.font.SysFont(None, 50, bold = True)
+        textfont = pygame.font.Font(None, 45)
+        
         # title
         titlerect = pygame.Rect(0, 110, 500, 100)
-        titlefont = pygame.font.SysFont(None, 110, bold = True)
         title = titlefont.render(f"{player.name.upper()}'S STATS", True, (255, 255, 255))
         offset = len(player.name)
         titlesurface = title.get_rect(centerx=titlerect.centerx+(offset*23), centery = 60)
         screen.blit(title, titlesurface)
-        
-        subtitlefont = pygame.font.SysFont(None, 80, bold = True)
-        littletitlefont = pygame.font.SysFont(None, 50, bold = True)
-        textfont = pygame.font.Font(None, 45)
         
         # health
         healthtitlerect = pygame.Rect(10, 120, 250, 110)
@@ -107,7 +104,10 @@ class Menu:
         subhealthbar = pygame.Rect(310, 145, 680*hppercentage, 60)
         pygame.draw.rect(screen, (100, 120, 160), subhealthbar)
         
-
+        healthbartext = subtitlefont.render(f'{player.currenthp} / {player.maxhp} HP', True, (255, 255, 255))
+        healthbartextsurface = healthbartext.get_rect(centery=healthbaroutline.centery, centerx=healthbaroutline.centerx - 180)
+        screen.blit(healthbartext, healthbartextsurface)
+        
         # level and exp
         leveltitlerect = pygame.Rect(10, 250, 270, 110)
         leveltitle = subtitlefont.render(f'LEVEL {player.level}', True, (200, 220, 255))
@@ -122,6 +122,10 @@ class Menu:
         exppercentage = player.exp / expneeded
         subexpbar = pygame.Rect(310, 275, 680*exppercentage, 60)
         pygame.draw.rect(screen, (100, 120, 160), subexpbar)
+        
+        exptext = subtitlefont.render(f'{player.exp} / {expneeded} XP', True, (255, 255, 255))
+        exptextsurface = exptext.get_rect(centery=expbaroutline.centery, centerx = expbaroutline.centerx - 177)
+        screen.blit(exptext, exptextsurface)
         
         # strength
         strengthrectoutline = pygame.Rect(20, 380, 400, 300)
@@ -201,9 +205,55 @@ class Menu:
         linetwoB = linetwoA.get_rect(centerx=weaponrect.centerx, centery=weaponrect.centery)
         screen.blit(linetwoA, linetwoB)
         
+        # back button
+        backbutton = pygame.Rect(850, 25, 400, 90)
+        if backbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+
+        pygame.draw.rect(screen, color, backbutton)
+        backbuttontext = subtitlefont.render('MENU', True, (255, 255, 255))
+        backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
+        screen.blit(backbuttontext, backbuttontextsurface)
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
+                mainmenu = True
+                statsrunning = False               
+    
+    def Inventory(player, events):
+        global inventory, mainmenu, inventoryselectscreen, selecteditem
+        
+        titlefont = pygame.font.SysFont(None, 110, bold = True)
+        subtitlefont = pygame.font.SysFont(None, 80, bold = True)
+        littletitlefont = pygame.font.SysFont(None, 50, bold = True)
+        textfont = pygame.font.Font(None, 45)
+        
+        # title
+        titlerect = pygame.Rect(0, 110, 500, 100)
+        title = titlefont.render(f"INVENTORY", True, (255, 255, 255))
+        titlesurface = title.get_rect(centerx=titlerect.centerx, centery = 60)
+        screen.blit(title, titlesurface)
+        
+        # back button
+        backbutton = pygame.Rect(850, 25, 400, 90)
+        if backbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+
+        pygame.draw.rect(screen, color, backbutton)
+        backbuttontext = subtitlefont.render('MENU', True, (255, 255, 255))
+        backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
+        screen.blit(backbuttontext, backbuttontextsurface)
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
+                mainmenu = True
+                inventory = False 
+        
 
     def OpenMenuScreen(player):
-        global menurunning, mainmenu, statsrunning, shop, inventory, save
+        global menurunning, mainmenu, statsrunning, shop, inventory, inventoryselectscreen, save, selecteditem
         menurunning = True
         ending = True
         
@@ -212,6 +262,8 @@ class Menu:
         shop = False
         inventory = False
         save = False
+        inventoryselectscreen = False
+        selecteditem = None
         
         x = 0
 
@@ -238,23 +290,22 @@ class Menu:
                 color = (redness, greenness, blueness)
 
             if mainmenu == True:
-                Menu.MakeEverythingElseFalse(mainmenu)
                 buttontitles = ['YOUR   STATS', 'SHOP', 'INVENTORY', 'SAVE', 'CLOSE MENU']
                 for buttontitle in buttontitles:
                     Menu.DrawButtonMainMenu(buttontitle, events)
                     
             elif statsrunning == True:
-                Menu.MakeEverythingElseFalse(statsrunning)
-                Menu.StatScreen(player)
-                pass
+                Menu.StatScreen(player, events)
+            
             elif shop == True:
-                Menu.MakeEverythingElseFalse(shop)
-                pass
+                print('hi')
+            
             elif inventory == True:
-                Menu.MakeEverythingElseFalse(inventory)
+                Menu.Inventory(player, events)
+            elif inventoryselectscreen == True:
                 pass
+            
             elif save == True:
-                Menu.MakeEverythingElseFalse(save)
                 pass
             
             pygame.display.update() 
