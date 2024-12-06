@@ -72,6 +72,13 @@ class Menu:
         text = textfont.render(buttontitle, True, (200, 220, 255))
         textsurface = text.get_rect(left=buttonrect.left + 10, centery = buttonrect.centery)
         screen.blit(text, textsurface)
+        
+        if buttontitle == 'YOUR   STATS':
+            titlefont = pygame.font.SysFont(None, 110, bold = True)
+            title = titlefont.render('MAIN MENU', True, (255, 255, 255))
+            titlesurface = title.get_rect(centerx=buttonrect.centerx-10, centery = 60)
+            screen.blit(title, titlesurface)
+            
     
     def OpenMenuScreen(player):
         global menurunning
