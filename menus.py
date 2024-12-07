@@ -57,7 +57,7 @@ class Menu:
         # title
         if buttontitle == 'YOUR   STATS':
             titlefont = pygame.font.SysFont(None, 110, bold = True)
-            title = titlefont.render('MAIN MENU', True, (255, 255, 255))
+            title = titlefont.render('MENU', True, (255, 255, 255))
             titlesurface = title.get_rect(centerx=buttonrect.centerx-10, centery = 60)
             screen.blit(title, titlesurface)
         
@@ -105,7 +105,7 @@ class Menu:
         pygame.draw.rect(screen, (100, 120, 160), subhealthbar)
         
         healthbartext = subtitlefont.render(f'{player.currenthp} / {player.maxhp} HP', True, (255, 255, 255))
-        healthbartextsurface = healthbartext.get_rect(centery=healthbaroutline.centery, centerx=healthbaroutline.centerx - 180)
+        healthbartextsurface = healthbartext.get_rect(centery=healthbaroutline.centery, centerx=healthbaroutline.centerx - 165)
         screen.blit(healthbartext, healthbartextsurface)
         
         # level and exp
@@ -250,7 +250,7 @@ class Menu:
             pygame.draw.rect(screen, (30, 30, 40), itemrect)
             pygame.draw.rect(screen, color, itemrectinside)
             
-            itemtext = itemfont.render(f'{theitem.name}', True, (255, 255, 255))
+            itemtext = itemfont.render(f'{theitem.name.upper()}', True, (255, 255, 255))
             itemsurface = itemtext.get_rect(center=itemrect.center)
             screen.blit(itemtext, itemsurface)
             
@@ -265,14 +265,16 @@ class Menu:
                         inventoryselectscreen = True
                         selecteditem = theitem
                         
-    def RouteInventoryFunction(selecteditem, events):
+    def RouteInventoryFunction(player, selecteditem, events):
         if isinstance(selecteditem, Weapon):
-            Menu.EquipWeapon(selecteditem, events)
+            Menu.EquipWeapon(player, selecteditem, events)
         elif isinstance(selecteditem, HealingItem):
-            Menu.HealingMenu(selecteditem, events)
-            
-    def EquipWeapon(selecteditem, events):
-        global inventoryselectscreen, inventory
+            Menu.HealingMenu(player, selecteditem, events)
+        else:
+            print('UH OH!')
+
+    def EquipWeapon(player, selecteditem, events):
+        global inventoryselectscreen, inventory, mainmenu
         titlefont = pygame.font.SysFont(None, 110, bold = True)
         subtitlefont = pygame.font.SysFont(None, 80, bold = True)
         littletitlefont = pygame.font.SysFont(None, 50, bold = True)
@@ -305,7 +307,6 @@ class Menu:
         
         damagerect = pygame.Rect(50, 320, 840, 100)
         damagepercentage = selecteditem.strength / 100
-
         damagerectinside = pygame.Rect(60, 330, (840*damagepercentage) - 20, 80)
         pygame.draw.rect(screen, (20, 20, 30), damagerect)
         pygame.draw.rect(screen, (60, 60, 90), damagerectinside)
@@ -314,7 +315,87 @@ class Menu:
         damagesurface = damage.get_rect(center=damagerect.center)
         screen.blit(damage, damagesurface)
         
+        # durability
+        
+        durabilityrect = pygame.Rect(50, 450, 840, 100)
+        durabilitypercentage = selecteditem.durability / 100
+        
+        durabilityrectinside = pygame.Rect(60, 460, (840*durabilitypercentage) - 20, 80)
+        pygame.draw.rect(screen, (20, 20, 30), durabilityrect)
+        pygame.draw.rect(screen, (60, 60, 90), durabilityrectinside)
+        
+        durability = subtitlefont.render(f'DURABILITY: {selecteditem.durability}', True, (255, 255, 255))
+        durabilitysurface = durability.get_rect(center=durabilityrect.center)
+        screen.blit(durability, durabilitysurface)
+        
+        # value
+        
+        value = round(selecteditem.cost * durabilitypercentage, 0)
+        
+        valuerect = pygame.Rect(50, 580, 840, 100)
+        if value > 100:
+            value = 100
+            
+        valuepercentage = value / 100
+        
+        valuerectinside = pygame.Rect(60, 590, (840*valuepercentage) - 20, 80)
+        pygame.draw.rect(screen, (20, 20, 30), valuerect)
+        pygame.draw.rect(screen, (60, 60, 90), valuerectinside)
+        
+        valuetext = subtitlefont.render(f'VALUE: {value}', True, (255, 255, 255))
+        valuesurface = valuetext.get_rect(center=valuerect.center)
+        screen.blit(valuetext, valuesurface)
+        
+        # equip
+        
+        equipbuttonoutline = pygame.Rect(950, 300, 285, 200)
+        equipbutton = pygame.Rect(960, 310, 265, 180)
+        if equipbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+        
+        pygame.draw.rect(screen, (30, 30, 40), equipbuttonoutline)
+        pygame.draw.rect(screen, color, equipbutton)
+        
+        equiptext = littletitlefont.render('EQUIP THIS', True, (255, 255, 255))
+        equiptextsurface = equiptext.get_rect(center=equipbutton.center)
+        screen.blit(equiptext, equiptextsurface)
+        
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and equipbutton.collidepoint(pygame.mouse.get_pos()):
+                player.weapon = selecteditem
+                if len(player.inventory) == 1:
+                    inventoryselectscreen = False
+                    inventory = False
+                    mainmenu = True
+        
+        # sell
+        
+        sellbuttonoutline = pygame.Rect(950, 520, 285, 180)
+        sellbutton = pygame.Rect(960, 530, 265, 160)
+        
+        if sellbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+        
+        pygame.draw.rect(screen, (30, 30, 40), sellbuttonoutline)
+        pygame.draw.rect(screen, color, sellbutton)
+        
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
+               inventory = True
+               player.gold += value
+               player.inventory.remove(selecteditem)
+               inventoryselectscreen = False
+               
+        selltext = littletitlefont.render('SELL ITEM', None, (255, 255, 255))
+        sellsurface = selltext.get_rect(center = sellbutton.center)
+        screen.blit(selltext, sellsurface)
+               
         # back button
+        
         backbutton = pygame.Rect(850, 25, 400, 90)
         if backbutton.collidepoint(pygame.mouse.get_pos()):
             color = (100, 110, 140)
@@ -329,8 +410,9 @@ class Menu:
             if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
                 inventory = True
                 inventoryselectscreen = False
+            
         
-    def HealingMenu(selecteditem, events):
+    def HealingMenu(player, selecteditem, events):
         global inventoryselectscreen, inventory
 
         titlefont = pygame.font.SysFont(None, 110, bold = True)
@@ -341,9 +423,103 @@ class Menu:
         # title
         titlerect = pygame.Rect(0, 110, 400, 100)
         title = titlefont.render("HEALING MENU", True, (255, 255, 255))
-        offset = len(player.name)
-        titlesurface = title.get_rect(centerx=titlerect.centerx+(offset*23), centery = 60)
+        titlesurface = title.get_rect(centerx=titlerect.centerx+130, centery = 60)
         screen.blit(title, titlesurface)
+        
+        # putting the name of the item
+        weapontitlerect = pygame.Rect(100, 135, 1060, 120)
+        pygame.draw.rect(screen, (30, 30, 40), weapontitlerect)
+        
+        weapontitletext = subtitlefont.render(f'HEALING ITEM: {selecteditem.name.upper()}', True, (255, 255, 255))
+        weapontitlesurface = weapontitletext.get_rect(center = weapontitlerect.center)
+        screen.blit(weapontitletext, weapontitlesurface)
+        
+        # 
+        # STATS
+        #
+        
+        statsboxoutline = pygame.Rect(20, 300, 900, 400)
+        pygame.draw.rect(screen, (30, 30, 40), statsboxoutline)
+        statsbox = pygame.Rect(30, 310, 880, 380)
+        pygame.draw.rect(screen, (40, 40, 60), statsbox)
+        
+        # heal
+        healrect = pygame.Rect(50, 370, 840, 100)
+        healpercentage = selecteditem.heal / 100
+        healrectinside = pygame.Rect(60, 380, (840*healpercentage) - 20, 80)
+        pygame.draw.rect(screen, (20, 20, 30), healrect)
+        pygame.draw.rect(screen, (60, 60, 90), healrectinside)
+                
+        heal = subtitlefont.render(f"HEALS: {selecteditem.heal} HP", True, (255, 255, 255))
+        healsurface = heal.get_rect(center=healrect.center)
+        screen.blit(heal, healsurface)
+        
+        # value
+        healrating = selecteditem.heal / 150
+        if healrating > 1:
+            healrating = 1
+        
+        
+        value = round(selecteditem.cost * healrating * 25, 0)
+        
+        valuerect = pygame.Rect(50, 530, 840, 100)
+        if value > 100:
+            value = 100
+        
+        valuerectinside = pygame.Rect(60, 540, (840*healrating) - 20, 80)
+        pygame.draw.rect(screen, (20, 20, 30), valuerect)
+        pygame.draw.rect(screen, (60, 60, 90), valuerectinside)
+        
+        valuetext = subtitlefont.render(f'VALUE: {value}', True, (255, 255, 255))
+        valuesurface = valuetext.get_rect(center=valuerect.center)
+        screen.blit(valuetext, valuesurface)
+        
+        # use
+        
+        usebuttonoutline = pygame.Rect(950, 300, 285, 200)
+        usebutton = pygame.Rect(960, 310, 265, 180)
+        if usebutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+        
+        pygame.draw.rect(screen, (30, 30, 40), usebuttonoutline)
+        pygame.draw.rect(screen, color, usebutton)
+        
+        equiptext = littletitlefont.render('CONSUME', True, (255, 255, 255))
+        equiptextsurface = equiptext.get_rect(center=usebutton.center)
+        screen.blit(equiptext, equiptextsurface)
+        
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and usebutton.collidepoint(pygame.mouse.get_pos()):
+                player.PlayerHeal(selecteditem.heal)
+                player.inventory.remove(selecteditem)
+                inventoryselectscreen = False
+                inventory = True
+        
+        # sell
+        
+        sellbuttonoutline = pygame.Rect(950, 520, 285, 180)
+        sellbutton = pygame.Rect(960, 530, 265, 160)
+        
+        if sellbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+        
+        pygame.draw.rect(screen, (30, 30, 40), sellbuttonoutline)
+        pygame.draw.rect(screen, color, sellbutton)
+        
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
+               inventory = True
+               player.gold += value
+               player.inventory.remove(selecteditem)
+               inventoryselectscreen = False
+               
+        selltext = littletitlefont.render('SELL ITEM', None, (255, 255, 255))
+        sellsurface = selltext.get_rect(center = sellbutton.center)
+        screen.blit(selltext, sellsurface)
         
         # back button
         backbutton = pygame.Rect(850, 25, 400, 90)
@@ -392,6 +568,21 @@ class Menu:
                 inventory = False 
                 
         Menu.DrawInventoryButtons(player, events) 
+        
+        
+        inventoryfullness = len(player.inventory) / 24
+        inventorycapacityoutline = pygame.Rect(10, 630, 1260, 80)
+        inventorycapacity = pygame.Rect(15, 635, (1260*inventoryfullness) - 20, 70)
+        
+        pygame.draw.rect(screen, (30, 30, 40), inventorycapacityoutline)
+        pygame.draw.rect(screen, (60, 60, 90), inventorycapacity)
+        
+        inventorytext = subtitlefont.render(f'INVENTORY CAPACITY: {len(player.inventory)} / 24', True, (255, 255, 255))
+        inventorysurface = inventorytext.get_rect(center = inventorycapacityoutline.center)
+        screen.blit(inventorytext, inventorysurface)
+        
+        # back button
+        
         backbutton = pygame.Rect(850, 25, 400, 90)
         if backbutton.collidepoint(pygame.mouse.get_pos()):
             color = (100, 110, 140)
@@ -405,10 +596,40 @@ class Menu:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
                 mainmenu = True
-                inventory = False       
+                inventory = False     
+                
+    def Shop(player, events):
+        global mainmenu, shop, shopselect, selecteditem
+        
+        titlefont = pygame.font.SysFont(None, 110, bold = True)
+        subtitlefont = pygame.font.SysFont(None, 80, bold = True)
+        littletitlefont = pygame.font.SysFont(None, 50, bold = True)
+        textfont = pygame.font.Font(None, 45)
+        
+        # title
+        titlerect = pygame.Rect(0, 110, 500, 100)
+        title = titlefont.render(f"SHOP", True, (255, 255, 255))
+        titlesurface = title.get_rect(centerx=titlerect.centerx, centery = 60)
+        screen.blit(title, titlesurface)
+        
+        # back button
+        backbutton = pygame.Rect(850, 25, 400, 90)
+        if backbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+
+        pygame.draw.rect(screen, color, backbutton)
+        backbuttontext = subtitlefont.render('MENU', True, (255, 255, 255))
+        backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
+        screen.blit(backbuttontext, backbuttontextsurface)
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
+                mainmenu = True
+                shop = False 
 
     def OpenMenuScreen(player):
-        global menurunning, mainmenu, statsrunning, shop, inventory, inventoryselectscreen, save, selecteditem
+        global menurunning, mainmenu, statsrunning, shop, inventory, inventoryselectscreen, save, selecteditem, shopselect
         menurunning = True
         ending = True
         
@@ -419,6 +640,7 @@ class Menu:
         save = False
         inventoryselectscreen = False
         selecteditem = None
+        shopselect = False
         
         x = 0
 
@@ -453,12 +675,14 @@ class Menu:
                 Menu.StatScreen(player, events)
             
             elif shop == True:
-                print('hi')
+                Menu.Shop(player, events)
+            elif shopselect == True:
+                Menu.ShopSelect(player, selecteditem, events)
             
             elif inventory == True:
                 Menu.Inventory(player, events)
             elif inventoryselectscreen == True:
-                Menu.RouteInventoryFunction(selecteditem, events)
+                Menu.RouteInventoryFunction(player, selecteditem, events)
             
             elif save == True:
                 pass
@@ -479,16 +703,16 @@ class Menu:
             screen.fill((20, 20, 25))
             pygame.display.update()
 
-weaponA = Weapon('AHHH', 40, 1, 1)
-weaponB = Weapon('AHHH', 30, 1, 1)
-weaponC = Weapon('AHHHHHHsadofjadslkfjadsk;lf', 100, 1, 1)
-weaponD = Weapon('AHHH', 105, 1, 1)
-weaponE = Weapon('AHHH', 90, 1, 1)
-weaponF = Weapon('AHHH', 10, 1, 1)
-weaponG = Weapon('AHHH', 19, 1, 1)
-healingitem = HealingItem('AHHH', 37, 1)
-weaponI = Weapon('AHHH', 32, 1, 1)
+weaponA = Weapon('Weapon Sword', 40, 20, 57)
+weaponB = Weapon('WeaponB', 30, 20, 1)
+weaponC = Weapon('WeaponC', 100, 1, 1)
+weaponD = Weapon('WeaponD', 105, 20, 1)
+weaponE = Weapon('WeaponE', 90, 20, 1)
+weaponF = Weapon('WeaponF', 10, 20, 1)
+weaponG = Weapon('WeaponG', 19, 20, 1)
+healingitem = HealingItem('HEALING ITEM', 100, 1)
+weaponH = Weapon('WeaponH', 32, 20, 1)
 
-player = MainCharacter('player', 100, 59, 0, Weapon('aaaaaaaaaaaa', 100, 20, 30), [weaponA, weaponB, weaponC, weaponD, weaponE, weaponF, weaponG, healingitem, weaponI], 20, 20, 80)
+player = MainCharacter('player', 100, 59, 0, Weapon('aaaaaaaaaaaa', 100, 20, 30), [weaponA], 20, 20, 80)
 
 Menu.OpenMenuScreen(player)

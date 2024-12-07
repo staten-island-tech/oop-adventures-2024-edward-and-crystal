@@ -13,6 +13,8 @@ pygame.init()
 # does it work
 # of course it does im an awesome programmer 👍
 
+player = None
+
 screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption('Battles')
 battle = True
@@ -551,7 +553,7 @@ class Battles:
                 player.MainCharacterGetEXP(enemy.expdrop)
                 if isinstance(enemy, Enemy):
                     if isinstance(enemy.weapondrop, Weapon) or isinstance(enemy.weapondrop, HealingItem):
-                        if len(player.inventory) < 30: # capacity
+                        if len(player.inventory) < 24: # capacity
                             player.inventory.append(enemy.weapondrop)
                     enemiesfought.remove(enemy)
         
@@ -589,7 +591,7 @@ class Battles:
             
             pygame.draw.rect(screen, (200, 220, 240), (0, 620, 1280, 200))
             
-            hppercentage = round(player.currenthp / player.maxhp, 0) 
+            hppercentage = round(player.currenthp / player.maxhp, 3) 
             
             menufont = pygame.font.Font(None, 30)
             healthbar = pygame.Rect((10, 645, 200, 30))
@@ -659,5 +661,4 @@ class Battles:
         running = False
         battle = True
         Battles.BattleMenu(player, enemies)
-
-player = MainCharacter('placeholder so there are no undefined errors', 1, 1, 1, 1, [], 1, 1, 1)
+    
