@@ -2,6 +2,7 @@ from charactersitems import Character
 from charactersitems import MainCharacter
 from charactersitems import Weapon
 from charactersitems import HealingItem
+
 import pygame
 pygame.init()
 
@@ -632,7 +633,7 @@ class Menu:
         global menurunning, mainmenu, statsrunning, shop, inventory, inventoryselectscreen, save, selecteditem, shopselect
         menurunning = True
         ending = True
-        
+
         mainmenu = True
         statsrunning = False
         shop = False
@@ -641,7 +642,7 @@ class Menu:
         inventoryselectscreen = False
         selecteditem = None
         shopselect = False
-        
+
         x = 0
 
         while menurunning:
@@ -688,31 +689,4 @@ class Menu:
                 pass
             
             pygame.display.update() 
-        
-        while ending:
-            for event in events:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
-
-            x += 1
-            print(x)
-            if x > 99:
-                ending = False
-                break
-            screen.fill((20, 20, 25))
-            pygame.display.update()
-
-weaponA = Weapon('Weapon Sword', 40, 20, 57)
-weaponB = Weapon('WeaponB', 30, 20, 1)
-weaponC = Weapon('WeaponC', 100, 1, 1)
-weaponD = Weapon('WeaponD', 105, 20, 1)
-weaponE = Weapon('WeaponE', 90, 20, 1)
-weaponF = Weapon('WeaponF', 10, 20, 1)
-weaponG = Weapon('WeaponG', 19, 20, 1)
-healingitem = HealingItem('HEALING ITEM', 100, 1)
-weaponH = Weapon('WeaponH', 32, 20, 1)
-
-player = MainCharacter('player', 100, 59, 0, Weapon('aaaaaaaaaaaa', 100, 20, 30), [weaponA], 20, 20, 80)
-
-Menu.OpenMenuScreen(player)
+    

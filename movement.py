@@ -1,5 +1,9 @@
 import pygame
 from charactersitems import MainCharacter
+from charactersitems import Weapon
+from charactersitems import HealingItem
+
+from menus import Menu
 
 pygame.init()
 
@@ -7,7 +11,7 @@ screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption('Game')
 running = True
 
-class OpenWorld():
+class OpenWorld:
     def CreateMoveButton(direction, events, room, player):
         global playerx, playery, itworks
         buttonfont = pygame.font.Font(None, 36)
@@ -49,6 +53,7 @@ class OpenWorld():
                         
                     playerlocation = (testplayerx, testplayery)
                     itworks = False
+                    
                     for rectangle in room["rectangles"]:
                         rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
                         if rectcoords.collidepoint(playerlocation):
@@ -68,7 +73,7 @@ class OpenWorld():
                         if player.currenthp < 10:
                             player.currenthp = 10 # i'm not SO evil...
     
-    def CreateMenuButton(events): # opening the menu
+    def CreateMenuButton(player, events): # opening the menu
         menufont = pygame.font.Font(None, 36) # most of this code is the same
         menurect = pygame.Rect(800, 640, 180, 60)
         menutext = menufont.render("Open Menu", True, (255, 255, 255))
@@ -77,7 +82,7 @@ class OpenWorld():
             color = (40, 54, 60)
             for event in events: # if we are hovering over the button and we click it the menu gets printed
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print('menu') # sample function
+                    Menu.OpenMenuScreen(player) # sample function
         else:
             color = (20, 27, 30)
             
@@ -108,7 +113,7 @@ class OpenWorld():
             directions = ["LEFT", "UP", "DOWN", "RIGHT"]
             for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
                 OpenWorld.CreateMoveButton(direction, events, room, player)
-            OpenWorld.CreateMenuButton(events)
+            OpenWorld.CreateMenuButton(player, events)
             
             playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
             playerinforect = pygame.Rect(410, 640, 360, 60)
@@ -127,6 +132,6 @@ room = {
     (200, 200, 400, 50)]
     }   
 
-player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
+player = MainCharacter('drwillfulneglect', 100, 100, 10, Weapon("HI", 10, 10, 0), [], 100, 0, 0)
 
 OpenWorld.LoadRoom(room, player)
