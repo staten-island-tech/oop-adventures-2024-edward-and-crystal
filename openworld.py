@@ -122,6 +122,7 @@ room = {
     (200, 200, 400, 50)]
     }   
 
+
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 
 OpenWorld.LoadRoom(room, player)

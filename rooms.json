@@ -1,17 +1,14 @@
-[{
-    "name" : "StartArea",
-    "spawntable" : [{
-        "name" : "Goblin",
-        "spawnrate" : 60
-    }, {
-        "name" : "Slime",
-        "spawnrate" : 35
-    }, {
-        "name" : "Orc",
-        "spawnrate" : 4
-    }, {
-        "name" : "Grifter",
-        "spawnrate" : 1
-    }]
-}
+[
+    {
+        "room_one": [
+            [100, 100, 100, 400],
+            [200, 200, 400, 50]
+        ]
+    },
+    {
+        "room_two": [
+            [100, 100, 100, 100],
+            [620, 100, 100, 100]
+        ]
+    }
 ]
