@@ -125,13 +125,3 @@ class OpenWorld:
             playerlocation = pygame.Rect(playerx, playery, 10, 10) # a square where the player is
             pygame.draw.rect(screen, (255, 255, 255), playerlocation)
             pygame.display.update()
- 
-room = {
-    "rectangles" : [
-    (100, 100, 100, 400),
-    (200, 200, 400, 50)]
-    }   
-
-player = MainCharacter('drwillfulneglect', 100, 100, 10, Weapon("HI", 10, 10, 0), [], 100, 0, 0)
-
-OpenWorld.LoadRoom(room, player)

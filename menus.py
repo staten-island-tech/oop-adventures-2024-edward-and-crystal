@@ -719,21 +719,17 @@ class Menu:
             canpurchase = False
             text = 'TOO EXPENSIVE'
         
-        for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
-                player.inventory.append(item)
-                player.gold -= item.cost
-                shopselect = False
-                shop = True
+        if canpurchase == True:
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
+                    player.inventory.append(item)
+                    player.gold -= item.cost
+                    shopselect = False
+                    shop = True
                
         selltext = littletitlefont.render(text, None, (255, 255, 255))
         sellsurface = selltext.get_rect(center = sellbutton.center)
         screen.blit(selltext, sellsurface)
-        
-        if canpurchase == True:
-            for event in events:
-                if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
-                    player.gold -= item.cost
         
         # back button
         backbutton = pygame.Rect(850, 25, 400, 90)
@@ -824,21 +820,17 @@ class Menu:
             canpurchase = False
             text = 'TOO EXPENSIVE'
         
-        for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
-                player.inventory.append(item)
-                player.gold -= item.cost
-                shopselect = False
-                shop = True
+        if canpurchase == True:
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
+                    player.inventory.append(item)
+                    player.gold -= item.cost
+                    shopselect = False
+                    shop = True
                
         selltext = littletitlefont.render(text, None, (255, 255, 255))
         sellsurface = selltext.get_rect(center = sellbutton.center)
         screen.blit(selltext, sellsurface)
-        
-        if canpurchase == True:
-            for event in events:
-                if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
-                    player.gold -= item.cost
         
         # back button
         backbutton = pygame.Rect(850, 25, 400, 90)
@@ -851,6 +843,11 @@ class Menu:
         backbuttontext = subtitlefont.render('SHOP', True, (255, 255, 255))
         backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
         screen.blit(backbuttontext, backbuttontextsurface)
+        
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
+                shopselect = False
+                shop = True
     
     def Shop(player, events):
         global mainmenu, shop, shopselect, selecteditem
@@ -967,6 +964,3 @@ class Menu:
                 pass
             
             pygame.display.update() 
-            
-player = MainCharacter('hi', 100, 100, 10, Weapon('EdSword', 10, 10, 0), [], 107, 100, 100)
-Menu.OpenMenuScreen(player)
