@@ -384,12 +384,13 @@ class Menu:
         pygame.draw.rect(screen, (30, 30, 40), sellbuttonoutline)
         pygame.draw.rect(screen, color, sellbutton)
         
-        for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
-               inventory = True
-               player.gold += value
-               player.inventory.remove(selecteditem)
-               inventoryselectscreen = False
+        if player.weapon != selecteditem:
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
+                   inventory = True
+                   player.gold += value
+                   player.inventory.remove(selecteditem)
+                   inventoryselectscreen = False
                
         selltext = littletitlefont.render('SELL ITEM', None, (255, 255, 255))
         sellsurface = selltext.get_rect(center = sellbutton.center)
@@ -639,7 +640,8 @@ class Menu:
         
         titlefont = pygame.font.SysFont(None, 110, bold = True)
         subtitlefont = pygame.font.SysFont(None, 80, bold = True)
-        textfont = pygame.font.Font(None, 45)      
+        textfont = pygame.font.Font(None, 45) 
+        littletitlefont = pygame.font.SysFont(None, 50, bold = True)     
 
         # title
         titlerect = pygame.Rect(0, 110, 500, 100)
@@ -647,13 +649,99 @@ class Menu:
         titlesurface = title.get_rect(centerx=titlerect.centerx, centery = 60)
         screen.blit(title, titlesurface)
         
+        # putting the name of the weapon
+        weapontitlerect = pygame.Rect(100, 135, 1060, 120)
+        pygame.draw.rect(screen, (30, 30, 40), weapontitlerect)
+        
+        weapontitletext = subtitlefont.render(f'WEAPON: {selecteditem.name.upper()}', True, (255, 255, 255))
+        weapontitlesurface = weapontitletext.get_rect(center = weapontitlerect.center)
+        screen.blit(weapontitletext, weapontitlesurface)
+        
+        # 
+        # STATS
+        #
+        
+        statsboxoutline = pygame.Rect(20, 300, 900, 400)
+        pygame.draw.rect(screen, (30, 30, 40), statsboxoutline)
+        statsbox = pygame.Rect(30, 310, 880, 380)
+        pygame.draw.rect(screen, (40, 40, 60), statsbox)
+        
+        # damage
+        
+        damagerect = pygame.Rect(50, 320, 840, 100)
+        damagerectinside = pygame.Rect(60, 330, 820, 80)
+        pygame.draw.rect(screen, (20, 20, 30), damagerect)
+        pygame.draw.rect(screen, (60, 60, 90), damagerectinside)
+                
+        damage = subtitlefont.render(f"DAMAGE: {selecteditem.strength}", True, (255, 255, 255))
+        damagesurface = damage.get_rect(center=damagerect.center)
+        screen.blit(damage, damagesurface)
+        
+        # durability
+        
+        durabilityrect = pygame.Rect(50, 450, 840, 100)
+        durabilityrectinside = pygame.Rect(60, 460, 820, 80)
+        pygame.draw.rect(screen, (20, 20, 30), durabilityrect)
+        pygame.draw.rect(screen, (60, 60, 90), durabilityrectinside)
+        
+        durability = subtitlefont.render(f'DURABILITY: {selecteditem.durability}', True, (255, 255, 255))
+        durabilitysurface = durability.get_rect(center=durabilityrect.center)
+        screen.blit(durability, durabilitysurface)
+        
+        # cost
+        
+        costrect = pygame.Rect(50, 580, 840, 100)
+        costrectinside = pygame.Rect(60, 590, 820, 80)
+        pygame.draw.rect(screen, (20, 20, 30), costrect)
+        pygame.draw.rect(screen, (60, 60, 90), costrectinside)
+        
+        valuetext = subtitlefont.render(f'COST: {item.cost}', True, (255, 255, 255))
+        valuesurface = valuetext.get_rect(center=costrect.center)
+        screen.blit(valuetext, valuesurface)
+        
+        # purchase (all the variables are sell bc im too lazy to recode what is functionally the same)
+        
+        sellbuttonoutline = pygame.Rect(950, 520, 285, 180)
+        sellbutton = pygame.Rect(960, 530, 265, 160)
+        
+        if sellbutton.collidepoint(pygame.mouse.get_pos()):
+            color = (100, 110, 140)
+        else:
+            color = (50, 50, 75)
+        
+        pygame.draw.rect(screen, (30, 30, 40), sellbuttonoutline)
+        pygame.draw.rect(screen, color, sellbutton)
+        
+        if player.gold >= item.cost:
+            canpurchase = True
+            text = 'PURCHASE'
+        else:
+            canpurchase = False
+            text = 'TOO EXPENSIVE'
+        
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
+                player.inventory.append(item)
+                player.gold -= item.cost
+                shopselect = False
+                shop = True
+               
+        selltext = littletitlefont.render(text, None, (255, 255, 255))
+        sellsurface = selltext.get_rect(center = sellbutton.center)
+        screen.blit(selltext, sellsurface)
+        
+        if canpurchase == True:
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONDOWN and sellbutton.collidepoint(pygame.mouse.get_pos()):
+                    player.gold -= item.cost
+        
         # back button
         backbutton = pygame.Rect(850, 25, 400, 90)
         if backbutton.collidepoint(pygame.mouse.get_pos()):
             color = (100, 110, 140)
         else:
             color = (50, 50, 75)
-
+            
         pygame.draw.rect(screen, color, backbutton)
         backbuttontext = subtitlefont.render('SHOP', True, (255, 255, 255))
         backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
