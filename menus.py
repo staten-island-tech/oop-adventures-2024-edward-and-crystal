@@ -599,12 +599,49 @@ class Menu:
                 mainmenu = True
                 inventory = False     
                 
+    def DrawShopButton(item, index, events):
+        global shop, shopselect, selecteditem
+        littletitlefont = pygame.font.SysFont(None, 50, bold = True)
+        
+        left = 0
+        if index >= 4:
+            index -= 4
+            left += 1
+        
+        button = pygame.Rect(200 + (left * 430), 150 + (index * 150), 400, 100) 
+        if button.collidepoint(pygame.mouse.get_pos()):
+            color = (60, 60, 90)
+        else:
+            color = (40, 40, 60)
+             
+        pygame.draw.rect(screen, color, button)
+        text = littletitlefont.render(f'{item.name}', True, (255, 255, 255))    
+        textsurface = text.get_rect(center=button.center)
+        screen.blit(text, textsurface)
+        
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and color == (60, 60, 90):
+                shop = False
+                shopselect = True
+                selecteditem = item
+                
+    def RouteShopSelect(player, item, events):
+        if isinstance(item, Weapon):
+            Menu.BuyWeapon(player, item, events)
+        else:
+            Menu.BuyHealingItem(player, item, events)
+            
+    def BuyWeapon(player, item, events):
+        print(item.name)        
+    
+    def BuyHealingItem(player, item, events):
+        print(item.cost)
+    
     def Shop(player, events):
         global mainmenu, shop, shopselect, selecteditem
         
         titlefont = pygame.font.SysFont(None, 110, bold = True)
         subtitlefont = pygame.font.SysFont(None, 80, bold = True)
-        littletitlefont = pygame.font.SysFont(None, 50, bold = True)
         textfont = pygame.font.Font(None, 45)
         
         # title
@@ -612,6 +649,31 @@ class Menu:
         title = titlefont.render(f"SHOP", True, (255, 255, 255))
         titlesurface = title.get_rect(centerx=titlerect.centerx, centery = 60)
         screen.blit(title, titlesurface)
+        
+        # draw the purchaseableitems
+        woodensword = Weapon("Wooden Sword", 9, 14, 8)
+        stonesword = Weapon("Stone Sword", 12, 18, 15)
+        goldsword = Weapon("Gold Sword", 30, 6, 16)
+        edsword = Weapon("EdSword", 50, 100, 130) # like my own name, as i am a narcissist
+        
+        apple = HealingItem("Apple", 7, 10)
+        smallhealingpotion = HealingItem("Small Healing Potion", 15, 20)
+        bighealingpotion = HealingItem("Big Healing Potion", 30, 35)
+        
+        shopitems = [woodensword, stonesword, apple]
+        if player.level > 5:
+            shopitems.append(goldsword)
+            shopitems.append(smallhealingpotion)
+            if player.level > 10:
+                shopitems.append(edsword)
+                shopitems.append(bighealingpotion)
+        
+        index = 0
+            
+        for item in shopitems:
+            Menu.DrawShopButton(item, index, events)
+            index += 1
+        
         
         # back button
         backbutton = pygame.Rect(850, 25, 400, 90)
@@ -624,6 +686,7 @@ class Menu:
         backbuttontext = subtitlefont.render('MENU', True, (255, 255, 255))
         backbuttontextsurface = backbuttontext.get_rect(center = backbutton.center)
         screen.blit(backbuttontext, backbuttontextsurface)
+        
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
                 mainmenu = True
@@ -678,7 +741,7 @@ class Menu:
             elif shop == True:
                 Menu.Shop(player, events)
             elif shopselect == True:
-                Menu.ShopSelect(player, selecteditem, events)
+                Menu.RouteShopSelect(player, selecteditem, events)
             
             elif inventory == True:
                 Menu.Inventory(player, events)
@@ -689,4 +752,6 @@ class Menu:
                 pass
             
             pygame.display.update() 
-    
+            
+player = MainCharacter('hi', 100, 100, 10, Weapon('EdSword', 10, 10, 0), [], 7, 100, 7)
+Menu.OpenMenuScreen(player)
