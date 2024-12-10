@@ -2,7 +2,7 @@ import tkinter as tk
 
 playercoordinates = [1, 2]
 window = tk.Tk()
-window.title('WorkOrYouLikeLittleKids')
+window.title('HI')
 
 print(playercoordinates[1])
 
