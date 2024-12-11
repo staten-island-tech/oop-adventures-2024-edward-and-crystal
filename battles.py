@@ -94,11 +94,15 @@ class Battles:
                     
                         
     def AttackStepTwo(player, enemy, enemies):
-        global attacksteptwo, attack, events, x, damage, enemiesfought
+        global attacksteptwo, attack, events, x, damage, enemiesfought, weaponbroken
         if x == 1:
             x += 1
             damage = Character.CharacterDamageCalc(player)
             enemy.currenthp -= damage
+            player.weapon.durability -= 1
+            if player.weapon.durability == 0:
+                player.weapon = Weapon('NONE', 0, 16384, 0)
+                weaponbroken = True
         textbox = pygame.Rect(220, 630, 1000, 80) # !
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
         font = pygame.font.Font(None, 36)
@@ -623,7 +627,7 @@ class Battles:
     def BattleMenu(player, enemies):
         global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block, events # im gonna be real i would be 
         # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
-        global blockdone, chosenenemy, enemiesfought
+        global blockdone, chosenenemy, enemiesfought, weaponbroken
         wasactiondone = False
         attackpressed = False
         attack = False
@@ -632,6 +636,7 @@ class Battles:
         block = False
         blockdone = False
         chosenenemy = None
+        weaponbroken = False
         enemiesfought = []
         x = 1
         y = 0
@@ -696,7 +701,20 @@ class Battles:
                     Battles.AttackStepTwo(player, chosenenemy, enemies)          
             
             if attacksteptwo == True:
-                Battles.AttackStepThree(player, enemies)  
+                Battles.AttackStepThree(player, enemies) 
+            
+            if weaponbroken == True:
+                weaponbrokenoutline = pygame.Rect(10, 10, 300, 50)
+                weaponbrokenrect = pygame.Rect(15, 15, 290, 40)
+                pygame.draw.rect(screen, (30, 30, 40), weaponbrokenoutline)
+                pygame.draw.rect(screen, (40, 40, 60), weaponbrokenrect)
+                font = pygame.font.Font(None, 24)
+                text = font.render('YOUR WEAPON HAS BROKEN!', True, (255, 24, 25))
+                textsurface = text.get_rect(centerx=weaponbrokenrect.centerx, centery = weaponbrokenrect.centery -10)
+                screen.blit(text, textsurface)
+                text2 = font.render(f'YOUR STRENGTH: {player.strength}', True, (255, 24, 25))
+                text2surface = text2.get_rect(centerx=weaponbrokenrect.centerx, centery = weaponbrokenrect.centery +12)
+                screen.blit(text2, text2surface)
             
             Battles.MakeEnemies(enemies)
             pygame.display.update() 
@@ -724,3 +742,11 @@ class Battles:
         running = False
         battle = True
         Battles.BattleMenu(player, enemies)
+        
+grifter = Grifter('grifter', 10, 10, 0, Weapon(None, None, None, None), 10, 10, None, 200, None)
+enemy = Enemy('regularenemy', 10, 10, 10, Weapon('hi', 10, 10, 0), 0, None, 10, None)
+boss = BossEnemy('bossguy', 100, 100, 10, Weapon('hi', 10, 10, 0), 0, None)
+player = MainCharacter('drwillfulneglect', 1000, 1000, 0, Weapon('sup', 100, 1, 0), [], 10, 0, 10)
+enemies = [grifter, enemy, boss]
+
+Battles.Battle(player, enemies)
