@@ -742,11 +742,3 @@ class Battles:
         running = False
         battle = True
         Battles.BattleMenu(player, enemies)
-        
-grifter = Grifter('grifter', 10, 10, 0, Weapon(None, None, None, None), 10, 10, None, 200, None)
-enemy = Enemy('regularenemy', 10, 10, 10, Weapon('hi', 10, 10, 0), 0, None, 10, None)
-boss = BossEnemy('bossguy', 100, 100, 10, Weapon('hi', 10, 10, 0), 0, None)
-player = MainCharacter('drwillfulneglect', 1000, 1000, 0, Weapon('hi :)', 100, 1, 0), [], 10, 0, 10)
-enemies = [grifter, enemy, boss]
-
-Battles.Battle(player, enemies)
