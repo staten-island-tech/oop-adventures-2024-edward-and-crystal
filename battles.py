@@ -261,7 +261,7 @@ class Battles:
         hawk1surface = hawk1.get_rect(center=(720, 655)) # don't ask
         screen.blit(hawk1, hawk1surface)
         
-        hawk2 = textfont.render(f"You now have {player.currenthp} HP!", True, (255, 255, 255))
+        hawk2 = textfont.render(f"You now have {str(player.currenthp).strip('.0')} HP!", True, (255, 255, 255))
         hawk2surface = hawk2.get_rect(center=(720, 685))
         screen.blit(hawk2, hawk2surface)
         
@@ -532,7 +532,7 @@ class Battles:
                 pygame.draw.rect(screen, (150, 195, 240), (xcoordinate+15, 530, (enemy.currenthp / enemy.maxhp) * 120, 30))
                 
                 font = pygame.font.Font(None, 28)
-                healthbartext = font.render(f"{enemy.currenthp} / {enemy.maxhp} HP", True, (255, 255, 255))
+                healthbartext = font.render(f"{str(enemy.currenthp).strip('.0')} / {str(enemy.maxhp).strip('.0')} HP", True, (255, 255, 255))
                 healthbarsurface = healthbartext.get_rect(center=healthbarrect.center)
                 screen.blit(healthbartext, healthbarsurface)
             
@@ -551,7 +551,7 @@ class Battles:
                 pygame.draw.rect(screen, (150, 195, 240), (xcoordinate+15, 530, (enemy.currenthp / enemy.maxhp) * 120, 30))
                 
                 font = pygame.font.Font(None, 28)
-                healthbartext = font.render(f"{enemy.currenthp} / {enemy.maxhp} HP", True, (255, 255, 255))
+                healthbartext = font.render(f"{str(enemy.currenthp).strip('.0')} / {str(enemy.maxhp).strip('.0')} HP", True, (255, 255, 255))
                 healthbarsurface = healthbartext.get_rect(center=healthbarrect.center)
                 screen.blit(healthbartext, healthbarsurface)
                 
@@ -570,8 +570,8 @@ class Battles:
                 pygame.draw.rect(screen, (100, 130, 140), healthbarrect)
                 pygame.draw.rect(screen, (150, 215, 240), (xcoordinate-15, 515, (enemy.currenthp / enemy.maxhp) * 180, 60))
                 
-                font = pygame.font.Font(None, 46)
-                healthbartext = font.render(f"{int(enemy.currenthp)} / {int(enemy.maxhp)} HP", True, (255, 255, 255))
+                font = pygame.font.Font(None, 28)
+                healthbartext = font.render(f"{str(enemy.currenthp).strip('.0')} / {str(enemy.maxhp).strip('.0')} HP", True, (255, 255, 255))
                 healthbarsurface = healthbartext.get_rect(center=healthbarrect.center)
                 screen.blit(healthbartext, healthbarsurface)
                 
@@ -611,6 +611,7 @@ class Battles:
         
         if x == 1:
             x += 1
+            player.gold = int(player.gold) # for grifters, to make the gold an integer again
             for enemy in enemiesfought:
                 player.MainCharacterGetEXP(enemy.expdrop)
                 if isinstance(enemy, Enemy):
@@ -667,7 +668,7 @@ class Battles:
             
             pygame.draw.rect(screen, (100, 110, 140), (10, 645, 200*hppercentage, 30))
         
-            hptext = menufont.render(f"{int(player.currenthp)} / {int(player.maxhp)} HP", True, (255, 255, 255))
+            hptext = menufont.render(f"{str(player.currenthp).strip('.0')} / {str(player.maxhp).strip('.0')} HP", True, (255, 255, 255))
             hpsurface = hptext.get_rect(center=healthbar.center)
             
             nameunderhealthbartext = menufont.render(player.name, True, 36)
@@ -724,10 +725,11 @@ class Battles:
         battle = True
         Battles.BattleMenu(player, enemies)
         
-player = MainCharacter('hi', 10, 10, 1000, Weapon('hi', 1, 1, 1), [], 10000, 10, 0)
+player = MainCharacter('sup', 10, 10, 1000, Weapon('hi', 1, 1, 1), [], 10000, 10, 0)
 grifter = Grifter('a', 1, 1, 1, Weapon(None, None, None, None), 10, 10, 10, 0, None)
 grifter2 = Grifter('b', 1, 1, 1, Weapon(None, None, None, None), 10, 10, 10, 0, None)
 grifter3 = Grifter('c', 1, 1, 1, Weapon(None, None, None, None), 10, 10, 10, 0, None)
 
+print(player.gold)
 Battles.Battle(player, [grifter, grifter2, grifter3])
 print(player.gold)
