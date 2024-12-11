@@ -961,18 +961,3 @@ class Menu:
                 pass
             
             pygame.display.update() 
-            
-            
-weapona = Weapon('WEAPONA', 10, 10, 100)
-weaponb = Weapon('WEAPONB', 10, 10, 100)
-weaponc = Weapon('WEAPONC', 10, 10, 100)
-weapond = Weapon('WEAPOND', 10, 10, 100)
-weapone = Weapon('WEAPONE', 10, 10, 100)
-healingitema = HealingItem('HEALINGITEMA', 10, 30)
-healingitemb = HealingItem('HEALINGITEMB', 10, 30)
-healingitemc = HealingItem('HEALINGITEMC', 10, 30)
-
-items = [weapona, weaponb, weaponc, weapond, weapone, healingitema, healingitemb, healingitemc]
-player = MainCharacter('EDWARDhi', 100, 60, 10, weapona, items, 1000, 12, 10)
-
-Menu.OpenMenuScreen(player)
