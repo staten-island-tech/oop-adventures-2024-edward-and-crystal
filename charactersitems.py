@@ -219,12 +219,26 @@ class Enemy(Character):
         player.currenthp -= damage
 
 class Grifter(Character): # grifter hell :D
-   def __init__(self, name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop, lastaction):
+    def __init__(self, name, maxhp, currenthp, strength, weapon, steal, golddrop, weapondrop, expdrop, lastaction):
         super().__init__(name, maxhp, currenthp, strength, weapon)
+        self.steal = steal
         self.golddrop = golddrop
         self.weapondrop = weapondrop
         self.expdrop = expdrop
         self.lastaction = lastaction
+        
+    def GrifterHeal(self, heal):
+        self.maxhp += .5*heal
+        
+        self.currenthp += heal
+        if self.currenthp > self.maxhp:
+            self.currenthp = self.maxhp
+            
+    def GrifterCalc(self):
+        steal = self.steal
+        multiply = 1 - (steal / 100)
+        
+        return multiply
 
 class BossEnemy(Character):
     def __init__(self, name, maxhp, currenthp, strength, weapon, expdrop, lastaction):

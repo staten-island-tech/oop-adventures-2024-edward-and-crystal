@@ -198,6 +198,20 @@ class Battles:
                     enemy.EnemyHeal(5)
                     enemy.lastaction = 'healed!'
                     action = 'healed!'
+            elif isinstance(enemy, Grifter):
+                action = random.randint(1, 2)
+                if (enemy.currenthp/enemy.maxhp) <= 0.4:
+                    enemy.GrifterHeal(10)
+                elif action == 1:
+                    steal = Grifter.GrifterCalc(enemy)                
+                    player.gold *= steal
+                    enemy.lastaction = 'stole gold!'
+                    action = 'stole gold!'
+                else:
+                    enemy.GrifterHeal(10)
+                    enemy.lastaction = 'healed!'
+                    action = 'healed!'
+                    
             elif isinstance(enemy, BossEnemy):
                 import random
                 action = random.randint(1, 100)
@@ -359,6 +373,20 @@ class Battles:
                         enemy.EnemyHeal(5)
                         enemy.lastaction = 'healed!'
                         action = 'healed!'
+                elif isinstance(enemy, Grifter):
+                    import random
+                    action = random.randint(1, 2)
+                    if (enemy.currenthp/enemy.maxhp) <= 0.4:
+                        enemy.GrifterHeal(10)
+                    elif action == 1:
+                        steal = Grifter.GrifterCalc(enemy)                
+                        player.gold *= steal
+                        enemy.lastaction = 'stole gold!'
+                        action = 'stole gold!'
+                    else:
+                        enemy.GrifterHeal(10)
+                        enemy.lastaction = 'healed!'
+                        action = 'healed!'
                 elif isinstance(enemy, BossEnemy):
                     import random
                     action = random.randint(1, 100)
@@ -411,7 +439,22 @@ class Battles:
                         enemy.EnemyHeal(5)
                         enemy.lastaction = 'healed!'
                         action = 'healed!'   
-                        
+                
+                elif isinstance(enemy, Grifter):
+                    import random
+                    action = random.randint(1, 2)
+                    if (enemy.currenthp/enemy.maxhp) <= 0.4:
+                        enemy.GrifterHeal(10)
+                    elif action == 1:
+                        steal = Grifter.GrifterCalc(enemy)                
+                        player.gold *= steal
+                        enemy.lastaction = 'stole gold!'
+                        action = 'stole gold!'
+                    else:
+                        enemy.GrifterHeal(10)
+                        enemy.lastaction = 'healed!'
+                        action = 'healed!' 
+                    
                 elif isinstance(enemy, BossEnemy):
                     import random
                     action = random.randint(1, 100)
@@ -475,7 +518,6 @@ class Battles:
         xcoordinate = 0
         for enemy in enemies: 
             if isinstance(enemy, Enemy):
-                print('hi')
                 pygame.draw.circle(screen, (200, 90, 75), (xcoordinate+75, 200), 50)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 225), (xcoordinate+75, 340), 35)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 340), (xcoordinate+35, 400), 30)
@@ -529,7 +571,7 @@ class Battles:
                 pygame.draw.rect(screen, (150, 215, 240), (xcoordinate-15, 515, (enemy.currenthp / enemy.maxhp) * 180, 60))
                 
                 font = pygame.font.Font(None, 46)
-                healthbartext = font.render(f"{enemy.currenthp} / {enemy.maxhp} HP", True, (255, 255, 255))
+                healthbartext = font.render(f"{int(enemy.currenthp)} / {int(enemy.maxhp)} HP", True, (255, 255, 255))
                 healthbarsurface = healthbartext.get_rect(center=healthbarrect.center)
                 screen.blit(healthbartext, healthbarsurface)
                 
@@ -611,7 +653,7 @@ class Battles:
             
             pygame.draw.rect(screen, (200, 220, 240), (0, 620, 1280, 200))
             
-            hppercentage = round(player.currenthp / player.maxhp, 3) 
+            hppercentage = round(player.currenthp / player.maxhp, 2) 
             
             menufont = pygame.font.Font(None, 30)
             healthbar = pygame.Rect((10, 645, 200, 30))
@@ -625,7 +667,7 @@ class Battles:
             
             pygame.draw.rect(screen, (100, 110, 140), (10, 645, 200*hppercentage, 30))
         
-            hptext = menufont.render(f"{player.currenthp} / {player.maxhp} HP", True, (255, 255, 255))
+            hptext = menufont.render(f"{int(player.currenthp)} / {int(player.maxhp)} HP", True, (255, 255, 255))
             hpsurface = hptext.get_rect(center=healthbar.center)
             
             nameunderhealthbartext = menufont.render(player.name, True, 36)
@@ -681,3 +723,11 @@ class Battles:
         running = False
         battle = True
         Battles.BattleMenu(player, enemies)
+        
+player = MainCharacter('hi', 10, 10, 1000, Weapon('hi', 1, 1, 1), [], 10000, 10, 0)
+grifter = Grifter('a', 1, 1, 1, Weapon(None, None, None, None), 10, 10, 10, 0, None)
+grifter2 = Grifter('b', 1, 1, 1, Weapon(None, None, None, None), 10, 10, 10, 0, None)
+grifter3 = Grifter('c', 1, 1, 1, Weapon(None, None, None, None), 10, 10, 10, 0, None)
+
+Battles.Battle(player, [grifter, grifter2, grifter3])
+print(player.gold)
