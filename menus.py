@@ -105,13 +105,13 @@ class Menu:
         subhealthbar = pygame.Rect(310, 145, 680*hppercentage, 60)
         pygame.draw.rect(screen, (100, 120, 160), subhealthbar)
         
-        healthbartext = subtitlefont.render(f'{str(player.currenthp).strip('.0')} / {str(player.maxhp).strip('.0')} HP', True, (255, 255, 255))
+        healthbartext = subtitlefont.render(f'{int(player.currenthp)} / {int(player.maxhp)} HP', True, (255, 255, 255))
         healthbartextsurface = healthbartext.get_rect(centery=healthbaroutline.centery, centerx=healthbaroutline.centerx - 165)
         screen.blit(healthbartext, healthbartextsurface)
         
         # level and exp
         leveltitlerect = pygame.Rect(10, 250, 270, 110)
-        leveltitle = subtitlefont.render(f'LEVEL {str(player.level).strip('.0')}', True, (200, 220, 255))
+        leveltitle = subtitlefont.render(f'LEVEL {(player.level)}', True, (200, 220, 255))
         levelsurface = leveltitle.get_rect(center=leveltitlerect.center)
         screen.blit(leveltitle, levelsurface)
         
@@ -124,7 +124,7 @@ class Menu:
         subexpbar = pygame.Rect(310, 275, 680*exppercentage, 60)
         pygame.draw.rect(screen, (100, 120, 160), subexpbar)
         
-        exptext = subtitlefont.render(f'{str(player.exp).strip('.0')} / {str(expneeded).strip('.0')} XP', True, (255, 255, 255))
+        exptext = subtitlefont.render(f'{int(player.exp)} / {int(expneeded)} XP', True, (255, 255, 255))
         exptextsurface = exptext.get_rect(centery=expbaroutline.centery, centerx = expbaroutline.centerx - 177)
         screen.blit(exptext, exptextsurface)
         
@@ -138,15 +138,15 @@ class Menu:
         lineoneB = lineoneA.get_rect(centerx=strengthrect.centerx, centery=strengthrect.centery - 100)
         screen.blit(lineoneA, lineoneB)
         
-        linetwoA = textfont.render(f'BASE STRENGTH: {str(player.strength).strip('.0')}', True, (255, 255, 255))
+        linetwoA = textfont.render(f'BASE STRENGTH: {int(player.strength)}', True, (255, 255, 255))
         linetwoB = linetwoA.get_rect(centerx=strengthrect.centerx, centery=strengthrect.centery - 55)
         screen.blit(linetwoA, linetwoB)
         
-        linethreeA = textfont.render(f'WEAPON STRENGTH: {str(player.weapon.strength).strip('.0')}', True, (255, 255, 255))
+        linethreeA = textfont.render(f'WEAPON STRENGTH: {int(player.weapon.strength)}', True, (255, 255, 255))
         linethreeB = linethreeA.get_rect(centerx=strengthrect.centerx, centery=strengthrect.centery - 20)
         screen.blit(linethreeA, linethreeB)
         
-        linefourA = littletitlefont.render(f'TOTAL STRENGTH: {str(player.weapon.strength + player.strength).strip('.0')}', True, (200, 220, 255))
+        linefourA = littletitlefont.render(f'TOTAL STRENGTH: {int(player.weapon.strength + player.strength)}', True, (200, 220, 255))
         linefourB = linefourA.get_rect(centerx=strengthrect.centerx, centery=strengthrect.centery + 90)
         screen.blit(linefourA, linefourB)
         
@@ -158,7 +158,7 @@ class Menu:
         pygame.draw.rect(screen, (60, 60, 90), goldrect)
         
         goldfont = pygame.font.SysFont(None, 105, bold=True)
-        lineoneA = goldfont.render(f'{str(player.gold).strip('.0')} GOLD', True, (200, 220, 255))
+        lineoneA = goldfont.render(f'{int(player.gold)} GOLD', True, (200, 220, 255))
         lineoneB = lineoneA.get_rect(centerx=goldrect.centerx, centery= goldrect.centery-90)
         screen.blit(lineoneA, lineoneB)
         
@@ -311,7 +311,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), damagerect)
         pygame.draw.rect(screen, (60, 60, 90), damagerectinside)
                 
-        damage = subtitlefont.render(f"DAMAGE: {str(selecteditem.strength).strip('.0')}", True, (255, 255, 255))
+        damage = subtitlefont.render(f"DAMAGE: {int(selecteditem.strength)}", True, (255, 255, 255))
         damagesurface = damage.get_rect(center=damagerect.center)
         screen.blit(damage, damagesurface)
         
@@ -324,7 +324,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), durabilityrect)
         pygame.draw.rect(screen, (60, 60, 90), durabilityrectinside)
         
-        durability = subtitlefont.render(f'DURABILITY: {str(selecteditem.durability).strip('.0')}', True, (255, 255, 255))
+        durability = subtitlefont.render(f'DURABILITY: {int(selecteditem.durability)}', True, (255, 255, 255))
         durabilitysurface = durability.get_rect(center=durabilityrect.center)
         screen.blit(durability, durabilitysurface)
         
@@ -342,7 +342,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), valuerect)
         pygame.draw.rect(screen, (60, 60, 90), valuerectinside)
         
-        valuetext = subtitlefont.render(f'VALUE: {str(value).strip('.0')}', True, (255, 255, 255))
+        valuetext = subtitlefont.render(f'VALUE: {int(value)}', True, (255, 255, 255))
         valuesurface = valuetext.get_rect(center=valuerect.center)
         screen.blit(valuetext, valuesurface)
         
@@ -450,7 +450,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), healrect)
         pygame.draw.rect(screen, (60, 60, 90), healrectinside)
                 
-        heal = subtitlefont.render(f"HEALS: {str(selecteditem.heal).strip('.0')} HP", True, (255, 255, 255))
+        heal = subtitlefont.render(f"HEALS: {int(selecteditem.heal)} HP", True, (255, 255, 255))
         healsurface = heal.get_rect(center=healrect.center)
         screen.blit(heal, healsurface)
         
@@ -470,7 +470,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), valuerect)
         pygame.draw.rect(screen, (60, 60, 90), valuerectinside)
         
-        valuetext = subtitlefont.render(f'VALUE: {str(value).strip('.0')}', True, (255, 255, 255))
+        valuetext = subtitlefont.render(f'VALUE: {int(value)}', True, (255, 255, 255))
         valuesurface = valuetext.get_rect(center=valuerect.center)
         screen.blit(valuetext, valuesurface)
         
@@ -671,7 +671,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), damagerect)
         pygame.draw.rect(screen, (60, 60, 90), damagerectinside)
                 
-        damage = subtitlefont.render(f"DAMAGE: {str(selecteditem.strength).strip('.0')}", True, (255, 255, 255))
+        damage = subtitlefont.render(f"DAMAGE: {int(selecteditem.strength)}", True, (255, 255, 255))
         damagesurface = damage.get_rect(center=damagerect.center)
         screen.blit(damage, damagesurface)
         
@@ -682,7 +682,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), durabilityrect)
         pygame.draw.rect(screen, (60, 60, 90), durabilityrectinside)
         
-        durability = subtitlefont.render(f'DURABILITY: {str(selecteditem.durability).strip('.0')}', True, (255, 255, 255))
+        durability = subtitlefont.render(f'DURABILITY: {int(selecteditem.durability)}', True, (255, 255, 255))
         durabilitysurface = durability.get_rect(center=durabilityrect.center)
         screen.blit(durability, durabilitysurface)
         
@@ -693,7 +693,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), costrect)
         pygame.draw.rect(screen, (60, 60, 90), costrectinside)
         
-        valuetext = subtitlefont.render(f'COST: {str(item.cost).strip('.0')}', True, (255, 255, 255))
+        valuetext = subtitlefont.render(f'COST: {int(item.cost)}', True, (255, 255, 255))
         valuesurface = valuetext.get_rect(center=costrect.center)
         screen.blit(valuetext, valuesurface)
         
@@ -783,7 +783,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), healrect)
         pygame.draw.rect(screen, (60, 60, 90), healrectinside)
                 
-        heal = subtitlefont.render(f"HEALS: {str(selecteditem.heal).strip('.0')} HP", True, (255, 255, 255))
+        heal = subtitlefont.render(f"HEALS: {int(selecteditem.heal)} HP", True, (255, 255, 255))
         healsurface = heal.get_rect(center=healrect.center)
         screen.blit(heal, healsurface)
         
@@ -794,7 +794,7 @@ class Menu:
         pygame.draw.rect(screen, (20, 20, 30), costrect)
         pygame.draw.rect(screen, (60, 60, 90), costrectinside)
         
-        costtext = subtitlefont.render(f'COST: {str(item.cost).strip('.0')}', True, (255, 255, 255))
+        costtext = subtitlefont.render(f'COST: {int(item.cost)}', True, (255, 255, 255))
         costsurface = costtext.get_rect(center=costrect.center)
         screen.blit(costtext, costsurface)
         
@@ -961,3 +961,18 @@ class Menu:
                 pass
             
             pygame.display.update() 
+            
+            
+weapona = Weapon('WEAPONA', 10, 10, 100)
+weaponb = Weapon('WEAPONB', 10, 10, 100)
+weaponc = Weapon('WEAPONC', 10, 10, 100)
+weapond = Weapon('WEAPOND', 10, 10, 100)
+weapone = Weapon('WEAPONE', 10, 10, 100)
+healingitema = HealingItem('HEALINGITEMA', 10, 30)
+healingitemb = HealingItem('HEALINGITEMB', 10, 30)
+healingitemc = HealingItem('HEALINGITEMC', 10, 30)
+
+items = [weapona, weaponb, weaponc, weapond, weapone, healingitema, healingitemb, healingitemc]
+player = MainCharacter('EDWARDhi', 100, 60, 10, weapona, items, 1000, 12, 10)
+
+Menu.OpenMenuScreen(player)
