@@ -473,8 +473,9 @@ class Battles:
     
     def MakeEnemies(enemies):
         xcoordinate = 0
-        for enemy in enemies:
-            if isinstance(enemy, Enemy) or isinstance(enemy, Grifter):
+        for enemy in enemies: 
+            if isinstance(enemy, Enemy):
+                print('hi')
                 pygame.draw.circle(screen, (200, 90, 75), (xcoordinate+75, 200), 50)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 225), (xcoordinate+75, 340), 35)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 340), (xcoordinate+35, 400), 30)
@@ -483,6 +484,25 @@ class Battles:
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+115, 400), (xcoordinate+115, 425), 30)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 225), (xcoordinate+35, 340), 27)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 225), (xcoordinate+115, 340), 27)
+                
+                healthbarrect = pygame.Rect(xcoordinate+15, 530, 120, 30)
+                pygame.draw.rect(screen, (100, 130, 140), healthbarrect)
+                pygame.draw.rect(screen, (150, 195, 240), (xcoordinate+15, 530, (enemy.currenthp / enemy.maxhp) * 120, 30))
+                
+                font = pygame.font.Font(None, 28)
+                healthbartext = font.render(f"{enemy.currenthp} / {enemy.maxhp} HP", True, (255, 255, 255))
+                healthbarsurface = healthbartext.get_rect(center=healthbarrect.center)
+                screen.blit(healthbartext, healthbarsurface)
+            
+            elif isinstance(enemy, Grifter):
+                pygame.draw.circle(screen, (75, 190, 90), (xcoordinate+75, 200), 50)
+                pygame.draw.line(screen, (75, 190, 90), (xcoordinate+75, 225), (xcoordinate+75, 340), 35)
+                pygame.draw.line(screen, (75, 190, 90), (xcoordinate+75, 340), (xcoordinate+35, 400), 30)
+                pygame.draw.line(screen, (75, 190, 90), (xcoordinate+75, 340), (xcoordinate+115, 400), 30)
+                pygame.draw.line(screen, (75, 190, 90), (xcoordinate+35, 400), (xcoordinate+35, 425), 30)
+                pygame.draw.line(screen, (75, 190, 90), (xcoordinate+115, 400), (xcoordinate+115, 425), 30)
+                pygame.draw.line(screen, (75, 190, 90), (xcoordinate+75, 225), (xcoordinate+35, 340), 27)
+                pygame.draw.line(screen, (75, 190, 90), (xcoordinate+75, 225), (xcoordinate+115, 340), 27)
                 
                 healthbarrect = pygame.Rect(xcoordinate+15, 530, 120, 30)
                 pygame.draw.rect(screen, (100, 130, 140), healthbarrect)
@@ -661,4 +681,3 @@ class Battles:
         running = False
         battle = True
         Battles.BattleMenu(player, enemies)
-    
