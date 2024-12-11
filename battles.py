@@ -703,17 +703,17 @@ class Battles:
             if attacksteptwo == True:
                 Battles.AttackStepThree(player, enemies) 
             
-            if weaponbroken == True:
+            if weaponbroken == True or player.weapon.name == 'NONE':
                 weaponbrokenoutline = pygame.Rect(10, 10, 300, 50)
                 weaponbrokenrect = pygame.Rect(15, 15, 290, 40)
                 pygame.draw.rect(screen, (30, 30, 40), weaponbrokenoutline)
                 pygame.draw.rect(screen, (40, 40, 60), weaponbrokenrect)
                 font = pygame.font.Font(None, 24)
-                text = font.render('YOUR WEAPON HAS BROKEN!', True, (255, 24, 25))
-                textsurface = text.get_rect(centerx=weaponbrokenrect.centerx, centery = weaponbrokenrect.centery -10)
+                text = font.render('YOUR WEAPON IS BROKEN!', True, (255, 24, 25))
+                textsurface = text.get_rect(centerx=weaponbrokenrect.centerx, centery = weaponbrokenrect.centery -9)
                 screen.blit(text, textsurface)
-                text2 = font.render(f'YOUR STRENGTH: {player.strength}', True, (255, 24, 25))
-                text2surface = text2.get_rect(centerx=weaponbrokenrect.centerx, centery = weaponbrokenrect.centery +12)
+                text2 = font.render(f'YOUR STRENGTH: {int(player.strength)}', True, (255, 24, 25))
+                text2surface = text2.get_rect(centerx=weaponbrokenrect.centerx, centery = weaponbrokenrect.centery +11)
                 screen.blit(text2, text2surface)
             
             Battles.MakeEnemies(enemies)
@@ -746,7 +746,7 @@ class Battles:
 grifter = Grifter('grifter', 10, 10, 0, Weapon(None, None, None, None), 10, 10, None, 200, None)
 enemy = Enemy('regularenemy', 10, 10, 10, Weapon('hi', 10, 10, 0), 0, None, 10, None)
 boss = BossEnemy('bossguy', 100, 100, 10, Weapon('hi', 10, 10, 0), 0, None)
-player = MainCharacter('drwillfulneglect', 1000, 1000, 0, Weapon('sup', 100, 1, 0), [], 10, 0, 10)
+player = MainCharacter('drwillfulneglect', 1000, 1000, 0, Weapon('hi :)', 100, 1, 0), [], 10, 0, 10)
 enemies = [grifter, enemy, boss]
 
 Battles.Battle(player, enemies)
