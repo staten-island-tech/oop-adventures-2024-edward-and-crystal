@@ -75,12 +75,13 @@ class Character:
                     weapondrop = 'nothing'
             
 
-                enemies.append(Enemy(name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop))
+                enemies.append(Enemy(name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop, None))
         
             elif enemytype == 'GRIFTER':
                 name = enemy['name']
                 maxhp = enemy['maxhp']
                 currenthp = enemy['currenthp']
+                strength = enemy['strength']
                 steal = enemy['steal']
                 golddrop = enemy['golddrop']
                 expdrop = enemy['expdrop']
@@ -91,10 +92,14 @@ class Character:
                 itemstrength = drop['strength']
                 itemdurability = drop['durability']
                 itemcost = drop['cost']
-                weapondrop = Weapon(itemname, itemstrength, itemdurability, itemcost)
+                drop = enemy['weapondrop']
+                if drop['type'] == "WEAPON":
+                    weapondrop = Weapon("Grifter's Staff", 10, 200, 40)
+                else:
+                    weapondrop = HealingItem("Grifter's Prize", 30, 30)
 
-                enemies.append(Grifter(name, maxhp, currenthp, steal, weapon, golddrop, weapondrop, expdrop))
-
+                enemies.append(Grifter(name, maxhp, currenthp, strength, weapon, steal, golddrop, weapondrop, expdrop, None))
+            
             elif enemytype == 'BOSS':
                 name = enemy['name']
                 maxhp = enemy['maxhp']
@@ -103,7 +108,7 @@ class Character:
                 expdrop = enemy['expdrop']
                 weapon = Weapon(enemy['weapon']['name'], enemy['weapon']['strength'], enemy['weapon']['durability'], 0)
             
-                enemies.append(BossEnemy(name, maxhp, currenthp, strength, weapon, expdrop))
+                enemies.append(BossEnemy(name, maxhp, currenthp, strength, weapon, expdrop, None))
 
             else:
                 print('bad this is bad this is pretty darn bad :(')
