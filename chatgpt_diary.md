@@ -3,7 +3,7 @@
 
 ## Project Name: Final Project
 
-### Date: 12/10/24
+### Date: 12/12/24
 
 ---
 
@@ -11,7 +11,7 @@
 
 Briefly describe the problem you're trying to solve or the task you're working on.
 
-> I need to create room designs, have those room designs be randomly selected to find a given room for each stage, and make sure the enemies can't spawn outside the borders of the map.
+> I need to randomly spawn the player within the borders of the map. The x and y coordinates need to be multiples of 10.
 
 ---
 
@@ -19,7 +19,7 @@ Briefly describe the problem you're trying to solve or the task you're working o
 
 Describe the initial approach you took to solving the problem. If you started writing code, include it here.
 
-```Make room designs (mash a bunch of rectangles together), store in a json file, make a function to randomly pick a room design. Find some way to detect if a enemy is outside the borders.
+```Use the random module somehow to generate x and y values that are multiples of 10. Check if these x and y coordinates
 
 ```
 

@@ -76,7 +76,7 @@ class OpenWorld():
         else:
             color = (20, 27, 30)
         for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and menurect.collidepoint(pygame.mouse.get_pos()):
                 print('menu')
             
         pygame.draw.rect(screen, color, menurect) 
@@ -84,8 +84,7 @@ class OpenWorld():
                            
     def LoadRoom(room, player):
         global playerx, playery # sets their location at the start
-        playerx = 100 # may be changed but you do the function :D
-        playery = 100
+
         while running:
             events = pygame.event.get()
             for event in events:
@@ -118,14 +117,14 @@ class OpenWorld():
  
 room = {
     "rectangles" : [
-    [10, 10, 100, 590],
-    [10, 10 , 1220, 100],
-    [1160, 10, 100, 590],
-    [100, 500, 1150, 100],
-   
+    [10, 260, 1250, 100],
+    [210, 10, 1150, 650]
 ]
     }   
+playerx = 100 # may be changed but you do the function :D
+playery = 100
 
+#when approach eACH ENEMY SUMMON MORE ENEMIES 
 
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 
