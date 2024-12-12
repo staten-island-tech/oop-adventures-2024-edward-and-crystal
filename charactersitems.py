@@ -271,3 +271,9 @@ class BossEnemy(Character):
         woodclub = Weapon('woodclub', 10, 10, 10)
         summonable = BossEnemy('SUMMONED BOSS', 100, 100, 10, woodclub, 0)
         enemies.append(summonable)
+        
+import json
+with open('enemies.json', 'r') as file:
+    jsonfile = json.load(file)
+    
+print(jsonfile, indent=2)
