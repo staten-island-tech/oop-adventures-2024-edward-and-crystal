@@ -93,11 +93,12 @@ class OpenWorld():
                            
     def LoadRoom(room, player):
         global playerx, playery
-        for rect in data[room]:
-            playerx = random.randint(2, 127) * 10
-            playery = random.randint(2, 71) * 10
-            playerlocation = pygame.Rect(playerx, playery, 10, 10) # a square where the player is
-            if player
+
+        while not playerlocation.colliderect(rectangle for rectangle in data['rectangles'] in room  in data):
+            for rect in data[room]:
+                playerx = random.randint(2, 127) * 10
+                playery = random.randint(2, 71) * 10
+                playerlocation = pygame.Rect(playerx, playery, 10, 10) # a square where the player is
         while running: 
             events = pygame.event.get()
             for event in events:
