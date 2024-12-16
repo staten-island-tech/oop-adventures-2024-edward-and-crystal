@@ -5,6 +5,6 @@ with open('enemies.json', 'r') as file:
     
 for enemy in enemies:
     try:
-        print(enemy['weapondrop'])
+        print(enemy['weapondrop'], 'hi')
     except KeyError:
         print(enemy['name'])
