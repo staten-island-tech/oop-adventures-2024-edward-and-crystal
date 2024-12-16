@@ -1,5 +1,12 @@
 import pygame
 from charactersitems import MainCharacter
+import json
+
+import random
+
+with open('rooms.json', 'r') as file:
+    data = json.load(file)
+
 
 pygame.init()
 
@@ -86,9 +93,11 @@ class OpenWorld():
                            
     def LoadRoom(room, player):
         global playerx, playery
-        playerx = 100
-        playery = 100 # you may have to recode this depending on what entrance they come from, and what room they are in
-        # thats your problem have fun :D
+        for rect in data[room]:
+            playerx = random.randint(2, 127) * 10
+            playery = random.randint(2, 71) * 10
+            playerlocation = pygame.Rect(playerx, playery, 10, 10) # a square where the player is
+            if player
         while running: 
             events = pygame.event.get()
             for event in events:
@@ -117,15 +126,24 @@ class OpenWorld():
             pygame.draw.rect(screen, (20, 27, 30), playerinforect)
             screen.blit(playerinfotext, playerinfosurface)
             
-            playerlocation = pygame.Rect(playerx, playery, 10, 10) # a square where the player is
+            
             pygame.draw.rect(screen, (255, 255, 255), playerlocation)
             pygame.display.update()
  
 room = {
-    "rectangles" : [
-    (100, 100, 100, 400),
-    (200, 200, 400, 50)]
-    }   
+    "rectangles": [[10, 10, 100, 590],
+                  [10, 10, 1220, 100],
+                    [1160, 10, 100, 590],
+                    [100, 500, 1150, 100],
+                    [590, 10, 100, 590],
+                    [10, 270, 1220, 100],
+                    [590, 500, 200, 200]]
+
+}
+        
+        
+
+    
 
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 

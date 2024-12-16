@@ -19,7 +19,7 @@ Briefly describe the problem you're trying to solve or the task you're working o
 
 Describe the initial approach you took to solving the problem. If you started writing code, include it here.
 
-```Use the random module somehow to generate x and y values that are multiples of 10. Check if these x and y coordinates
+```Use the random module somehow to generate x and y values that are multiples of 10. Check if these x and y coordinates collide with the rectangle. If not, make them the coordinates of the character
 
 ```
 
