@@ -124,4 +124,20 @@ class OpenWorld:
             
             playerlocation = pygame.Rect(playerx, playery, 10, 10) # a square where the player is
             pygame.draw.rect(screen, (255, 255, 255), playerlocation)
+            
+            for exit in room['exits']:
+                pygame.draw.rect(screen, (0, 0, 2), exit['rectangles'])
+                for rectangle in exit['rectangles']:
+                    if rectangle.collidepoint((playerx, playery)):
+                        print('hi')
+            
+            
             pygame.display.update()
+            
+import json
+with open('rooms.json', 'r') as file:
+    rooms = json.load(file)
+    
+player = MainCharacter('edward', 1, 1, 1, 1, [], 1, 1, 1)  
+    
+print(rooms)
