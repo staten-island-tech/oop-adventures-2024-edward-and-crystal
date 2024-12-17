@@ -11,7 +11,7 @@ gray = (169, 169, 169)
 screen_color = gray
 screen.fill(screen_color)
 running = True
-mobs = []
+enemies = []
 number_of_enemies_on_screen = 0
 character_positions = []
 enemy_width = 200
@@ -50,17 +50,17 @@ class Room:
             'Boss Grifter': 1 if self.room_number == 8 else 0
         }
         return probabilites
-    def get_random_enemy(self): 
+    
+    def spawn_enemies(self, number_of_enemies): 
         names = list(self.probabilites.keys())  # Get enemy names from keys
         chances = list(self.probabilites.values())  # Get spawn probabilities from values
-        selected_enemy = random.choices(names, weights=chances, k=1)  # Randomly select an enemy
-        return selected_enemy
-    def get_number_of_enemies(self):
-        if self.room_number in [4, 8]:
-            max_number_of_enemies = 1
-        else:
-            max_number_of_enemies = 4
-        return max_number_of_enemies
+        for i in range(number_of_enemies):
+          selected_enemy = random.choices(names, weights=chances, k=1)  # Randomly select an enemy
+          enemies.append(selected_enemy)
+        for enemy in enemies:
+            #do black rectangles
+
+    
     
     def draw_room(self):
         #i cant draw the enemies properly without the sprites. 

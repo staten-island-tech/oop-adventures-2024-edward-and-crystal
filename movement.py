@@ -6,8 +6,7 @@ import random
 
 with open('rooms.json', 'r') as file:
     data = json.load(file)
-
-
+    
 pygame.init()
 
 screen = pygame.display.set_mode((1280, 720))
@@ -93,12 +92,21 @@ class OpenWorld():
                            
     def LoadRoom(room, player):
         global playerx, playery
+        
+        while True: #gets the starting position of the player character
+            collision = True
+            playerlocation = pygame.Rect(random.randint(2, 127) * 10, random.randint(2, 71) * 10, 10, 10)
+            for room in data:
+                for rectangle in room['rectangles']:
+                    rect = pygame.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3])
+                    if not playerlocation.colliderect(rect):
+                        collision = False
+                        break
+                if not collision:
+                    break
+            if not collision:
+                break                             
 
-        while not playerlocation.colliderect(rectangle for rectangle in data['rectangles'] in room  in data):
-            for rect in data[room]:
-                playerx = random.randint(2, 127) * 10
-                playery = random.randint(2, 71) * 10
-                playerlocation = pygame.Rect(playerx, playery, 10, 10) # a square where the player is
         while running: 
             events = pygame.event.get()
             for event in events:
