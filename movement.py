@@ -1,11 +1,13 @@
 import pygame
-from rooms import playery, playerx
+import random
 
 pygame.init()
 
 screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption('Game')
 running = True
+playerx = random.randint(2, 127) * 10
+playery = random.randint(2, 71) * 10
 
 class OpenWorld():
     def CreateMoveButton(direction, events, room, player):

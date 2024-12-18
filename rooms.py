@@ -2,7 +2,7 @@ import pygame
 import json
 import random
 from charactersitems import MainCharacter
-from movement import OpenWorld
+from movement import OpenWorld, playerx, playery
 
 pygame.init()
 
@@ -12,12 +12,11 @@ screen = pygame.display.set_mode((screen_width,screen_height))
 gray = (169, 169, 169)
 screen_color = gray
 screen.fill(screen_color)
+enemy_width = 10
+enemy_height = 10
 running = True
 enemies = []
-number_of_enemies_on_screen = 0
-character_positions = []
-enemy_width = 200
-enemy_height = 100
+
 
 '''def load_enemy_data():
     with open('enemies.json') as f:
@@ -26,7 +25,7 @@ enemy_height = 100
 enemy_data = load_enemy_data()
 '''
 with open('rooms.json', 'r') as file:
-    data = json.load(file)
+    rooms_data = json.load(file)
 
 #MAKE ROOMS AND SPAWN TABLES (the percent chance each enemy will spawn in a partricular area), DESIGNS
 #3 rooms, 1 boss, 3 rooms, 1 boss
@@ -36,7 +35,7 @@ class Room:
     def __init__(self, room_number):
         self.room_number = room_number
         self.probabilites = self.spawn_table()
-        self.max_number_of_enemies = self.get_number_of_enemies()
+
     def clear(self):
         screen.fill(screen_color)
     def spawn_table(self):
@@ -87,15 +86,13 @@ class Room:
                 character_positions.append(rect)
                 print(Room(4).get_number_of_enemies())
 
-    def LoadRoom(room, player):
-        '''global playerx, playery'''
-        
+    def LoadRoom(self, room, player):
+      
         while True: #gets the starting position of the player character
             collision = True
-            playerx = random.randint(2, 127) * 10
-            playery = random.randint(2, 71) * 10
+    
             playerrect = pygame.Rect(playerx, playery, 10, 10)
-            for room in data:
+            for room in rooms_data:
                 for rectangle in room['rectangles']:
                     rect = pygame.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3])
                     if not playerrect.colliderect(rect):
@@ -114,10 +111,12 @@ class Room:
                     exit() # if we exit out the window it closes
             
             screen.fill((20, 20, 25)) # background
-            for rect in room['rectangles']:  # each room has a list of rectangles, which are tuples, see the room example at the bottom
-                pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
-            for rect in room['rectangles']:
-                pygame.draw.rect(screen, (40, 40, 50), rect)
+            for room in rooms_data:
+                if room['id'] == room:
+                    for rect in room['rectangles']:  # each room has a list of rectangles, which are tuples, see the room example at the bottom
+                        pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
+                    for rect in room['rectangles']:
+                        pygame.draw.rect(screen, (40, 40, 50), rect)
             
             pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100)) # this draws the light bar at the bottom that the buttons sit on
             pygame.draw.line(screen, (145, 180, 200), (0, 620), (1280, 620), 10)
@@ -144,14 +143,11 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        
-                
-        
-
 
     pygame.display.flip()
 
     
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 
-Room.LoadRoom(1, player)
+room = Room(1)
+room.LoadRoom(player)
