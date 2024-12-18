@@ -1,12 +1,6 @@
 import pygame
-from charactersitems import MainCharacter
-import json
+from rooms import playery, playerx
 
-import random
-
-with open('rooms.json', 'r') as file:
-    data = json.load(file)
-    
 pygame.init()
 
 screen = pygame.display.set_mode((1280, 720))
@@ -53,11 +47,11 @@ class OpenWorld():
                         testplayerx = playerx + 10
                         testplayery = playery
                         
-                    playerlocation = (testplayerx, testplayery)
+                    playerrect = (testplayerx, testplayery)
                     itworks = False
                     for rectangle in room["rectangles"]:
                         rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
-                        if rectcoords.collidepoint(playerlocation):
+                        if rectcoords.collidepoint(playerrect):
                             itworks = True
                     
                     if itworks:
@@ -90,55 +84,7 @@ class OpenWorld():
         pygame.draw.rect(screen, color, menurect)
         screen.blit(menutext, menusurface)
                            
-    def LoadRoom(room, player):
-        global playerx, playery
-        
-        while True: #gets the starting position of the player character
-            collision = True
-            playerlocation = pygame.Rect(random.randint(2, 127) * 10, random.randint(2, 71) * 10, 10, 10)
-            for room in data:
-                for rectangle in room['rectangles']:
-                    rect = pygame.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3])
-                    if not playerlocation.colliderect(rect):
-                        collision = False
-                        break
-                if not collision:
-                    break
-            if not collision:
-                break                             
-
-        while running: 
-            events = pygame.event.get()
-            for event in events:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit() # if we exit out the window it closes
-            
-            screen.fill((20, 20, 25)) # background
-            for rect in room['rectangles']:  # each room has a list of rectangles, which are tuples, see the room example at the bottom
-                pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
-            for rect in room['rectangles']:
-                pygame.draw.rect(screen, (40, 40, 50), rect)
-            
-            pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100)) # this draws the light bar at the bottom that the buttons sit on
-            pygame.draw.line(screen, (145, 180, 200), (0, 620), (1280, 620), 10)
-            
-            directions = ["LEFT", "UP", "DOWN", "RIGHT"]
-            for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
-                OpenWorld.CreateMoveButton(direction, events, room, player)
-            OpenWorld.CreateMenuButton(events)
-            
-            playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
-            playerinforect = pygame.Rect(410, 640, 360, 60)
-            playerinfotext = playerinfofont.render(f"{player.name}: {player.currenthp}/{player.maxhp}", True, (255, 255, 255))
-            playerinfosurface = playerinfotext.get_rect(center=playerinforect.center)
-            pygame.draw.rect(screen, (20, 27, 30), playerinforect)
-            screen.blit(playerinfotext, playerinfosurface)
-            
-            
-            pygame.draw.rect(screen, (255, 255, 255), playerlocation)
-            pygame.display.update()
- 
+    
 room = {
     "rectangles": [[10, 10, 100, 590],
                   [10, 10, 1220, 100],
@@ -153,7 +99,3 @@ room = {
         
 
     
-
-player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
-
-OpenWorld.LoadRoom(room, player)

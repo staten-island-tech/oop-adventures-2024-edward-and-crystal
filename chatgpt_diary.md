@@ -12,6 +12,7 @@
 Briefly describe the problem you're trying to solve or the task you're working on.
 
 > I need to randomly spawn the player within the borders of the map. The x and y coordinates need to be multiples of 10.
+> Trying to move a LoadRoom function that was in movement.py to rooms.py. I need to import the player x and y values from rooms.py to movement.py. I'm getting a circular import error.
 
 ---
 
@@ -20,7 +21,6 @@ Briefly describe the problem you're trying to solve or the task you're working o
 Describe the initial approach you took to solving the problem. If you started writing code, include it here.
 
 ```Use the random module somehow to generate x and y values that are multiples of 10. Check if these x and y coordinates collide with the rectangle. If not, make them the coordinates of the character
-
 ```
 
 - What was your plan for solving the problem?
@@ -35,7 +35,7 @@ Write down the questions or requests you made to ChatGPT.
 
 Also include what code from ChatGPT you are unsure of and craft a question that asks for further clarification. 
 
--How do I make good room designs?
+1. How to use the random module in python to generate x and y values that are multiples of 10. I'm using pygame.
 -
 
 ```text
@@ -49,8 +49,9 @@ How can I optimize this sorting function for large datasets?
 
 Record the code or suggestions ChatGPT provided. Include any changes or improvements ChatGPT suggested and how it influenced your approach.
 
-``` Have walls and doors as lists
-```
+1. Do characterlocation = pygame.rect(random.randint(1, 100), random.randint(1, 100), 10, 10)
+-The way I originally thought about it was to initalize the random x and y values, and then put those variables in the rectangle, but this way saves 2 lines of code.
+
 - What was ChatGPT's solution or suggestion?
 - How did it differ from your original approach?
 

@@ -1,6 +1,8 @@
 import pygame
 import json
 import random
+from charactersitems import MainCharacter
+from movement import OpenWorld
 
 pygame.init()
 
@@ -16,11 +18,15 @@ number_of_enemies_on_screen = 0
 character_positions = []
 enemy_width = 200
 enemy_height = 100
-def load_enemy_data():
+
+'''def load_enemy_data():
     with open('enemies.json') as f:
         return json.load(f)
 
 enemy_data = load_enemy_data()
+'''
+with open('rooms.json', 'r') as file:
+    data = json.load(file)
 
 #MAKE ROOMS AND SPAWN TABLES (the percent chance each enemy will spawn in a partricular area), DESIGNS
 #3 rooms, 1 boss, 3 rooms, 1 boss
@@ -58,7 +64,10 @@ class Room:
           selected_enemy = random.choices(names, weights=chances, k=1)  # Randomly select an enemy
           enemies.append(selected_enemy)
         for enemy in enemies:
-            #do black rectangles
+            enemyrect = pygame.rect(random.randint(2, 127) * 10, random.randint(2, 71) * 10, 20, 20)
+            if not enemyrect.colliderect(enemy for enemy in enemies) and not enemyrect.colliderect(playerlocation): 
+                pygame.draw.rect(screen, 'black', enemyrect)
+            
 
     
     
@@ -78,6 +87,58 @@ class Room:
                 character_positions.append(rect)
                 print(Room(4).get_number_of_enemies())
 
+    def LoadRoom(room, player):
+        '''global playerx, playery'''
+        
+        while True: #gets the starting position of the player character
+            collision = True
+            playerx = random.randint(2, 127) * 10
+            playery = random.randint(2, 71) * 10
+            playerrect = pygame.Rect(playerx, playery, 10, 10)
+            for room in data:
+                for rectangle in room['rectangles']:
+                    rect = pygame.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3])
+                    if not playerrect.colliderect(rect):
+                        collision = False
+                        break
+                if not collision:
+                    break
+            if not collision:
+                break                             
+
+        while running: 
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit() # if we exit out the window it closes
+            
+            screen.fill((20, 20, 25)) # background
+            for rect in room['rectangles']:  # each room has a list of rectangles, which are tuples, see the room example at the bottom
+                pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
+            for rect in room['rectangles']:
+                pygame.draw.rect(screen, (40, 40, 50), rect)
+            
+            pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100)) # this draws the light bar at the bottom that the buttons sit on
+            pygame.draw.line(screen, (145, 180, 200), (0, 620), (1280, 620), 10)
+            
+            directions = ["LEFT", "UP", "DOWN", "RIGHT"]
+            for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
+                OpenWorld.CreateMoveButton(direction, events, room, player)
+                OpenWorld.CreateMenuButton(events)
+            
+            playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
+            playerinforect = pygame.Rect(410, 640, 360, 60)
+            playerinfotext = playerinfofont.render(f"{player.name}: {player.currenthp}/{player.maxhp}", True, (255, 255, 255))
+            playerinfosurface = playerinfotext.get_rect(center=playerinforect.center)
+            pygame.draw.rect(screen, (20, 27, 30), playerinforect)
+            screen.blit(playerinfotext, playerinfosurface)
+            
+            
+            pygame.draw.rect(screen, (255, 255, 255), playerrect)
+            pygame.display.update()
+ 
+
 
 while running:
     for event in pygame.event.get():
@@ -89,3 +150,8 @@ while running:
 
 
     pygame.display.flip()
+
+    
+player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
+
+Room.LoadRoom(1, player)
