@@ -1,17 +1,33 @@
 import pygame
 import random
+import json
 
 pygame.init()
 
 screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption('Game')
 running = True
-playerx = random.randint(2, 127) * 10
-playery = random.randint(2, 71) * 10
 
-class OpenWorld():
+playerx = None
+playery = None
+
+with open('rooms.json', 'r') as file:
+    rooms_data = json.load(file)
+
+
+class OpenWorld:
+    def get_player_starting_pos():
+        while True:
+            global playerx, playery
+            playerx = random.randint(2, 127) * 10
+            playery = random.randint(2, 71) * 10
+            playerrect = pygame.Rect(playerx, playery, 10, 10)
+            #it checks if the player is in the map. did i need to format it this way? no but this is cool!!!
+            if any(playerrect.colliderect(pygame.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3])) for room in rooms_data for rectangle in room['rectangles']):
+               return playerrect 
+
     def CreateMoveButton(direction, events, room, player):
-        global playerx, playery, itworks
+        global playerx, playery, player_in_map
         buttonfont = pygame.font.Font(None, 36)
         if direction == "LEFT":
             buttonrect = pygame.Rect(10, 640, 90, 60)
@@ -37,31 +53,30 @@ class OpenWorld():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttonrect.collidepoint(pygame.mouse.get_pos()):
                     if direction == "LEFT":
-                        testplayerx = playerx - 10
-                        testplayery = playery
+                        playerx -= 10
                     elif direction == "UP":
-                        testplayery = playery - 10
-                        testplayerx = playerx
+                        playery += 10
                     elif direction == "DOWN":
-                        testplayery = playery + 10
-                        testplayerx = playerx
+                        playery -= 10
                     elif direction == "RIGHT":
-                        testplayerx = playerx + 10
-                        testplayery = playery
-                        
-                    playerrect = (testplayerx, testplayery)
-                    itworks = False
-                    for rectangle in room["rectangles"]:
-                        rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
-                        if rectcoords.collidepoint(playerrect):
-                            itworks = True
+                        playerx += 10
                     
-                    if itworks:
-                        playerx = testplayerx
-                        playery = testplayery
+                        
+                    playerrect = (playerx, playery)
+                    player_in_map = False
+
+                    for room in rooms_data:
+                        for rectangle in room["rectangles"]:
+                            rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
+                            if rectcoords.collidepoint(playerrect):
+                              player_in_map = True
+                              break
+                        if player_in_map:
+                            break
+                    
+                    if player_in_map:
                         youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
                         pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
-                        import random
                         enemychance = random.randint(1, 18)
                         if enemychance == 18:
                             print("ENEMY!")
@@ -85,19 +100,5 @@ class OpenWorld():
             
         pygame.draw.rect(screen, color, menurect)
         screen.blit(menutext, menusurface)
-                           
-    
-room = {
-    "rectangles": [[10, 10, 100, 590],
-                  [10, 10, 1220, 100],
-                    [1160, 10, 100, 590],
-                    [100, 500, 1150, 100],
-                    [590, 10, 100, 590],
-                    [10, 270, 1220, 100],
-                    [590, 500, 200, 200]]
-
-}
-        
-        
-
+              
     

@@ -2,7 +2,7 @@ import pygame
 import json
 import random
 from charactersitems import MainCharacter
-from movement import OpenWorld, playerx, playery
+from movement import OpenWorld
 
 pygame.init()
 
@@ -17,13 +17,6 @@ enemy_height = 10
 running = True
 enemies = []
 
-
-'''def load_enemy_data():
-    with open('enemies.json') as f:
-        return json.load(f)
-
-enemy_data = load_enemy_data()
-'''
 with open('rooms.json', 'r') as file:
     rooms_data = json.load(file)
 
@@ -86,22 +79,10 @@ class Room:
                 character_positions.append(rect)
                 print(Room(4).get_number_of_enemies())
 
-    def LoadRoom(self, room, player):
-      
-        while True: #gets the starting position of the player character
-            collision = True
-    
-            playerrect = pygame.Rect(playerx, playery, 10, 10)
-            for room in rooms_data:
-                for rectangle in room['rectangles']:
-                    rect = pygame.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3])
-                    if not playerrect.colliderect(rect):
-                        collision = False
-                        break
-                if not collision:
-                    break
-            if not collision:
-                break                             
+    def LoadRoom(self, player):
+
+        playerrect = OpenWorld.get_player_starting_pos()
+                          
 
         while running: 
             events = pygame.event.get()
@@ -109,10 +90,11 @@ class Room:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit() # if we exit out the window it closes
-            
+    
             screen.fill((20, 20, 25)) # background
+
             for room in rooms_data:
-                if room['id'] == room:
+                if room['id'] == self.room_number:
                     for rect in room['rectangles']:  # each room has a list of rectangles, which are tuples, see the room example at the bottom
                         pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
                     for rect in room['rectangles']:
@@ -132,19 +114,12 @@ class Room:
             playerinfosurface = playerinfotext.get_rect(center=playerinforect.center)
             pygame.draw.rect(screen, (20, 27, 30), playerinforect)
             screen.blit(playerinfotext, playerinfosurface)
-            
+        
             
             pygame.draw.rect(screen, (255, 255, 255), playerrect)
             pygame.display.update()
  
 
-
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    pygame.display.flip()
 
     
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
