@@ -900,6 +900,50 @@ class Menu:
             if event.type == pygame.MOUSEBUTTONDOWN and backbutton.collidepoint(pygame.mouse.get_pos()):
                 mainmenu = True
                 shop = False 
+                
+    def Save(player, events):
+        global save, mainmenu
+        titlefont = pygame.font.SysFont(None, 110, bold = True)
+        subtitlefont = pygame.font.SysFont(None, 80, bold = True)
+        
+        titlerect = pygame.Rect(0, 110, 500, 100)
+        title = titlefont.render(f"SAVE MENU", True, (255, 255, 255))
+        titlesurface = title.get_rect(centerx=titlerect.centerx, centery = 60)
+        screen.blit(title, titlesurface)
+        
+        askrect = pygame.Rect(0, 110, 700, 200)
+        ask = subtitlefont.render(f"Would you like to save?", True, (255, 255, 255))
+        asksurface = ask.get_rect(centerx=askrect.centerx, centery = 170)
+        screen.blit(ask, asksurface)
+        
+        yesrect = pygame.Rect(40, 300, 300, 100)
+        if yesrect.collidepoint(pygame.mouse.get_pos()):
+            yescolor = (100, 110, 140)
+        else:
+            yescolor = (50, 50, 75)
+        pygame.draw.rect(screen, yescolor, yesrect)
+        yes = subtitlefont.render(f"YES", True, (255, 255, 255))
+        yessurface = yes.get_rect(center=yesrect.center)
+        screen.blit(yes, yessurface)
+        
+        norect = pygame.Rect(450, 300, 300, 100)
+        if norect.collidepoint(pygame.mouse.get_pos()):
+            nocolor = (100, 110, 140)
+        else:
+            nocolor = (50, 50, 75)
+        pygame.draw.rect(screen, nocolor, norect)
+        no = subtitlefont.render(f"NO", True, (255, 255, 255))
+        nosurface = no.get_rect(center=norect.center)
+        screen.blit(no, nosurface)
+        
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if yesrect.collidepoint(pygame.mouse.get_pos()):
+                    pass
+                if norect.collidepoint(pygame.mouse.get_pos()):
+                    save = False
+                    mainmenu = True
+        
 
     def OpenMenuScreen(player):
         global menurunning, mainmenu, statsrunning, shop, inventory, inventoryselectscreen, save, selecteditem, shopselect
@@ -958,6 +1002,6 @@ class Menu:
                 Menu.RouteInventoryFunction(player, selecteditem, events)
             
             elif save == True:
-                pass
+                Menu.Save(player, events)
             
             pygame.display.update() 
