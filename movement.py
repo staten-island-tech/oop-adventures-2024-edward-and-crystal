@@ -16,18 +16,22 @@ with open('rooms.json', 'r') as file:
 
 
 class OpenWorld:
-    def get_player_starting_pos():
-        while True:
-            global playerx, playery
-            playerx = random.randint(2, 127) * 10
-            playery = random.randint(2, 71) * 10
-            playerrect = pygame.Rect(playerx, playery, 10, 10)
-            #it checks if the player is in the map. did i need to format it this way? no but this is cool!!!
-            if any(playerrect.colliderect(pygame.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3])) for room in rooms_data for rectangle in room['rectangles']):
-               return playerrect 
+    def __init__(self):
+        self.playerx = None
+        self.playery = None
+        self.playerrect = None
 
-    def CreateMoveButton(direction, events, room, player):
-        global playerx, playery, player_in_map
+    def get_player_starting_pos(self):
+        while True:
+            self.playerx = random.randint(2, 127) * 10
+            self.playery = random.randint(2, 71) * 10
+            self.playerrect = pygame.Rect(self.playerx, self.playery, 10, 10)
+            #it checks if the player is in the map. did i need to format it this way? no but this is cool!!!
+            if any(self.playerrect.colliderect(pygame.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3])) for room in rooms_data for rectangle in room['rectangles']):
+               return self.playerrect 
+
+    def CreateMoveButton(self, direction, events, room, player):
+        global player_in_map
         buttonfont = pygame.font.Font(None, 36)
         if direction == "LEFT":
             buttonrect = pygame.Rect(10, 640, 90, 60)
@@ -48,27 +52,29 @@ class OpenWorld:
         buttonsurface = buttonfont.render(direction, True, (245, 245, 255))
         buttontextrect = buttonsurface.get_rect(center=buttonrect.center)
         screen.blit(buttonsurface, buttontextrect)
-        
+
+
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttonrect.collidepoint(pygame.mouse.get_pos()):
                     if direction == "LEFT":
-                        playerx -= 10
+                        self.playerx -= 10
                     elif direction == "UP":
-                        playery += 10
+                        self.playery -= 10
                     elif direction == "DOWN":
-                        playery -= 10
+                        self.playery += 10
                     elif direction == "RIGHT":
-                        playerx += 10
-                    
-                        
-                    playerrect = (playerx, playery)
+                        self.playerx += 10
+
+                    self.playerrect = pygame.Rect(self.playerx, self.playery, 10, 10)
+
                     player_in_map = False
 
                     for room in rooms_data:
                         for rectangle in room["rectangles"]:
                             rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
-                            if rectcoords.collidepoint(playerrect):
+                           
+                            if rectcoords.collidepoint(self.playerx, self.playery):
                               player_in_map = True
                               break
                         if player_in_map:
@@ -84,8 +90,9 @@ class OpenWorld:
                         player.currenthp -= 3
                         if player.currenthp < 10:
                             player.currenthp = 10 # i'm not SO evil...
+             
     
-    def CreateMenuButton(events): # opening the menu
+    def CreateMenuButton(self, events): # opening the menu
         menufont = pygame.font.Font(None, 36) # most of this code is the same
         menurect = pygame.Rect(800, 640, 180, 60)
         menutext = menufont.render("Open Menu", True, (255, 255, 255))

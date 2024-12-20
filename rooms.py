@@ -81,9 +81,9 @@ class Room:
 
     def LoadRoom(self, player):
 
-        playerrect = OpenWorld.get_player_starting_pos()
-                          
-
+        openworld = OpenWorld()
+        playerrect = openworld.get_player_starting_pos()
+        
         while running: 
             events = pygame.event.get()
             for event in events:
@@ -105,8 +105,8 @@ class Room:
             
             directions = ["LEFT", "UP", "DOWN", "RIGHT"]
             for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
-                OpenWorld.CreateMoveButton(direction, events, room, player)
-                OpenWorld.CreateMenuButton(events)
+                openworld.CreateMoveButton(direction, events, room, player)
+                openworld.CreateMenuButton(events)
             
             playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
             playerinforect = pygame.Rect(410, 640, 360, 60)
@@ -116,7 +116,8 @@ class Room:
             screen.blit(playerinfotext, playerinfosurface)
         
             
-            pygame.draw.rect(screen, (255, 255, 255), playerrect)
+            pygame.draw.rect(screen, (255, 255, 255), (openworld.playerx, openworld.playery, 10, 10))
+            
             pygame.display.update()
  
 
