@@ -81,8 +81,8 @@ class Room:
 
     def LoadRoom(self, player):
 
-        openworld = OpenWorld()
-        playerrect = openworld.get_player_starting_pos()
+        openworld = OpenWorld(self.room_number)
+        openworld.get_player_starting_pos()
         
         while running: 
             events = pygame.event.get()

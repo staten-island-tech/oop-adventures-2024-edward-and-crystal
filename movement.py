@@ -12,24 +12,29 @@ playerx = None
 playery = None
 
 with open('rooms.json', 'r') as file:
-    rooms_data = json.load(file)
+    rooms = json.load(file)
 
 
 class OpenWorld:
-    def __init__(self):
+    def __init__(self, room_number):
         self.playerx = None
         self.playery = None
-        self.playerrect = None
+        self.room_number = room_number
 
     def get_player_starting_pos(self):
         while True:
             self.playerx = random.randint(2, 127) * 10
-            self.playery = random.randint(2, 71) * 10
-            self.playerrect = pygame.Rect(self.playerx, self.playery, 10, 10)
-            #it checks if the player is in the map. did i need to format it this way? no but this is cool!!!
-            if any(self.playerrect.colliderect(pygame.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3])) for room in rooms_data for rectangle in room['rectangles']):
-               return self.playerrect 
+            self.playery = random.randint(2, 61) * 10
+            playerrect = pygame.Rect(self.playerx, self.playery, 10, 10)
+            #it checks if the player is in the map
+            for room in rooms:
+                if room['id'] == self.room_number:
+                    for rect in room['rectangles']:
+                        maprect = pygame.Rect(rect)
+                        if playerrect.colliderect(maprect):
+                          return
 
+           
     def CreateMoveButton(self, direction, events, room, player):
         global player_in_map
         buttonfont = pygame.font.Font(None, 36)
@@ -58,29 +63,34 @@ class OpenWorld:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttonrect.collidepoint(pygame.mouse.get_pos()):
                     if direction == "LEFT":
-                        self.playerx -= 10
+                        testplayerx = self.playerx - 10
+                        testplayery = self.playery
                     elif direction == "UP":
-                        self.playery -= 10
+                        testplayery = self.playery - 10
+                        testplayerx = self.playerx 
                     elif direction == "DOWN":
-                        self.playery += 10
+                        testplayery = self.playery + 10
+                        testplayerx = self.playerx
                     elif direction == "RIGHT":
-                        self.playerx += 10
-
-                    self.playerrect = pygame.Rect(self.playerx, self.playery, 10, 10)
+                        testplayerx = self.playerx + 10
+                        testplayery = self.playery
 
                     player_in_map = False
+                    testrect = (testplayerx, testplayery, 10, 10)
 
-                    for room in rooms_data:
+                    for room in rooms:
                         for rectangle in room["rectangles"]:
-                            rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
-                           
-                            if rectcoords.collidepoint(self.playerx, self.playery):
-                              player_in_map = True
-                              break
-                        if player_in_map:
-                            break
+                            if room['id'] == self.room_number:
+                                rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
+                                if rectcoords.colliderect(testrect):
+                                    player_in_map = True
+                                    break
+                            if player_in_map:
+                                break
                     
                     if player_in_map:
+                        self.playery = testplayery 
+                        self.playerx = testplayerx 
                         youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
                         pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
                         enemychance = random.randint(1, 18)
