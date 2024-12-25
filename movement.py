@@ -25,6 +25,7 @@ class OpenWorld:
         while True:
             self.playerx = random.randint(2, 127) * 10
             self.playery = random.randint(2, 61) * 10
+
             playerrect = pygame.Rect(self.playerx, self.playery, 10, 10)
             #it checks if the player is in the map
             for room in rooms:
@@ -32,7 +33,7 @@ class OpenWorld:
                     for rect in room['rectangles']:
                         maprect = pygame.Rect(rect)
                         if playerrect.colliderect(maprect):
-                          return
+                          return #return ends the loops
 
            
     def CreateMoveButton(self, direction, events, room, player):
@@ -93,9 +94,9 @@ class OpenWorld:
                         self.playerx = testplayerx 
                         youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
                         pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
-                        enemychance = random.randint(1, 18)
+                        '''enemychance = random.randint(1, 18)
                         if enemychance == 18:
-                            print("ENEMY!")
+                            print("ENEMY!")'''
                     else:
                         player.currenthp -= 3
                         if player.currenthp < 10:
