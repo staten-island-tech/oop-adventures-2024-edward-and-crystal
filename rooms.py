@@ -1,6 +1,8 @@
 import pygame
 import json
 import random
+from charactersitems import MainCharacter
+from movement import OpenWorld
 
 pygame.init()
 
@@ -10,65 +12,21 @@ screen = pygame.display.set_mode((screen_width,screen_height))
 gray = (169, 169, 169)
 screen_color = gray
 screen.fill(screen_color)
+enemy_width = 10
+enemy_height = 10
 running = True
-mobs = []
-number_of_enemies_on_screen = 0
-character_positions = []
-enemy_width = 200
-enemy_height = 100
-# (E) why not in the room class? 
-def load_enemy_data():
-    with open('enemies.json') as f:
-        return json.load(f)
+enemies = []
 
-enemy_data = load_enemy_data()
-
-#MAKE ROOMS AND SPAWN TABLES (the percent chance each enemy will spawn in a partricular area), DESIGNS
-#3 rooms, 1 boss, 3 rooms, 1 boss
-
+with open('rooms.json', 'r') as file:
+    rooms = json.load(file)
 
 class Room:
     def __init__(self, room_number):
         self.room_number = room_number
-        self.probabilites = self.spawn_table()
-        self.max_number_of_enemies = self.get_number_of_enemies()
-    def clear(self):
-        screen.fill(screen_color)
-    def spawn_table(self):
-        #is this balanced? probably not, but it's a problem for a wiser Crystal
-        if self.room_number not in [4, 8]: 
-            probabilites = {
-                'Goblin': 0.2 - self.room_number * 0.05,
-                'Orc': 0.2 - self.room_number * 0.05,
-                'Slime': 0.3 - self.room_number * 0.05,
-                'Strong Slime': 0.1 + self.room_number * 0.05,
-                'Strong Orc': 0.15 + self.room_number * 0.05,
-                'Grifter': 0.05 + self.room_number * 0.05,
-            }
-        else:
-            probabilites = {
-            'Boss': 1 if self.room_number == 4 else 0, # (E) nice probably chatgpt suggested code
-            'Boss Grifter': 1 if self.room_number == 8 else 0  # (E) these else statements are redundant, assuming there are only 
-            # (E) 8 rooms
-            # (E) but we may need to have rooms 4 and 8 be special rooms, bc like... is a boss grifter gonna spawn every time?
-            # (E) static encounters, like the legendaries in pokemon, uh.. what am i saying
-            # (E) have a red sprite for the boss and if its dead it doesn't show up, if the player steps on it then it triggers
-            # (E) the fight
-            # (E) have fun coding that 
-        }
-        return probabilites
-    def get_random_enemy(self): 
-        names = list(self.probabilites.keys())  # Get enemy names from keys
-        chances = list(self.probabilites.values())  # Get spawn probabilities from values
-        selected_enemy = random.choices(names, weights=chances, k=1)  # Randomly select an enemy
-        return selected_enemy
-    def get_number_of_enemies(self):
-        if self.room_number in [4, 8]:
-            max_number_of_enemies = 1
-        else:
-            max_number_of_enemies = 4
-        return max_number_of_enemies
+        self.probabilities = self.spawn_table()
+        self.openworld = OpenWorld(self.room_number)
     
+<<<<<<< Updated upstream
     def draw_room(self):
         #i cant draw the enemies properly without the sprites. 
         #plus the drawing the enemy function should prob be in the enemy class, which edward has # (E) word bro
@@ -95,5 +53,231 @@ while running:
     #    0/ <[ hi crystal! ]          
     #   /|    
     #..  /\    - (E)
+=======
+    def spawn_enemies(self): 
+        global player_rect
+       
+        for room in rooms:
+            if room['id'] == self.room_number:
+                current_room = room
+                break
+>>>>>>> Stashed changes
 
-    pygame.display.flip()
+        total_enemies = len(current_room['rectangles'])
+        while len(enemies) < total_enemies:
+    
+            enemy_rect = pygame.Rect(random.randint(2, 127) * 10, random.randint(2, 61) * 10, 10, 10)
+            in_a_map_rect = any(pygame.Rect(rectangle).colliderect(enemy_rect) for room in rooms for rectangle in room['rectangles'] if room['id'] == self.room_number)
+            enemy_collision = any(enemy.colliderect(enemy_rect) for enemy in enemies) 
+            player_collision = enemy_rect.colliderect(player_rect)
+
+            if not enemy_collision and not player_collision and in_a_map_rect: #makes sure enemy is in map and isn't colliding with the player or other enemies
+              enemies.append(enemy_rect)
+
+    def check_if_enemy_encounter(self):
+        global player_rect
+        for enemy in enemies:
+            if player_rect.colliderect(enemy):
+
+                enemies.remove(enemy)
+                print('battle time!!')
+                #insert actual battles code. you got this, edward!!!!
+
+    def LoadRoom(self, player):
+        global player_rect
+        room_loaded = True
+        enemies_spawned = False
+        self.openworld.get_player_starting_pos()
+
+        while running: 
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit() # if we exit out the window it closes
+    
+            screen.fill((20, 20, 25)) # background
+
+            player_rect = pygame.Rect(self.openworld.playerx, self.openworld.playery, 10, 10)
+
+            for room in rooms:
+                if room['id'] == self.room_number:
+                    for rect in room['rectangles']:  # each room has a list of rectangles
+                        pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
+                    for rect in room['rectangles']:
+                        pygame.draw.rect(screen, (40, 40, 50), rect)
+            
+            pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100)) # this draws the light bar at the bottom that the buttons sit on
+            pygame.draw.line(screen, (145, 180, 200), (0, 620), (1280, 620), 10)
+            
+            directions = ["LEFT", "UP", "DOWN", "RIGHT"]
+            for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
+                self.openworld.CreateMoveButton(direction, events, room, player)
+                self.openworld.CreateMenuButton(events)
+            
+            playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
+            playerinforect = pygame.Rect(410, 640, 360, 60)
+            playerinfotext = playerinfofont.render(f"{player.name}: {player.currenthp}/{player.maxhp}", True, (255, 255, 255))
+            playerinfosurface = playerinfotext.get_rect(center=playerinforect.center)
+            pygame.draw.rect(screen, (20, 27, 30), playerinforect)
+            screen.blit(playerinfotext, playerinfosurface)
+            
+            pygame.draw.rect(screen, (255, 255, 255), (self.openworld.playerx, self.openworld.playery, 10, 10))
+
+            if not enemies_spawned:
+                self.spawn_enemies()
+                enemies_spawned = True
+                amount_of_rooms_user_has_been_in += 1
+              
+            for enemy in enemies:
+               pygame.draw.rect(screen, 'red', enemy)
+
+            self.check_if_enemy_encounter()
+            pygame.display.update()
+            
+            
+            if room_loaded and len(enemies) == 0:
+                for room in rooms:
+                    if room['id'] == self.room_number:
+                        destinations = [exit['destination'] for exit in room['exit'] if 'destination' in exit]
+                        self.room_number = random.choice(destinations)
+                        room_loaded = False
+                        enemies_spawned = False
+
+            elif amount_of_rooms_user_has_been_in == 6 and len(enemies) == 0:
+                pass
+                #insert win screen!!
+
+
+    
+player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
+
+room = Room(1)
+room.LoadRoom(player)
+import pygame
+import json
+import random
+from charactersitems import MainCharacter
+from movement import OpenWorld
+
+pygame.init()
+
+screen_width = 1280
+screen_height = 720
+screen = pygame.display.set_mode((screen_width,screen_height))
+gray = (169, 169, 169)
+screen_color = gray
+screen.fill(screen_color)
+enemy_width = 10
+enemy_height = 10
+running = True
+enemies = []
+
+with open('rooms.json', 'r') as file:
+    rooms = json.load(file)
+
+class Room:
+    def __init__(self, room_number):
+        self.room_number = room_number
+        self.probabilities = self.spawn_table()
+        self.openworld = OpenWorld(self.room_number)
+    
+    def spawn_enemies(self): 
+        global player_rect
+       
+        for room in rooms:
+            if room['id'] == self.room_number:
+                current_room = room
+                break
+
+        total_enemies = len(current_room['rectangles'])
+        while len(enemies) < total_enemies:
+    
+            enemy_rect = pygame.Rect(random.randint(2, 127) * 10, random.randint(2, 61) * 10, 10, 10)
+            in_a_map_rect = any(pygame.Rect(rectangle).colliderect(enemy_rect) for room in rooms for rectangle in room['rectangles'] if room['id'] == self.room_number)
+            enemy_collision = any(enemy.colliderect(enemy_rect) for enemy in enemies) 
+            player_collision = enemy_rect.colliderect(player_rect)
+
+            if not enemy_collision and not player_collision and in_a_map_rect: #makes sure enemy is in map and isn't colliding with the player or other enemies
+              enemies.append(enemy_rect)
+
+    def check_if_enemy_encounter(self):
+        global player_rect
+        for enemy in enemies:
+            if player_rect.colliderect(enemy):
+
+                enemies.remove(enemy)
+                print('battle time!!')
+                #insert actual battles code. you got this, edward!!!!
+
+    def LoadRoom(self, player):
+        global player_rect
+        room_loaded = True
+        enemies_spawned = False
+        self.openworld.get_player_starting_pos()
+
+        while running: 
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit() # if we exit out the window it closes
+    
+            screen.fill((20, 20, 25)) # background
+
+            player_rect = pygame.Rect(self.openworld.playerx, self.openworld.playery, 10, 10)
+
+            for room in rooms:
+                if room['id'] == self.room_number:
+                    for rect in room['rectangles']:  # each room has a list of rectangles
+                        pygame.draw.rect(screen, (35, 35, 42.5), (rect[0] - 10, rect[1] - 10, rect[2] + 20, rect[3] + 20))
+                    for rect in room['rectangles']:
+                        pygame.draw.rect(screen, (40, 40, 50), rect)
+            
+            pygame.draw.rect(screen, (185, 220, 240), (0, 620, 1280, 100)) # this draws the light bar at the bottom that the buttons sit on
+            pygame.draw.line(screen, (145, 180, 200), (0, 620), (1280, 620), 10)
+            
+            directions = ["LEFT", "UP", "DOWN", "RIGHT"]
+            for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
+                self.openworld.CreateMoveButton(direction, events, room, player)
+                self.openworld.CreateMenuButton(events)
+            
+            playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
+            playerinforect = pygame.Rect(410, 640, 360, 60)
+            playerinfotext = playerinfofont.render(f"{player.name}: {player.currenthp}/{player.maxhp}", True, (255, 255, 255))
+            playerinfosurface = playerinfotext.get_rect(center=playerinforect.center)
+            pygame.draw.rect(screen, (20, 27, 30), playerinforect)
+            screen.blit(playerinfotext, playerinfosurface)
+            
+            pygame.draw.rect(screen, (255, 255, 255), (self.openworld.playerx, self.openworld.playery, 10, 10))
+
+            if not enemies_spawned:
+                self.spawn_enemies()
+                enemies_spawned = True
+                amount_of_rooms_user_has_been_in += 1
+              
+            for enemy in enemies:
+               pygame.draw.rect(screen, 'red', enemy)
+
+            self.check_if_enemy_encounter()
+            pygame.display.update()
+            
+            
+            if room_loaded and len(enemies) == 0:
+                for room in rooms:
+                    if room['id'] == self.room_number:
+                        destinations = [exit['destination'] for exit in room['exit'] if 'destination' in exit]
+                        self.room_number = random.choice(destinations)
+                        room_loaded = False
+                        enemies_spawned = False
+
+            elif amount_of_rooms_user_has_been_in == 6 and len(enemies) == 0:
+                pass
+                #insert win screen!!
+
+
+    
+player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
+
+room = Room(1)
+room.LoadRoom(player)
