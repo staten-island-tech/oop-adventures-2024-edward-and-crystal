@@ -155,7 +155,7 @@
     "weapon": {
       "name": "none",
       "strength": 0,
-      "durability": 8192
+      "durability": 10000
     }
   }
 ]
