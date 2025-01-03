@@ -2,7 +2,10 @@ import pygame
 import json
 import random
 from charactersitems import MainCharacter
+from charactersitems import Weapon
+from charactersitems import Enemy
 from movement import OpenWorld
+from battles import Battles
 
 pygame.init()
 
@@ -47,7 +50,7 @@ class Room:
         for enemy in enemies:
             if player_rect.colliderect(enemy):
                 enemies.remove(enemy)
-                print('battle time!!')
+                Battles.Battle(player, [Enemy("GOBLIN", 10, 10, 0, Weapon("hi", 10, 10, 0), 0, 10, 0)])
                 #insert actual battles code. you got this, edward!!!!
 
     def LoadRoom(self, player, player_coordinates=None):
@@ -125,7 +128,7 @@ class Room:
                 pygame.draw.rect(screen, (20, 27, 30), textrect)
                 screen.blit(text, textsurface)
 
-player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
+player = MainCharacter('drwillfulneglect', 100, 100, 10, Weapon("HI", 10, 100, 10), [], 0, 1, 0)
 
 room = Room(1)
 room.LoadRoom(player)
