@@ -125,9 +125,6 @@ class Room:
                 pygame.draw.rect(screen, (20, 27, 30), textrect)
                 screen.blit(text, textsurface)
 
-
-
-    
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 
 room = Room(1)

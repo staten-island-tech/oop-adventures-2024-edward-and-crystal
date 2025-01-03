@@ -102,7 +102,6 @@ class OpenWorld:
                         if player.currenthp < 10:
                             player.currenthp = 10 # i'm not SO evil...
              
-    
     def CreateMenuButton(self, events): # opening the menu
         menufont = pygame.font.Font(None, 36) # most of this code is the same
         menurect = pygame.Rect(800, 640, 180, 60)
