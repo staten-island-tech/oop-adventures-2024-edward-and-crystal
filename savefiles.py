@@ -11,9 +11,44 @@ basically a while loop that does the save data:'''
 import json
 from charactersitems import MainCharacter
 from rooms import Room
+# from items import wooden_sword need to add the file
+import sys
 
-with open('saves.json', 'r') as file:
-	savedata = json.load(file)
+
+
+
+def make_savefile(name):
+	
+	with open('saves.json', 'r') as file:
+		savedata = json.load(file)
+	print('AAAAAAAAAAAAAAAAAAAAAAAA')
+
+	blank_player_data = {
+		"name": name,
+		"maxhp": 100,
+		"currenthp": 100,
+		"strength": 0,
+		"weapon": "wooden_sword", 
+		"inventory": [],
+		"gold": 0,
+		"level": 1,
+		"exp": 0
+	}
+	try:
+		with open('saves.json', 'r') as file:
+            savedata = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        # If file doesn't exist or is empty, create a new list for saves
+        savedata = []
+
+    # Append the new blank player data to the savedata list
+    savedata.append(blank_player_data)
+    
+    # Write the updated save data back to the file
+    with open('saves.json', 'w') as file:
+        json.dump(savedata, file, indent=2)
+
+    print(f"Save created for {name}")
 
 def load_savefile():
 	lookingforsave = True
@@ -21,6 +56,7 @@ def load_savefile():
 	while lookingforsave:
 		savefound = False
 		confirmed = False
+
 	name = input('Whose save would you like to open?')
 
 	for savefile in savedata:
@@ -41,3 +77,6 @@ def load_savefile():
 	room = Room(savefile['room'])
 
 	room.LoadRoom(player, coordinates)
+
+make_savefile('hi')
+print("Running script: script_name.py")
