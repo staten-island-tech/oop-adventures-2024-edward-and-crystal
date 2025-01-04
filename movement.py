@@ -106,6 +106,52 @@ class OpenWorld:
                         player.currenthp -= 3
                         if player.currenthp < 10:
                             player.currenthp = 10 # i'm not SO evil...
+                            
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w or event.key == pygame.K_UP:
+                    direction = "UP"
+                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                    direction = "LEFT"
+                elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                    direction = "DOWN"
+                elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                    direction = "RIGHT"
+                if direction == "LEFT":
+                    testplayerx = self.playerx - 2.5
+                    testplayery = self.playery
+                elif direction == "UP":
+                    testplayery = self.playery - 2.5
+                    testplayerx = self.playerx 
+                elif direction == "DOWN":
+                    testplayery = self.playery + 2.5
+                    testplayerx = self.playerx
+                elif direction == "RIGHT":
+                    testplayerx = self.playerx + 2.5
+                    testplayery = self.playery
+
+                player_in_map = False
+                testrect = (testplayerx, testplayery, 10, 10)
+
+                for room in rooms:
+                    for rectangle in room["rectangles"]:
+                        if room['id'] == self.room_number:
+                            rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
+                            if rectcoords.colliderect(testrect):
+                                player_in_map = True
+                                break
+                        if player_in_map:
+                            break
+                    
+                if player_in_map:
+                    self.playery = testplayery 
+                    self.playerx = testplayerx 
+                    youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
+                    pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
+                        
+                else:
+                    player.currenthp -= 3
+                    if player.currenthp < 10:
+                        player.currenthp = 10
              
     def CreateMenuButton(self, events): # opening the menu
         menufont = pygame.font.Font(None, 36) # most of this code is the same
