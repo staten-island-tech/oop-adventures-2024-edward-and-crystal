@@ -599,7 +599,6 @@ class Battles:
                 
     def EndBattle(enemiesfought, player):
         global battle, events, x
-        print(player)
         youwinrect = pygame.Rect(20, 20, 1240, 480)
         youwinfont = pygame.font.Font(None, 200)
         youwin2font = pygame.font.Font(None, 40)
@@ -617,6 +616,9 @@ class Battles:
             x += 1
             for enemy in enemiesfought:
                 player.MainCharacterGetEXP(enemy.expdrop)
+                if player.level >= 30:
+                    player.level = 30
+                    player.exp = 0
                 if isinstance(enemy, Enemy):
                     if isinstance(enemy.weapondrop, Weapon) or isinstance(enemy.weapondrop, HealingItem):
                         if len(player.inventory) < 24: # capacity

@@ -23,8 +23,13 @@ class OpenWorld:
 
     def get_player_starting_pos(self):
         while True:
-            self.playerx = random.randint(2, 127) * 10
-            self.playery = random.randint(2, 61) * 10
+            if self.room_number == 4:
+                self.playerx = 40
+                self.playery = 300
+            
+            else:
+                self.playerx = random.randint(2, 127) * 10
+                self.playery = random.randint(2, 61) * 10
 
             playerrect = pygame.Rect(self.playerx, self.playery, 10, 10)
             #it checks if the player is in the map
