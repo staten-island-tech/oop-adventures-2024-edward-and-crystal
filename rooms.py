@@ -54,6 +54,7 @@ class Room:
         for enemy in enemies:
             if player_rect.colliderect(enemy):
                 enemies.remove(enemy)
+                Battles.SpawnEnemies(self.room_number)
                 Battles.Battle(player, [Enemy("GOBLIN", 10, 10, 0, Weapon("hi", 10, 10, 0), 10, 100, 100)])
                 #insert actual battles code. you got this, edward!!!!
 
@@ -62,7 +63,8 @@ class Room:
         room_loaded = True
         enemies_spawned = False
         cangoforward = False
-
+        
+        
         if player_coordinates:
             self.openworld.playerx, self.openworld.playery = player_coordinates
         else:
@@ -168,13 +170,7 @@ class Room:
             if room_loaded and len(enemies) == 0:
                 for room in rooms:
                     if room['id'] == self.room_number:
-                        self.room_number += 1
-                        room = Room(self.room_number)
-                        enemies.clear()
-                        enemies_spawned = False
-                        rphbi.append(self.room_number)
-                        
-                        room.LoadRoom(player, rphbi, None)
+                        rphbi.append(self.room_number + 1)
 
             if 5 in rphbi:
                 #win screen
@@ -219,6 +215,6 @@ player = MainCharacter('edward', 100, 100, 10, Weapon("HI", 10, 100, 10), [], 0,
 room = Room(0)
 #rphbi = rooms player has been in ... duh ...
 
-rphbi = [0]
+rphbi = [0, 1, 2, 3, 4]
 
 room.LoadRoom(player, rphbi, None)

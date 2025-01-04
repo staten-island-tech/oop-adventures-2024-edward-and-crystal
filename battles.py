@@ -21,6 +21,45 @@ battle = True
 running = True
 
 class Battles:
+    def SpawnEnemies(roomnumber):
+        import json, random
+        with open('rooms.json', 'r') as file:
+            rooms = json.load(file)
+            
+        for potentialroom in rooms:
+            if potentialroom['id'] == roomnumber:
+                room = potentialroom 
+                break
+        
+        spawntable = room['spawntable']
+        enemycount = random.choice(spawntable['enemy count'])
+        
+        possibleenemies = []
+        
+        for i in range(spawntable['slime']):
+            possibleenemies.append('slime')
+            
+        for i in range(spawntable['goblin']):
+            possibleenemies.append('goblin')
+            
+        for i in range(spawntable['orc']):
+            possibleenemies.append('orc')
+            
+        for i in range(spawntable['strong slime']):
+            possibleenemies.append('strong slime')
+            
+        for i in range(spawntable['strong orc']):
+            possibleenemies.append('slime')
+            
+        for i in range(spawntable['grifter']):
+            possibleenemies.append('grifter')
+        
+        fightingenemies = []
+        
+        for i in range(enemycount):
+            fightingenemies.append(random.choice(possibleenemies))
+        print(fightingenemies)
+    
     def DrawActionButton(player, enemies, action):
         global wasactiondone, attackpressed, attack, enemy, theyblocking, events, x, y, z, chosenenemy
         x = 1

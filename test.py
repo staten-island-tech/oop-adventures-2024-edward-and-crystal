@@ -13,11 +13,15 @@ rooms = [
             [590, 10, 100, 590],
             [10, 270, 1220, 100]
         ],
-        "exit": [{
-            "destination": 1,
-            "rectangles": [1240, 280, 80, 80],
-            "coordinates": [40, 300]
-        }]
+        "spawntable": {
+            "enemy count": [1, 2],
+            "slime" : 50,
+            "goblin" : 45,
+            "orc" : 5,
+            "strong slime" : 0,
+            "strong orc" : 0,
+            "grifter" : 0
+        }
     },
     {
         "id": 1,
@@ -28,17 +32,15 @@ rooms = [
             [100, 500, 1150, 100],
             [590, 10, 100, 590]
         ],
-        "exit":[
-            {
-                "destination" : 0,
-                "rectangles" : [0, 280, 40, 80],
-                "coordinates": [1200, 300]
-            },
-            {
-                "destination": 2,
-                "rectangles": [1240, 280, 80, 80],
-                "coordinates": [40, 300]
-            }]
+        "spawntable": {
+            "enemy count": [1, 2, 2, 2, 3, 3],
+            "slime" : 20,
+            "goblin" : 60,
+            "orc" : 15,
+            "strong slime" : 0,
+            "strong orc" : 0,
+            "grifter" : 5
+        }
     },
     {
         "id": 2,
@@ -50,22 +52,15 @@ rooms = [
             [600, 10, 100, 590],
             [880, 10, 100, 590]
         ],
-        "exit":[
-            {
-                "destination" : 1,
-                "rectangles" : [0, 280, 40, 80],
-                "coordinates": [1200, 300]
-            },
-            {
-                "destination": 3,
-                "rectangles": [1240, 280, 80, 80],
-                "coordinates": [50, 30]
-            },
-            {
-                "destination" : 5,
-                "rectangles" : [610, 580, 80, 40],
-                "coordinates" : [630, 40]
-            }]
+        "spawntable": {
+            "enemy count": [2, 2, 3, 3, 3, 4],
+            "slime" : 5,
+            "goblin" : 45,
+            "orc" : 25,
+            "strong slime" : 15,
+            "strong orc" : 5,
+            "grifter" : 5
+        }
     },
     {
         "id": 3,
@@ -75,17 +70,15 @@ rooms = [
             [10, 510, 1260, 100],
             [590, 10, 100, 590]
         ],
-        "exit":[
-            {
-                "destination" : 2,
-                "rectangles" : [0, 20, 40, 80],
-                "coordinates": [1200, 300]
-            },
-            {
-                "destination": 4,
-                "rectangles": [1240, 270, 80, 80],
-                "coordinates": [40, 300]
-            }]
+        "spawntable": {
+            "enemy count": [3, 4, 4],
+            "slime" : 0,
+            "goblin" : 15,
+            "orc" : 35,
+            "strong slime" : 25,
+            "strong orc" : 20,
+            "grifter" : 5
+        }
     },
     {
         "id": 4,
@@ -94,12 +87,15 @@ rooms = [
             [10, 260, 1250, 100],
             [210, 10, 1150, 650]
         ],
-        "exit": [
-            {
-                "destination" : 3,
-                "rectangles" : [0, 270, 40, 80],
-                "coordinates": [1200, 280]
-            }]
+        "spawntable": {
+            "enemy count": [1],
+            "slime" : 0,
+            "goblin" : 0,
+            "orc" : 0,
+            "strong slime" : 0,
+            "strong orc" : 0,
+            "grifter" : 1
+        }
             
     },
     {
@@ -109,15 +105,18 @@ rooms = [
             [600, 0, 80, 200],
             [140, 200, 980, 400]
         ],
-        "exit": [
-            {
-                "destination" : 2,
-                "rectangles" : [590, 0, 100, 40],
-                "coordinates" : [610, 30]
-            }]
+        "spawntable": {
+            "enemy count": [1],
+            "slime" : 0,
+            "goblin" : 0,
+            "orc" : 0,
+            "strong slime" : 0,
+            "strong orc" : 0,
+            "grifter" : 1
+        }
             
     }
 ]
 
-#with open('rooms.json', 'w') as file:
-    #json.dump(rooms, file)
+with open('rooms.json', 'w') as file:
+    json.dump(rooms, file, indent=2)
