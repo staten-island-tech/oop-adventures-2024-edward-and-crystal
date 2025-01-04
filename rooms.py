@@ -4,13 +4,15 @@ import random
 from charactersitems import MainCharacter
 from movement import OpenWorld
 
-pygame.init()
 
+
+pygame.init()
 screen_width = 1280
 screen_height = 720
 screen = pygame.display.set_mode((screen_width,screen_height))
 running = True
-enemies = []
+enemies = []  
+
 
 with open('rooms.json', 'r') as file:
     rooms = json.load(file)
@@ -127,8 +129,8 @@ class Room:
 
 
 
-    
-player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 
+
+player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
 room = Room(1)
 room.LoadRoom(player)

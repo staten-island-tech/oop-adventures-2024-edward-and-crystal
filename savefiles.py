@@ -1,28 +1,16 @@
-'''name, maxhp, currenthp, strength, weapon, inventory, gold, level, exp, room, coordinates
-so you would need a function that converts the player object into a dictionary and then use the with open(blahblahblyuh) business to write it into a json file
-and then when you load the game it makes a player object and then loads the room with those coordinates
-yeah 
-uh
-to save me time i will just do this part in the terminal
-basically a while loop that does the save data:'''
-
 #TO DO: LOADING SAVE DATA TO A JSON FILE
 
 import json
-from charactersitems import MainCharacter
-from rooms import Room
 # from items import wooden_sword need to add the file
-import sys
 
-
-
+try:
+	with open('saves.json', 'r') as file:
+		savedata = json.load(file)
+except(FileNotFoundError, json.JSONDecodeError):
+	savedata = []
 
 def make_savefile(name):
 	
-	with open('saves.json', 'r') as file:
-		savedata = json.load(file)
-	print('AAAAAAAAAAAAAAAAAAAAAAAA')
-
 	blank_player_data = {
 		"name": name,
 		"maxhp": 100,
@@ -34,23 +22,13 @@ def make_savefile(name):
 		"level": 1,
 		"exp": 0
 	}
-	try:
-		with open('saves.json', 'r') as file:
-            savedata = json.load(file)
-    except (FileNotFoundError, json.JSONDecodeError):
-        # If file doesn't exist or is empty, create a new list for saves
-        savedata = []
-
-    # Append the new blank player data to the savedata list
-    savedata.append(blank_player_data)
+	savedata.append(blank_player_data)
     
     # Write the updated save data back to the file
-    with open('saves.json', 'w') as file:
-        json.dump(savedata, file, indent=2)
-
-    print(f"Save created for {name}")
-
-def load_savefile():
+	with open('saves.json', 'w') as file:
+		json.dump(savedata, file, indent=2)
+''
+def find_savefile():
 	lookingforsave = True
 
 	while lookingforsave:
@@ -70,13 +48,8 @@ def load_savefile():
 			if confirm.upper() == 'Y':
 				lookingforsave = False
 
-	player = MainCharacter(savefile['name'], savefile['maxhp'], savefile['currenthp'], savefile['strength'], savefile['weapon'], savefile['inventory'], savefile['gold'], savefile['level'], savefile['exp'])
-	room = savefile['room']
-	coordinates = savefile['coordinates']
+	#then you set the player values, coordinates, and room number equal to the values in the save file in the place where you call this function
 
-	room = Room(savefile['room'])
-
-	room.LoadRoom(player, coordinates)
-
-make_savefile('hi')
-print("Running script: script_name.py")
+	
+	
+find_savefile()
