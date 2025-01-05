@@ -416,7 +416,7 @@ class Battles:
         textbox = pygame.Rect(220, 630, 1000, 80) # !
         pygame.draw.rect(screen, (40, 40, 60), textbox) # !
         font = pygame.font.Font(None, 36)
-        if enemy.currenthp <= 0:
+        if enemy.currenthp < 1:
             enemy.currenthp = 0
             youractiontwo = font.render(f'The {enemy.name} has died!', True, (255, 255, 255))
             
@@ -459,7 +459,7 @@ class Battles:
         else:
             pass
         try:
-            if enemy.currenthp <= 0:
+            if enemy.currenthp < 1:
                 enemiesfought.append(enemy)
                 return
         except UnboundLocalError:
