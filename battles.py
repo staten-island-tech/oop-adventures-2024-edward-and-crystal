@@ -360,7 +360,6 @@ class Battles:
                         enemy.lastaction = 'attacked you!'
                         action = 'attacked you!'
                         if player.currenthp < 1:
-                            print('HAHAHAHAHA')
                             battle = False
                     else:
                         enemy.EnemySummon(enemies)
@@ -374,7 +373,6 @@ class Battles:
                         enemy.lastaction = 'attacked you!'
                         action = 'attacked you!'
                         if player.currenthp < 1:
-                            print('HAHAHAHAHA')
                             battle = False
                     elif action < 91 and action > 70:
                         enemy.EnemyHeal(15)
@@ -566,7 +564,6 @@ class Battles:
                         enemy.lastaction = 'attacked you!'
                         action = 'attacked you!'
                         if player.currenthp < 1:
-                            print('HAHAHAHAHA')
                             battle = False
                         else:
                             pass
@@ -605,7 +602,6 @@ class Battles:
                             enemy.lastaction = 'attacked you!'
                             action = 'attacked you!'
                             if player.currenthp < 1:
-                                print('HAHAHAHAHA')
                                 battle = False
                         else:
                             enemy.EnemySummon(enemies)
@@ -619,7 +615,6 @@ class Battles:
                             enemy.lastaction = 'attacked you!'
                             action = 'attacked you!'
                             if player.currenthp < 1:
-                                print('HAHAHAHAHA')
                                 battle = False
                         elif action < 91 and action > 70:
                             enemy.EnemyHeal(15)
@@ -731,7 +726,7 @@ class Battles:
                 xcoordinate +=30
                 
     def EndBattle(enemiesfought, player):
-        global battle, events, x
+        global battle, events, x, inbattle
         youwinrect = pygame.Rect(20, 20, 1240, 480)
         youwinfont = pygame.font.Font(None, 200)
         youwin2font = pygame.font.Font(None, 40)
@@ -744,6 +739,7 @@ class Battles:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 battle = False
+                inbattle = False
         
         if x == 1:
             x += 1
@@ -761,7 +757,7 @@ class Battles:
     def BattleMenu(player, enemies):
         global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block, events # im gonna be real i would be 
         # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
-        global blockdone, chosenenemy, enemiesfought, weaponbroken
+        global blockdone, chosenenemy, enemiesfought, weaponbroken, inbattle
         wasactiondone = False
         attackpressed = False
         attack = False
@@ -775,7 +771,7 @@ class Battles:
         x = 1
         y = 0
         z = 1
-        while battle:
+        while inbattle:
             screen.fill((20, 20, 25))
             events = pygame.event.get()
             for event in events:
@@ -788,8 +784,7 @@ class Battles:
                     x = 1
                 Battles.EndBattle(enemiesfought, player)
                 wasactiondone = True
-            if battle == False:
-                break # idk maybe
+ # idk maybe
             
             pygame.draw.rect(screen, (200, 220, 240), (0, 620, 1280, 200))
             
@@ -820,6 +815,8 @@ class Battles:
                 Battles.DrawActionButton(player, enemies, "ATTACK")
                 Battles.DrawActionButton(player, enemies, "BLOCK")
                 Battles.DrawActionButton(player, enemies, "FLEE (coward)")
+                if battle == False:
+                    break
                 
             if theyblocking == True:
                 Battles.Block(player)
@@ -872,7 +869,9 @@ class Battles:
                 break
 
     def Battle(player, enemies):
-        global running, wasactiondone, battle
+        global running, wasactiondone, battle, battling, inbattle
         running = False
+        inbattle = True
         battle = True
         Battles.BattleMenu(player, enemies)
+        battling = False

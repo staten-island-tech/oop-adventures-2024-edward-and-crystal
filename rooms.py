@@ -50,9 +50,10 @@ class Room:
                     enemies.append(enemy_rect)
 
     def check_if_enemy_encounter(self):
-        global player_rect
+        global player_rect, battling
         for enemy in enemies:
             if player_rect.colliderect(enemy):
+                battling = True
                 enemies.remove(enemy)
                 if self.room_number < 4:
                     fightingenemies = Battles.SpawnEnemies(self.room_number)
@@ -63,10 +64,12 @@ class Room:
                     
 
     def LoadRoom(self, player, rphbi, player_coordinates=None):
-        global player_rect, enemies_spawned
+        global player_rect, enemies_spawned, battling
         room_loaded = True
         enemies_spawned = False
         cangoforward = False
+        battling = False
+        x = 1
         
         
         if player_coordinates:
@@ -134,6 +137,10 @@ class Room:
                         enemies.clear()
                         enemies_spawned = False
                         room.LoadRoom(player, rphbi, None)
+            
+            if player.currenthp <= 0 and x == 1:
+                x += 1
+                self.DeathScreen()
             
             if self.room_number + 1 in rphbi:
                 goforwardrect = pygame.Rect(1140, 675, 100, 30)
@@ -212,8 +219,77 @@ class Room:
                 screen.blit(viewtext, viewsurface)
                 
             pygame.display.update()
+            
+    def DeathScreen(self):
+        import time
+        bgrect = pygame.Rect(1280, 0, 1280, 720)
+        innerrect = pygame.Rect(1290, 10, 1280, 700)
+        lastmovetime = time.time()
+        newtime = time.time()
+        
+        while bgrect[0] != 0:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    quit()
+            
+            newtime = time.time()      
+            pygame.draw.rect(screen, (10, 2, 1), bgrect)
+            pygame.draw.rect(screen, (30, 4, 2), innerrect)
+            
+            if newtime - lastmovetime > 0.05:
+                lastmovetime = newtime
+                bgrect[0] -= 20
+                innerrect[0] -= 20
+            
+            pygame.display.update()
+        
+        deadtime = time.time()
+        currenttime = time.time()
+        
+        
+        while currenttime - deadtime < 10:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    quit()        
 
-player = MainCharacter('edward', 100, 100, 10, Weapon("HI", 10, 100, 10), [], 0, 1, 0)
+            currenttime = time.time()
+            screen.fill((10, 2, 1))
+            
+            insiderectangle = pygame.Rect(10, 10, 1260, 700)
+            pygame.draw.rect(screen, (30, 4, 2), insiderectangle)
+            
+            fonts = pygame.font.get_fonts()
+            
+            textfont = pygame.font.SysFont(None, 200, bold=True)
+            youdied = textfont.render('YOU DIED.', True, (255, 0, 0))
+            youdiedsurface = youdied.get_rect(center=(640, 240))
+            screen.blit(youdied, youdiedsurface)
+            
+            smallfont = pygame.font.Font(None, 100)
+            youreached = smallfont.render(f"YOU REACHED ROOM {self.room_number + 1}", True, (255, 0, 0))
+            youreachedsurface = youreached.get_rect(center=(640, 340))
+            screen.blit(youreached, youreachedsurface)
+            
+            timeuntilend = int(10 - (currenttime - deadtime))
+            deletingin = smallfont.render(f"DELETING YOUR DATA IN {timeuntilend}", True, (255, 0, 0))
+            deletinginsurface = deletingin.get_rect(center=(640,410))
+            screen.blit(deletingin, deletinginsurface)
+            
+            
+            smallerfont = pygame.font.SysFont(None, 50, italic=True)
+            youhad = smallerfont.render("You had a good run! But you are bad at video games.", True, (255, 255, 255))
+            youhadsurface = youhad.get_rect(center=(640,480))
+            screen.blit(youhad, youhadsurface)
+            
+            
+            pygame.display.update()
+        
+        print("DATA DELETION UNDERWAY. THIS PROCESS WILL BE COMPLETED MOMENTARILY.")
+        quit()
+        
+player = MainCharacter('edward', 1, 1, 10, Weapon("HI", 10, 100, 10), [], 0, 1, 0)
 
 room = Room(0)
 #rphbi = rooms player has been in ... duh ...
