@@ -406,6 +406,8 @@ class Battles:
         if player.weapon.strength + player.strength >= chosenenemy.currenthp:
             wouldkill = True
         
+        height = 0
+        top = 600
         
         if animationtype == 1:
             radius = 50
@@ -450,18 +452,36 @@ class Battles:
                     pygame.draw.circle(screen, (100, 0, 0), (xcoordinate, 250), radius, 5)
                 else:
                     if not wouldkill:
-                        pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
-                        pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 400), (xcoordinate+50, 100), 10)
+                        animationtime = 0.3
+                        pygame.draw.line(screen, (255, 145, 0), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
+                        pygame.draw.line(screen, (255, 145, 0), (xcoordinate-50, 400), (xcoordinate+50, 100), 10) 
                     if wouldkill:
-                        pygame.draw.circle(screen, (0, 100, 100), (xcoordinate, 250), 120)
-                        pygame.draw.rect(screen, (0, 100, 100), (xcoordinate-50, 240, 100, 180))
-                        
-                        pygame.draw.circle(screen, (255, 255, 255), (xcoordinate, 250), 110)
-                        pygame.draw.rect(screen, (255, 255, 255), (xcoordinate-40, 250, 80, 160))
-                        pygame.draw.circle(screen, (0, 0, 0), (xcoordinate - 50, 250), 50)
-                        pygame.draw.circle(screen, (0, 0, 0), (xcoordinate + 50, 250), 50)
+                        animationtime = 2
+                        if height < 200:
+                            pygame.draw.circle(screen, (0, 100, 100), (xcoordinate, 250), 120)
+                            pygame.draw.rect(screen, (0, 100, 100), (xcoordinate-50, 240, 100, 180))
+                            
+                            pygame.draw.circle(screen, (255, 255, 255), (xcoordinate, 250), 110)
+                            pygame.draw.rect(screen, (255, 255, 255), (xcoordinate-40, 250, 80, 160))
+                            pygame.draw.circle(screen, (0, 0, 0), (xcoordinate - 50, 250), 50)
+                            pygame.draw.circle(screen, (0, 0, 0), (xcoordinate + 50, 250), 50)
+                                
+                            pygame.draw.line(screen, (0, 100, 100), (xcoordinate-30, 375), (xcoordinate-30, 410), 7)
+                            pygame.draw.line(screen, (0, 100, 100), (xcoordinate, 375), (xcoordinate, 410), 7)
+                            pygame.draw.line(screen, (0, 100, 100), (xcoordinate+30, 375), (xcoordinate+30, 410), 7)
+                            
+                            
+                        pygame.draw.rect(screen, (20, 20, 25), (xcoordinate-70, top, 140, height))
+                        if isinstance(enemy, BossEnemy):
+                            pygame.draw.rect(screen, (20, 20, 25), (xcoordinate-90, top, 180, height))
+                            
+                        if currenttime - lastmovetime > 0.02:
+                            lastmovetime = currenttime
+                            height += 6
+                            top -= 6
+                            
                        
-                    if currenttime - eksstarttime > 0.5:
+                    if currenttime - eksstarttime > animationtime:
                         complete = True
                         break
                     
@@ -482,10 +502,7 @@ class Battles:
             drawinglines = True
             line = 1
             starttime = time.time()
-            percentdone1 = 0
-            percentdone2 = 0
-            percentdone3 = 0
-            percentdone4 = 0
+            lastmovetime = time.time()
             lastgrowth = time.time()
             linelength = 0
             
@@ -569,18 +586,35 @@ class Battles:
                                 
                 else:
                     if not wouldkill:
-                        pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
-                        pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 400), (xcoordinate+50, 100), 10) 
+                        animationtime = 0.3
+                        pygame.draw.line(screen, (255, 145, 0), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
+                        pygame.draw.line(screen, (255, 145, 0), (xcoordinate-50, 400), (xcoordinate+50, 100), 10) 
                     if wouldkill:
-                        pygame.draw.circle(screen, (0, 100, 100), (xcoordinate, 250), 120)
-                        pygame.draw.rect(screen, (0, 100, 100), (xcoordinate-50, 240, 100, 180))
+                        animationtime = 2
+                        if height < 200:
+                            pygame.draw.circle(screen, (0, 100, 100), (xcoordinate, 250), 120)
+                            pygame.draw.rect(screen, (0, 100, 100), (xcoordinate-50, 240, 100, 180))
+                            
+                            pygame.draw.circle(screen, (255, 255, 255), (xcoordinate, 250), 110)
+                            pygame.draw.rect(screen, (255, 255, 255), (xcoordinate-40, 250, 80, 160))
+                            pygame.draw.circle(screen, (0, 0, 0), (xcoordinate - 50, 250), 50)
+                            pygame.draw.circle(screen, (0, 0, 0), (xcoordinate + 50, 250), 50)
+                            
+                            pygame.draw.line(screen, (0, 100, 100), (xcoordinate-30, 375), (xcoordinate-30, 410), 7)
+                            pygame.draw.line(screen, (0, 100, 100), (xcoordinate, 375), (xcoordinate, 410), 7)
+                            pygame.draw.line(screen, (0, 100, 100), (xcoordinate+30, 375), (xcoordinate+30, 410), 7)
+                            
+                        pygame.draw.rect(screen, (20, 20, 25), (xcoordinate-70, top, 140, height))
+                        if isinstance(enemy, BossEnemy):
+                            pygame.draw.rect(screen, (20, 20, 25), (xcoordinate-90, top, 180, height))
                         
-                        pygame.draw.circle(screen, (255, 255, 255), (xcoordinate, 250), 110)
-                        pygame.draw.rect(screen, (255, 255, 255), (xcoordinate-40, 250, 80, 160))
-                        pygame.draw.circle(screen, (0, 0, 0), (xcoordinate - 50, 250), 50)
-                        pygame.draw.circle(screen, (0, 0, 0), (xcoordinate + 50, 250), 50)
-                        
-                    if currenttime - eksstarttime > 0.5:
+                        if currenttime - lastmovetime > 0.02:
+                            lastmovetime = currenttime
+                            height += 6
+                            top -= 6
+                            
+                       
+                    if currenttime - eksstarttime > animationtime:
                         complete = True
                         break
                             
@@ -781,6 +815,7 @@ class Battles:
         areyarunning = random.randint(1, 100)
         if areyarunning >= chancetoflee:
             battle = False
+            player.gold = int(player.gold)
         else:
             block = True
             blockdone = True # im too lazy to code this function again so what im doing is
@@ -1114,6 +1149,7 @@ class Battles:
                 battle = False
                 inbattle = False
         
+        player.gold = int(player.gold)
         if x == 1:
             x += 1
             for enemy in enemiesfought:

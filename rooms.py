@@ -291,7 +291,7 @@ class Room:
         print("DATA DELETION UNDERWAY. THIS PROCESS WILL BE COMPLETED MOMENTARILY.")
         quit()
         
-player = MainCharacter('edward', 30, 10, 10, Weapon("HI", 0, 100, 10), [], 0, 1, 0)
+player = MainCharacter('edward', 100, 100, 1000, Weapon("HI", 0, 100, 10), [], 0, 1, 0)
 
 room = Room(0)
 #rphbi = rooms player has been in ... duh ...
