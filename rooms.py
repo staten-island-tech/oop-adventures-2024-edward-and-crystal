@@ -54,9 +54,13 @@ class Room:
         for enemy in enemies:
             if player_rect.colliderect(enemy):
                 enemies.remove(enemy)
-                Battles.SpawnEnemies(self.room_number)
-                Battles.Battle(player, [Enemy("GOBLIN", 10, 10, 0, Weapon("hi", 10, 10, 0), 10, 100, 100)])
-                #insert actual battles code. you got this, edward!!!!
+                if self.room_number < 4:
+                    fightingenemies = Battles.SpawnEnemies(self.room_number)
+                    Battles.Battle(player, fightingenemies)
+                else:
+                    fightingenemies = Battles.SpawnBoss()
+                    Battles.Battle(player, fightingenemies)
+                    
 
     def LoadRoom(self, player, rphbi, player_coordinates=None):
         global player_rect, enemies_spawned

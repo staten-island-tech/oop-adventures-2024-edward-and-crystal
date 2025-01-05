@@ -21,6 +21,90 @@ battle = True
 running = True
 
 class Battles:
+    def DictionaryEnemyToObjectEnemy(enemyname):
+        import json
+        with open('enemies.json', 'r') as file:
+            enemies = json.load(file)
+            
+        for possibleenemy in enemies:
+            if possibleenemy['name'] == enemyname:
+                enemy = possibleenemy
+                break
+            
+        if enemy['type'] == "REGULAR":
+            name = enemy['name']
+            maxhp = enemy['maxhp']
+            currenthp = enemy['currenthp']
+            strength = enemy['strength']
+            golddrop = enemy['golddrop']
+            expdrop = enemy['expdrop']
+            weapon = Weapon("None", 0, 8192, 0)
+            
+            enemyweapondrop = enemy['weapondrop']
+            if enemyweapondrop['type'] == "WEAPON":
+                weaponname = enemyweapondrop['name']
+                weaponstrength = enemyweapondrop['strength']
+                weapondurability = enemyweapondrop['durability']
+                weaponcost = enemyweapondrop['cost']
+                weapondrop = Weapon(weaponname, weaponstrength, weapondurability, weaponcost)
+            elif enemyweapondrop['type'] == "HEALING ITEM":
+                itemname = enemyweapondrop['name']
+                itemheal = enemyweapondrop['heal']
+                itemcost = enemyweapondrop['cost']
+                
+                weapondrop = HealingItem(itemname, itemheal, itemcost)
+            else:
+                weapondrop = None
+                
+            enemy = Enemy(name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop)
+        
+        elif enemy['type'] == "GRIFTER":
+            name = enemy['name']
+            maxhp = enemy['maxhp']
+            currenthp = enemy['currenthp']
+            strength = enemy['strength']
+            steal = enemy['steal']
+            golddrop = enemy['golddrop']
+            expdrop = enemy['expdrop']
+            weapon = Weapon("None", 0, 8192, 0)
+
+            enemyweapondrop = enemy['weapondrop']
+            if enemyweapondrop['type'] == "WEAPON":
+                weaponname = enemyweapondrop['name']
+                weaponstrength = enemyweapondrop['strength']
+                weapondurability = enemyweapondrop['durability']
+                weaponcost = enemyweapondrop['cost']
+                weapondrop = Weapon(weaponname, weaponstrength, weapondurability, weaponcost)
+            elif enemyweapondrop['type'] == "HEALING ITEM":
+                itemname = enemyweapondrop['name']
+                itemheal = enemyweapondrop['heal']
+                itemcost = enemyweapondrop['cost']
+                
+                weapondrop = HealingItem(itemname, itemheal, itemcost)
+            else:
+                weapondrop = None
+                
+            enemy = Grifter(name, maxhp, currenthp, strength, weapon, golddrop, weapondrop, expdrop, steal)
+        
+        elif enemy['type'] == "BOSS":
+            name = enemy['name']
+            maxhp = enemy['maxhp']
+            currenthp = enemy['currenthp']
+            strength = enemy['strength']
+            expdrop = enemy['expdrop']
+            weapon = Weapon("None", 0, 16384, 0)
+            
+            enemy = BossEnemy(name, maxhp, currenthp, strength, weapon, expdrop)
+        
+        return enemy
+    
+    def SpawnBoss():
+        strongslime = Battles.DictionaryEnemyToObjectEnemy("Strong Slime")
+        strongorc = Battles.DictionaryEnemyToObjectEnemy("Strong Orc")
+        boss = Battles.DictionaryEnemyToObjectEnemy("King Orc")
+        
+        return [strongslime, strongorc, boss]
+    
     def SpawnEnemies(roomnumber):
         import json, random
         with open('rooms.json', 'r') as file:
@@ -34,31 +118,38 @@ class Battles:
         spawntable = room['spawntable']
         enemycount = random.choice(spawntable['enemy count'])
         
-        possibleenemies = []
+        possibleenemies = [] 
         
         for i in range(spawntable['slime']):
-            possibleenemies.append('slime')
+            slime = Battles.DictionaryEnemyToObjectEnemy('Slime')
+            possibleenemies.append(slime)
             
         for i in range(spawntable['goblin']):
-            possibleenemies.append('goblin')
+            goblin = Battles.DictionaryEnemyToObjectEnemy('Goblin')
+            possibleenemies.append(goblin)
             
         for i in range(spawntable['orc']):
-            possibleenemies.append('orc')
+            orc = Battles.DictionaryEnemyToObjectEnemy('Orc')
+            possibleenemies.append(orc)
             
         for i in range(spawntable['strong slime']):
-            possibleenemies.append('strong slime')
+            strongslime = Battles.DictionaryEnemyToObjectEnemy('Strong Slime')
+            possibleenemies.append(strongslime)
             
         for i in range(spawntable['strong orc']):
-            possibleenemies.append('slime')
+            strongorc = Battles.DictionaryEnemyToObjectEnemy('Strong Orc')
+            possibleenemies.append(strongorc)
             
         for i in range(spawntable['grifter']):
-            possibleenemies.append('grifter')
-        
+            grifter = Battles.DictionaryEnemyToObjectEnemy('Grifter')
+            possibleenemies.append(grifter)
+            
         fightingenemies = []
         
         for i in range(enemycount):
             fightingenemies.append(random.choice(possibleenemies))
-        print(fightingenemies)
+        
+        return fightingenemies
     
     def DrawActionButton(player, enemies, action):
         global wasactiondone, attackpressed, attack, enemy, theyblocking, events, x, y, z, chosenenemy
@@ -221,7 +312,7 @@ class Battles:
                 enemy.currenthp += 0
             except UnboundLocalError: 
                 return
-            if isinstance(enemy, Enemy):
+            if isinstance(enemy, Enemy) and not isinstance(enemy, Grifter):
                 action = random.randint(1, 5)
                 if (enemy.currenthp/enemy.maxhp) <= 0.2:
                     enemy.EnemyHeal(5)
@@ -243,14 +334,15 @@ class Battles:
             elif isinstance(enemy, Grifter):
                 action = random.randint(1, 2)
                 if (enemy.currenthp/enemy.maxhp) <= 0.4:
-                    enemy.GrifterHeal(10)
+                    enemy.GrifterHeal(40)
+                    action = 'healed!'
                 elif action == 1:
                     steal = Grifter.GrifterCalc(enemy)                
                     player.gold *= steal
                     enemy.lastaction = 'stole gold!'
                     action = 'stole gold!'
                 else:
-                    enemy.GrifterHeal(10)
+                    enemy.GrifterHeal(40)
                     enemy.lastaction = 'healed!'
                     action = 'healed!'
                     
@@ -399,7 +491,7 @@ class Battles:
         if x == 1:
             x += 1
             if block == False:
-                if isinstance(enemy, Enemy):
+                if isinstance(enemy, Enemy) and not isinstance(enemy, Grifter):
                     import random
                     action = random.randint(1, 5)
                     if (enemy.currenthp/enemy.maxhp) <= 0.2:
@@ -419,14 +511,15 @@ class Battles:
                     import random
                     action = random.randint(1, 2)
                     if (enemy.currenthp/enemy.maxhp) <= 0.4:
-                        enemy.GrifterHeal(10)
+                        enemy.GrifterHeal(40)
+                        action = 'healed!'
                     elif action == 1:
                         steal = Grifter.GrifterCalc(enemy)                
                         player.gold *= steal
                         enemy.lastaction = 'stole gold!'
                         action = 'stole gold!'
                     else:
-                        enemy.GrifterHeal(10)
+                        enemy.GrifterHeal(40)
                         enemy.lastaction = 'healed!'
                         action = 'healed!'
                 elif isinstance(enemy, BossEnemy):
@@ -460,7 +553,7 @@ class Battles:
                             enemy.lastaction = 'spawned an Orc!'
                             action = 'spawned an Orc!'
             else:
-                if isinstance(enemy, Enemy):
+                if isinstance(enemy, Enemy) and not isinstance(enemy, Grifter):
                     import random
                     action = random.randint(1, 5)
                     if (enemy.currenthp/enemy.maxhp) <= 0.2:
@@ -486,14 +579,15 @@ class Battles:
                     import random
                     action = random.randint(1, 2)
                     if (enemy.currenthp/enemy.maxhp) <= 0.4:
-                        enemy.GrifterHeal(10)
+                        enemy.GrifterHeal(40)
+                        action = 'healed!'
                     elif action == 1:
                         steal = Grifter.GrifterCalc(enemy)                
                         player.gold *= steal
                         enemy.lastaction = 'stole gold!'
                         action = 'stole gold!'
                     else:
-                        enemy.GrifterHeal(10)
+                        enemy.GrifterHeal(40)
                         enemy.lastaction = 'healed!'
                         action = 'healed!' 
                     
@@ -559,7 +653,7 @@ class Battles:
     def MakeEnemies(enemies):
         xcoordinate = 0
         for enemy in enemies: 
-            if isinstance(enemy, Enemy):
+            if isinstance(enemy, Enemy) and not isinstance(enemy, Grifter):
                 pygame.draw.circle(screen, (200, 90, 75), (xcoordinate+75, 200), 50)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 225), (xcoordinate+75, 340), 35)
                 pygame.draw.line(screen, (200, 90, 75), (xcoordinate+75, 340), (xcoordinate+35, 400), 30)

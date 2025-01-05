@@ -133,7 +133,7 @@ class OpenWorld:
                 testrect = (testplayerx, testplayery, 10, 10)
 
                 for room in rooms:
-                    for rectangle in room["rectangles"]:
+                    for rectangle in room["rectangles"]: 
                         if room['id'] == self.room_number:
                             rectcoords = pygame.Rect(rectangle[0], rectangle [1], rectangle[2], rectangle[3])
                             if rectcoords.colliderect(testrect):

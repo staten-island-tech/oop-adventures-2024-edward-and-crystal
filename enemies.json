@@ -1,8 +1,4 @@
-import json
-
-
-
-enemies = [
+[
   {
     "type": "REGULAR",
     "name": "Goblin",
@@ -142,6 +138,3 @@ enemies = [
     }
   }
 ]
-
-with open('enemies.json', 'w') as file:
-    json.dump(enemies, file, indent=2)
