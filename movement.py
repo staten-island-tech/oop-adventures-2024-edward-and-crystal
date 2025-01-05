@@ -151,8 +151,7 @@ class OpenWorld:
                     self.playery = testplayery 
                     self.playerx = testplayerx 
                     youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
-                    pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
-                    print(self.playerx, self.playery)    
+                    pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect) 
                 else:
                     testplayerhealth = player.currenthp - 3
                         

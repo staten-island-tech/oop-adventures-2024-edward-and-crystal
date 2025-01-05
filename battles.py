@@ -21,6 +21,169 @@ battle = True
 running = True
 
 class Battles:
+    def BattleStartAnimation():
+        import time
+        curtainrect = pygame.Rect(0, 0, 0, 720)
+        bottomrect = pygame.Rect(0, 720, 1280, 100)
+        red = 255
+        green = 255
+        blue = 255
+        color = (red, green, blue)
+        lastmovetime = time.time()
+        moving = True
+        colorchange = False
+        bottomrectmoving = False
+        
+        complete = False
+        while not complete:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    quit()
+            
+            currenttime = time.time()
+                
+            pygame.draw.rect(screen, color, curtainrect)
+            font = pygame.font.SysFont(None, 400, bold=True, italic=True)
+            text = font.render("BATTLE", True, (20, 20, 25))
+            surface = text.get_rect(center= (640, 160))
+            text2 = font.render("TIME!", True, (20, 20, 25))
+            surface2 = text.get_rect(center=(760, 560))
+            
+            screen.blit(text, surface)
+            screen.blit(text2, surface2)
+            
+            if moving == True:
+                if currenttime - lastmovetime > 0.01:
+                    curtainrect[2] += 20
+                    lastmovetime = currenttime
+                    if curtainrect[2] > 1280:
+                        moving = False
+                        colorchange = True
+                        lastmovetime = currenttime
+            elif colorchange == True:
+                if currenttime - lastmovetime > 0.015:
+                    lastmovetime = currenttime
+                    red -= (235/100)
+                    green -= (235/100)
+                    blue -= (230/100)
+                    color = (red, green, blue)
+                    
+                    if color[0] < 20:
+                        color = (20, 20, 25)
+                        
+                        lastmovetime = currenttime
+                        colorchange = False
+                        bottomrectmoving = True
+            elif bottomrectmoving == True:
+                pygame.draw.rect(screen, (200, 220, 240), bottomrect)
+                if currenttime - lastmovetime > 0.01:
+                    bottomrect[1] -= 1
+                    if bottomrect[1] == 620:
+                        complete = True
+                        break
+            
+            pygame.display.update()
+        
+    def BossStartAnimation():
+        import time
+        complete = False
+        radius = 0
+        length = 0
+        leftpos = 1280
+        thickness = 0
+        circles = True
+        drawingx = False
+        rectangles = False
+        lastmovetime = time.time()
+        colorchanging = False
+        bottomrecttop = 720
+        bottomrect = False
+        red = green = blue = 255
+        
+        while not complete:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    quit
+            
+            currenttime = time.time()
+            
+            pygame.draw.circle(screen, (90, 10, 18), (0, 0), radius)
+            pygame.draw.circle(screen, (90, 10, 18), (1280, 720), radius)
+            if radius >= 10:
+                pygame.draw.circle(screen, (150, 20, 30), (0, 0), radius-5, 5)
+                pygame.draw.circle(screen, (150, 20, 30), (1280, 720), radius-5, 5)
+            
+            pygame.draw.line(screen, (200, 50, 60), (0, 0), (1280, 720), int(thickness))
+            pygame.draw.line(screen, (200, 50, 60), (0, 720), (1280, 0), int(thickness))
+            
+            pygame.draw.rect(screen, (255, 255, 255), (0, 0, length, 360)) 
+            pygame.draw.rect(screen, (255, 255, 255), (leftpos, 360, 1280, 360))
+            
+            if circles:
+                if currenttime - lastmovetime > 0.01:
+                    lastmovetime = currenttime
+                    radius += 2.5
+                    if radius == 500:
+                        lastmovetime = currenttime
+                        circles = False
+                        drawingx = True
+            
+            elif drawingx:
+                if currenttime - lastmovetime > 0.01:
+                    lastmovetime = currenttime
+                    thickness += 2.5
+                    if thickness == 200:
+                        lastmovetime = currenttime
+                        drawingx = False
+                        rectangles = True
+                        
+            elif rectangles:
+                if currenttime - lastmovetime > 0.01:
+                    lastmovetime = currenttime
+                    length += 20
+                    leftpos -= 20    
+                    if leftpos == 0:
+                        rectangles = False
+                        colorchanging = True
+                        
+            elif colorchanging:
+                pygame.draw.rect(screen, (red, green, blue), (0, 0, 1280, 720))
+                if currenttime - lastmovetime > 0.01:
+                    lastmovetime = currenttime
+                    red -= (235/100)
+                    green = red
+                    blue -= (230/100)
+                    
+                    if red < 20:
+                        colorchanging = False
+                        red = green = 20
+                        blue = 25
+                        lastmovetime = currenttime
+                        bottomrect = True
+                        
+            elif bottomrect == True:
+                screen.fill((20, 20, 25))
+                pygame.draw.rect(screen, (200, 220, 240), (0, bottomrecttop, 1280, 100))
+                if currenttime - lastmovetime > 0.01:
+                    bottomrecttop -= 1
+                    if bottomrecttop == 620:
+                        complete = True
+                        break
+            
+            
+            if bottomrect == False:
+                font = pygame.font.SysFont(None, 400, bold=True, italic=True)
+                text = font.render("BOSS", True, (20, 20, 25))
+                surface = text.get_rect(center= (640, 160))
+                text2 = font.render("TIME!", True, (20, 20, 25))
+                surface2 = text.get_rect(center=(760, 560))
+            
+            screen.blit(text, surface)
+            screen.blit(text2, surface2)
+            pygame.display.update()
+            
     def DictionaryEnemyToObjectEnemy(enemyname):
         import json
         with open('enemies.json', 'r') as file:
@@ -181,7 +344,7 @@ class Battles:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and buttonrect.collidepoint(mousepos):
                 if action == 'FLEE (coward)':
-                    Battles.FleeCoward(player)
+                    Battles.FleeCoward(player, enemies)
                     wasactiondone = True
                 elif action == 'ATTACK':
                     if attackpressed == True:
@@ -239,6 +402,11 @@ class Battles:
         import random, time
         animationtype = random.randint(1, 2)
         
+        wouldkill = False
+        if player.weapon.strength + player.strength >= chosenenemy.currenthp:
+            wouldkill = True
+        
+        
         if animationtype == 1:
             radius = 50
             complete = False
@@ -281,8 +449,18 @@ class Battles:
                 if circle:
                     pygame.draw.circle(screen, (100, 0, 0), (xcoordinate, 250), radius, 5)
                 else:
-                    pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
-                    pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 400), (xcoordinate+50, 100), 10)   
+                    if not wouldkill:
+                        pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
+                        pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 400), (xcoordinate+50, 100), 10)
+                    if wouldkill:
+                        pygame.draw.circle(screen, (0, 100, 100), (xcoordinate, 250), 120)
+                        pygame.draw.rect(screen, (0, 100, 100), (xcoordinate-50, 240, 100, 180))
+                        
+                        pygame.draw.circle(screen, (255, 255, 255), (xcoordinate, 250), 110)
+                        pygame.draw.rect(screen, (255, 255, 255), (xcoordinate-40, 250, 80, 160))
+                        pygame.draw.circle(screen, (0, 0, 0), (xcoordinate - 50, 250), 50)
+                        pygame.draw.circle(screen, (0, 0, 0), (xcoordinate + 50, 250), 50)
+                       
                     if currenttime - eksstarttime > 0.5:
                         complete = True
                         break
@@ -390,8 +568,18 @@ class Battles:
                                 eksstarttime = time.time()
                                 
                 else:
-                    pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
-                    pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 400), (xcoordinate+50, 100), 10)   
+                    if not wouldkill:
+                        pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
+                        pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 400), (xcoordinate+50, 100), 10) 
+                    if wouldkill:
+                        pygame.draw.circle(screen, (0, 100, 100), (xcoordinate, 250), 120)
+                        pygame.draw.rect(screen, (0, 100, 100), (xcoordinate-50, 240, 100, 180))
+                        
+                        pygame.draw.circle(screen, (255, 255, 255), (xcoordinate, 250), 110)
+                        pygame.draw.rect(screen, (255, 255, 255), (xcoordinate-40, 250, 80, 160))
+                        pygame.draw.circle(screen, (0, 0, 0), (xcoordinate - 50, 250), 50)
+                        pygame.draw.circle(screen, (0, 0, 0), (xcoordinate + 50, 250), 50)
+                        
                     if currenttime - eksstarttime > 0.5:
                         complete = True
                         break
@@ -579,12 +767,16 @@ class Battles:
         screen.blit(hawk2, hawk2surface)
         
         
-    def FleeCoward(player):
+    def FleeCoward(player, enemies):
         global battle, block, blockdone
         import random
         chancetoflee = 100 - (100*(player.currenthp / player.maxhp))
         if chancetoflee < 45:
             chancetoflee = 45
+
+        for enemy in enemies:
+            if isinstance(enemy, BossEnemy):
+                chancetoflee = 10000000000 # come back here 
             
         areyarunning = random.randint(1, 100)
         if areyarunning >= chancetoflee:
@@ -1037,7 +1229,7 @@ class Battles:
         endingbattle = True
         while endingbattle:
             # placeholder until i figure out how i will set you back in the open world
-            screen.fill((255, 255, 255)) # flashbanging me constantly as i debug bruh / do i change it? of course not
+         # flashbanging me constantly as i debug bruh / do i change it? of course not
             for event in events:
                 if event.type == pygame.QUIT:
                     endingbattle = False

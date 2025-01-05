@@ -57,9 +57,11 @@ class Room:
                 enemies.remove(enemy)
                 if self.room_number < 4:
                     fightingenemies = Battles.SpawnEnemies(self.room_number)
+                    Battles.BattleStartAnimation()
                     Battles.Battle(player, fightingenemies)
                 else:
                     fightingenemies = Battles.SpawnBoss()
+                    Battles.BossStartAnimation()
                     Battles.Battle(player, fightingenemies)
                     
 
@@ -268,7 +270,7 @@ class Room:
             screen.blit(youdied, youdiedsurface)
             
             smallfont = pygame.font.Font(None, 100)
-            youreached = smallfont.render(f"YOU REACHED ROOM {self.room_number + 1}", True, (255, 0, 0))
+            youreached = smallfont.render(f"YOU REACHED ROOM {max(rphbi) + 1}", True, (255, 0, 0))
             youreachedsurface = youreached.get_rect(center=(640, 340))
             screen.blit(youreached, youreachedsurface)
             
@@ -294,6 +296,6 @@ player = MainCharacter('edward', 30, 10, 10, Weapon("HI", 0, 100, 10), [], 0, 1,
 room = Room(0)
 #rphbi = rooms player has been in ... duh ...
 
-rphbi = [0]
+rphbi = [0, 1, 2, 3, 4]
 
 room.LoadRoom(player, rphbi, None)
