@@ -1,5 +1,3 @@
-#TO DO: LOADING SAVE DATA TO A JSON FILE
-
 import json
 # from items import wooden_sword need to add the file
 
@@ -8,6 +6,8 @@ try:
 		savedata = json.load(file)
 except(FileNotFoundError, json.JSONDecodeError):
 	savedata = []
+	with open('saves.json', 'w') as file:
+		json.dump(savedata, file, indent=2)
 
 class SaveFileManager:
 	def __init__(self):
@@ -16,17 +16,17 @@ class SaveFileManager:
 	def save_or_load_file(self):
 		#strip removes all spaces before or after the letters (not the spaces in between words)
 		answer = input('Do you want to create a file or load a new one?').strip().lower()
-
-		if answer == 'create':
-			name = input('What do you want to name your save file?').strip()
-			self.make_savefile(name)
-		elif answer == 'load':
-			self.select_savefile()
-		else:
-			print('Invalid Answer. Please try again!')
-			self.save_or_load_file() #forces them to answer load or save 
-
-	def make_savefile(self, name):
+		while True:
+			if answer == 'create':
+				self.create_savefile()
+				break
+			elif answer == 'load':
+				self.load_savefile()
+				break
+			else:
+				print('Invalid Answer. Please try again!')
+				
+	def dump_savefile_to_json(self, name):
 		
 		blank_player_data = {
 			"name": name,
@@ -46,14 +46,39 @@ class SaveFileManager:
 		with open('saves.json', 'w') as file:
 			json.dump(savedata, file, indent=2)
 	''
-	def select_savefile(self):
+	def create_savefile(self):
+		while True:
+			if savedata: #runs the code if the list isnt empty
+				print("\nThese are the taken names. You can't name your save file any of these names\n")
+				#prints all savefile names
+				for savefile in savedata:
+					print(savefile['name']) #\n skips a line. done for better formatting
+				print() # skips a line for better formatting
 
+			name = input('What do you want to name your save file?').strip()
+
+			if name == '':
+				print("Blank save file name. Please try again.")
+				continue
+			
+			#checks if the chosen name matches any of savefile's names
+			if any(savefile['name'].upper() == name.upper() for savefile in savedata):
+				print('\nA save file already has this name. Please try again')
+				continue
+			
+			#if it's a valid answer, make a save file
+			self.dump_savefile_to_json(name)
+			print('File sucessfully created')
+			break
+		
+	def load_savefile(self):
+	
 		lookingforsave = True
 
 		while lookingforsave:
 			savefound = False
 
-			print('\nHere are all the save file names:\n') #\n skips a line. done for better formatting
+			print('\nHere are all the save file names:\n') 
 
 			#prints all savefile names
 			for savefile in savedata: 
@@ -67,7 +92,7 @@ class SaveFileManager:
 					savefound = True
 				else:
 					print('\nInvalid Answer. Please try again.')
-					self.select_savefile()
+					self.load_savefile()
 						
 				if savefound == True:
 					if savefile == chosensave:
@@ -86,7 +111,14 @@ class SaveFileManager:
 						return chosensave
 		#when you call this function, you set the player values, coordinates, and room number equal to the values in the save file 
 		
+	def update_savefile(self):
+		#need to make the MainCharacter data into a dictionary to replace the savefile that has its name
+		from rooms import player
+		playerdict = player.__dict__
+		print(playerdict)
+		pass
+		
 		
 test = SaveFileManager()
 
-test.save_or_load_file()
+test.update_savefile()

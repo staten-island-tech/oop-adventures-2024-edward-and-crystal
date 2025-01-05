@@ -4,14 +4,8 @@ import random
 from charactersitems import MainCharacter
 from movement import OpenWorld
 
-
-
-pygame.init()
-screen_width = 1280
-screen_height = 720
-screen = pygame.display.set_mode((screen_width,screen_height))
-running = True
 enemies = []  
+
 
 
 with open('rooms.json', 'r') as file:
@@ -53,6 +47,12 @@ class Room:
                 #insert actual battles code. you got this, edward!!!!
 
     def LoadRoom(self, player, player_coordinates=None):
+        
+        pygame.init()
+        screen_width = 1280
+        screen_height = 720
+        screen = pygame.display.set_mode((screen_width,screen_height))
+        running = True
         global player_rect
         room_loaded = True
         enemies_spawned = False
@@ -128,9 +128,6 @@ class Room:
                 screen.blit(text, textsurface)
 
 
-
-
-
 player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
-room = Room(1)
-room.LoadRoom(player)
+'''room = Room(1)
+room.LoadRoom(player)'''
