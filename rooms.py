@@ -170,8 +170,7 @@ class Room:
 
             self.check_if_enemy_encounter()
             
-            
-            if room_loaded and len(enemies) == 0:
+            if room_loaded and len(enemies) == 0 and player.currenthp > 0:
                 for room in rooms:
                     if room['id'] == self.room_number:
                         rphbi.append(self.room_number + 1)
