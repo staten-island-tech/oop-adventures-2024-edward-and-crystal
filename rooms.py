@@ -221,4 +221,3 @@ room = Room(0)
 rphbi = [0, 1, 2, 3, 4]
 
 room.LoadRoom(player, rphbi, None)
-room.LoadRoom(player, rphbi, None)
