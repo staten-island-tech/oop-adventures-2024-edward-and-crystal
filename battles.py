@@ -103,7 +103,7 @@ class Battles:
         strongorc = Battles.DictionaryEnemyToObjectEnemy("Strong Orc")
         boss = Battles.DictionaryEnemyToObjectEnemy("King Orc")
         
-        return [strongslime, strongorc, boss]
+        return [strongslime, boss, strongorc]
     
     def SpawnEnemies(roomnumber):
         import json, random
@@ -147,7 +147,9 @@ class Battles:
         fightingenemies = []
         
         for i in range(enemycount):
-            fightingenemies.append(random.choice(possibleenemies))
+            enemy = random.choice(possibleenemies)
+            fightingenemies.append(enemy)
+            possibleenemies.remove(enemy) # i rolled the 1/100 while testing that the exact same enemy spawned twice
         
         return fightingenemies
     
@@ -220,7 +222,186 @@ class Battles:
                         attack = True
                         if enemy:
                             chosenenemy = enemy
+                            
+    def AttackAnimation(chosenenemy, enemies, player):    
+        enemynumber = enemies.index(chosenenemy)
+        numberofbosses = 0
+        for enemy in enemies:
+            if isinstance(enemy, BossEnemy):
+                numberofbosses += 1
+            if enemy == chosenenemy:
+                break
+        
+        xcoordinate = 75
+        xcoordinate += (enemynumber*150)
+        xcoordinate += (numberofbosses*30)
+        
+        import random, time
+        animationtype = random.randint(1, 2)
+        
+        if animationtype == 1:
+            radius = 50
+            complete = False
+            circle = True
+            lastmovetime = time.time()
+            currenttime = time.time()
+            while not complete:
+                events = pygame.event.get()
+                for event in events:
+                    if event.type == pygame.QUIT:
+                        quit()
+                screen.fill((20, 20, 25))
+                Battles.MakeEnemies(enemies)
+                
+                pygame.draw.rect(screen, (200, 220, 240), (0, 620, 1280, 200))
+                
+                hppercentage = round(player.currenthp / player.maxhp, 2) 
+                
+                menufont = pygame.font.Font(None, 30)
+                healthbar = pygame.Rect((10, 645, 200, 30))
+                nameunderhealthbarrect = pygame.Rect((10, 675, 200, 30))
+                pygame.draw.rect(screen, (75, 100, 125), (5, 640, 210, 40))
+                pygame.draw.rect(screen, (25, 25, 32.5), healthbar)
+                if hppercentage < .30:
+                    uhohtext = menufont.render("!!!!!!!!!!!!!!!!!!!!!!!!!!!", True, (120, 120, 130))
+                    uhohsurface = uhohtext.get_rect(center=healthbar.center)
+                    screen.blit(uhohtext, uhohsurface)
+                
+                pygame.draw.rect(screen, (100, 110, 140), (10, 645, 200*hppercentage, 30))
+            
+                hptext = menufont.render(f"{int(player.currenthp)} / {int(player.maxhp)} HP", True, (255, 255, 255))
+                hpsurface = hptext.get_rect(center=healthbar.center)
+                
+                nameunderhealthbartext = menufont.render(player.name, True, 36)
+                nameunderhbsurface = nameunderhealthbartext.get_rect(center=nameunderhealthbarrect.center)
+                
+                screen.blit(nameunderhealthbartext, nameunderhbsurface)
+                screen.blit(hptext, hpsurface)
+                
+                if circle:
+                    pygame.draw.circle(screen, (100, 0, 0), (xcoordinate, 250), radius, 5)
+                else:
+                    pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
+                    pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 400), (xcoordinate+50, 100), 10)   
+                    if currenttime - eksstarttime > 0.5:
+                        complete = True
+                        break
                     
+                currenttime = time.time()
+                
+                if circle == True:
+                    if currenttime - lastmovetime > 0.05:
+                        radius -= 2.5
+                        lastmovetime = currenttime
+                        if radius == 0:
+                            eksstarttime = time.time()
+                            circle = False
+                
+                pygame.display.update()
+                
+        else:
+            complete = False
+            drawinglines = True
+            line = 1
+            starttime = time.time()
+            percentdone1 = 0
+            percentdone2 = 0
+            percentdone3 = 0
+            percentdone4 = 0
+            lastgrowth = time.time()
+            linelength = 0
+            
+            while not complete:
+                events = pygame.event.get()
+                for event in events:
+                    if event.type == pygame.QUIT:
+                        quit()
+                        
+                screen.fill((20, 20, 25))
+                Battles.MakeEnemies(enemies)
+                
+                pygame.draw.rect(screen, (200, 220, 240), (0, 620, 1280, 200))
+                
+                hppercentage = round(player.currenthp / player.maxhp, 2) 
+                
+                menufont = pygame.font.Font(None, 30)
+                healthbar = pygame.Rect((10, 645, 200, 30))
+                nameunderhealthbarrect = pygame.Rect((10, 675, 200, 30))
+                pygame.draw.rect(screen, (75, 100, 125), (5, 640, 210, 40))
+                pygame.draw.rect(screen, (25, 25, 32.5), healthbar)
+                if hppercentage < .30:
+                    uhohtext = menufont.render("!!!!!!!!!!!!!!!!!!!!!!!!!!!", True, (120, 120, 130))
+                    uhohsurface = uhohtext.get_rect(center=healthbar.center)
+                    screen.blit(uhohtext, uhohsurface)
+                
+                pygame.draw.rect(screen, (100, 110, 140), (10, 645, 200*hppercentage, 30)) 
+                
+                hptext = menufont.render(f"{int(player.currenthp)} / {int(player.maxhp)} HP", True, (255, 255, 255))
+                hpsurface = hptext.get_rect(center=healthbar.center)
+                
+                nameunderhealthbartext = menufont.render(player.name, True, 36)
+                nameunderhbsurface = nameunderhealthbartext.get_rect(center=nameunderhealthbarrect.center)
+                
+                screen.blit(nameunderhealthbartext, nameunderhbsurface)
+                screen.blit(hptext, hpsurface)
+                
+                currenttime = time.time()
+                
+                # x coordinate is the center
+                # start and end positions for
+                # line 1: xcoord - 100, 100 and xcoord+100, 400
+                # line 3: xcoord + 100, 100 and xcoord-100, 400
+                
+                if drawinglines:
+                    if line == 1:
+                        if currenttime - lastgrowth > 0.0025:
+                            linelength += 2
+                            lastgrowth = currenttime
+                            
+                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 100), (xcoordinate - 100 + linelength, 100 + 1.5*linelength), 5)
+                    elif line == 2:
+                        if currenttime - lastgrowth > 0.0025:
+                            linelength += 2
+                            lastgrowth = currenttime
+                        
+                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 250), (xcoordinate - 100 + linelength, 250), 5)
+                        
+                    elif line == 3:
+                        if currenttime - lastgrowth > 0.0025:
+                            linelength += 2
+                            lastgrowth = currenttime
+                            
+                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate + 100, 400), (xcoordinate + 100 - linelength, 400 - 1.5*linelength), 5)
+                        
+                    elif line == 4:
+                        if currenttime - lastgrowth > 0.0025:
+                            linelength += 6
+                            lastgrowth = currenttime
+                        
+                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate, 150), (xcoordinate, 150 + linelength), 5)      
+                        
+                    if currenttime - starttime > 0.25:
+                            line += 1
+                            starttime = currenttime
+                            lastgrowth = time.time()
+                            linelength = 0
+                            if line > 4:
+                                drawinglines = False
+                                eksstarttime = time.time()
+                                
+                else:
+                    pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 100), (xcoordinate+50, 400), 10)    
+                    pygame.draw.line(screen, (255, 255, 255), (xcoordinate-50, 400), (xcoordinate+50, 100), 10)   
+                    if currenttime - eksstarttime > 0.5:
+                        complete = True
+                        break
+                            
+                
+                pygame.display.update()
+                
+                
+        
+        
                         
     def AttackStepTwo(player, enemy, enemies):
         global attacksteptwo, attack, events, x, damage, enemiesfought, weaponbroken
@@ -350,7 +531,7 @@ class Battles:
                 import random
                 action = random.randint(1, 100)
                 if (enemy.currenthp/enemy.maxhp) <= 0.3:
-                    enemy.EnemyHeal(15)
+                    enemy.EnemyHeal(25)
                     enemy.lastaction = 'healed!'
                     action = 'healed!'
                 elif enemy.currenthp/enemy.maxhp >= 1:
@@ -375,7 +556,7 @@ class Battles:
                         if player.currenthp < 1:
                             battle = False
                     elif action < 91 and action > 70:
-                        enemy.EnemyHeal(15)
+                        enemy.EnemyHeal(25)
                         enemy.lastaction = 'healed!'
                         action = 'healed!'
                     else:
@@ -524,7 +705,7 @@ class Battles:
                     import random
                     action = random.randint(1, 100)
                     if (enemy.currenthp/enemy.maxhp) <= 0.3:
-                        enemy.EnemyHeal(15)
+                        enemy.EnemyHeal(25)
                         enemy.lastaction = 'healed!'
                         action = 'healed!'
                     elif enemy.currenthp/enemy.maxhp >= 1:
@@ -543,7 +724,7 @@ class Battles:
                             enemy.lastaction = 'tried to attack, but was blocked!'
                             action = 'tried to attack, but was blocked!'
                         elif action < 91 and action > 70:
-                            enemy.EnemyHeal(15)
+                            enemy.EnemyHeal(25)
                             enemy.lastaction = 'healed!'
                             action = 'healed!'
                         else:
@@ -592,7 +773,7 @@ class Battles:
                     import random
                     action = random.randint(1, 100)
                     if (enemy.currenthp/enemy.maxhp) <= 0.3:
-                        enemy.EnemyHeal(15)
+                        enemy.EnemyHeal(25)
                         enemy.lastaction = 'healed!'
                         action = 'healed!'
                     elif enemy.currenthp/enemy.maxhp >= 1:
@@ -617,7 +798,7 @@ class Battles:
                             if player.currenthp < 1:
                                 battle = False
                         elif action < 91 and action > 70:
-                            enemy.EnemyHeal(15)
+                            enemy.EnemyHeal(25)
                             enemy.lastaction = 'healed!'
                             action = 'healed!'
                         else:
@@ -757,7 +938,7 @@ class Battles:
     def BattleMenu(player, enemies):
         global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block, events # im gonna be real i would be 
         # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
-        global blockdone, chosenenemy, enemiesfought, weaponbroken, inbattle
+        global blockdone, chosenenemy, enemiesfought, weaponbroken, inbattle, z
         wasactiondone = False
         attackpressed = False
         attack = False
@@ -829,6 +1010,9 @@ class Battles:
                     
             if attack == True:
                 if chosenenemy != None:
+                    if z == 1:
+                        Battles.AttackAnimation(chosenenemy, enemies, player)
+                        z += 1
                     Battles.AttackStepTwo(player, chosenenemy, enemies)          
             
             if attacksteptwo == True:

@@ -103,9 +103,14 @@ class OpenWorld:
                         if enemychance == 18:
                             print("ENEMY!")'''
                     else:
-                        player.currenthp -= 3
-                        if player.currenthp < 10:
-                            player.currenthp = 10 # i'm not SO evil...
+                        testplayerhealth = player.currenthp - 3
+                        
+                        if testplayerhealth < 10:
+                            player.currenthp = player.currenthp # i'm not SO evil...
+                            if player.currenthp > 10:
+                                player.currenthp = 10
+                        else:
+                            player.currenthp = testplayerhealth
                             
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w or event.key == pygame.K_UP:
@@ -147,11 +152,16 @@ class OpenWorld:
                     self.playerx = testplayerx 
                     youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
                     pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
-                        
+                    print(self.playerx, self.playery)    
                 else:
-                    player.currenthp -= 3
-                    if player.currenthp < 10:
-                        player.currenthp = 10
+                    testplayerhealth = player.currenthp - 3
+                        
+                    if testplayerhealth < 10:
+                        player.currenthp = player.currenthp # i'm not SO evil...
+                        if player.currenthp > 10:
+                            player.currenthp = 10
+                    else:
+                        player.currenthp = testplayerhealth
              
     def CreateMenuButton(self, events): # opening the menu
         menufont = pygame.font.Font(None, 36) # most of this code is the same

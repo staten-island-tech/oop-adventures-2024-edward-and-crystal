@@ -110,7 +110,7 @@ class Room:
             pygame.draw.rect(screen, (20, 27, 30), playerinforect)
             screen.blit(playerinfotext, playerinfosurface)
             
-            pygame.draw.rect(screen, (255, 255, 255), (self.openworld.playerx, self.openworld.playery, 10, 10))
+            pygame.draw.rect(screen, (255, 255, 255), (round(self.openworld.playerx, -1), round(self.openworld.playery, -1), 10, 10))
             
             roominforect = pygame.Rect(1000, 632, 260, 80)
             pygame.draw.rect(screen, (20, 27, 30), roominforect)
@@ -289,11 +289,11 @@ class Room:
         print("DATA DELETION UNDERWAY. THIS PROCESS WILL BE COMPLETED MOMENTARILY.")
         quit()
         
-player = MainCharacter('edward', 1, 1, 10, Weapon("HI", 10, 100, 10), [], 0, 1, 0)
+player = MainCharacter('edward', 30, 10, 10, Weapon("HI", 0, 100, 10), [], 0, 1, 0)
 
 room = Room(0)
 #rphbi = rooms player has been in ... duh ...
 
-rphbi = [0, 1, 2, 3, 4]
+rphbi = [0]
 
 room.LoadRoom(player, rphbi, None)
