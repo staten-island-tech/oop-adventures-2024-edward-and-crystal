@@ -392,12 +392,16 @@ class Battles:
         for enemy in enemies:
             if isinstance(enemy, BossEnemy):
                 numberofbosses += 1
+                
             if enemy == chosenenemy:
                 break
+            
+        if isinstance(chosenenemy, BossEnemy):
+            numberofbosses -= 0.5
         
         xcoordinate = 75
         xcoordinate += (enemynumber*150)
-        xcoordinate += (numberofbosses*30)
+        xcoordinate += (numberofbosses*60)
         
         import random, time
         animationtype = random.randint(1, 2)
@@ -550,7 +554,7 @@ class Battles:
                 if drawinglines:
                     if line == 1:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 2
+                            linelength += 4
                             lastgrowth = currenttime
                             
                         pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 100), (xcoordinate - 100 + linelength, 100 + 1.5*linelength), 5)
@@ -563,7 +567,7 @@ class Battles:
                         
                     elif line == 3:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 2
+                            linelength += 4
                             lastgrowth = currenttime
                             
                         pygame.draw.line(screen, (100, 0, 0), (xcoordinate + 100, 400), (xcoordinate + 100 - linelength, 400 - 1.5*linelength), 5)
