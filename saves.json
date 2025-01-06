@@ -1,19 +1,6 @@
 [
   {
-    "name": "k",
-    "maxhp": 100,
-    "currenthp": 100,
-    "strength": 0,
-    "weapon": "wooden_sword",
-    "inventory": [
-      "wooden_sword"
-    ],
-    "gold": 0,
-    "level": 1,
-    "exp": 0
-  },
-  {
-    "name": "l",
+    "name": "w",
     "maxhp": 100,
     "currenthp": 100,
     "strength": 0,

@@ -13,6 +13,7 @@ class Weapon:
             'cost': self.cost
         }
 
+
 class HealingItem:
     def __init__(self, name, heal, cost):
         self.name = name

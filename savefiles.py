@@ -1,5 +1,4 @@
 import json
-# from items import wooden_sword need to add the file
 
 try:
 	with open('saves.json', 'r') as file:
@@ -10,23 +9,21 @@ except(FileNotFoundError, json.JSONDecodeError):
 		json.dump(savedata, file, indent=2)
 
 class SaveFileManager:
-	def __init__(self):
-		pass #done so I can call this class's functions in other functions also in the class
-
-	def save_or_load_file(self):
+	def save_or_load_file():
 		#strip removes all spaces before or after the letters (not the spaces in between words)
-		answer = input('Do you want to create a file or load a new one?').strip().lower()
+	
 		while True:
+			answer = input('Do you want to create a file or load a new one?').strip().lower()
 			if answer == 'create':
-				self.create_savefile()
+				SaveFileManager.create_savefile()
 				break
 			elif answer == 'load':
-				self.load_savefile()
+				SaveFileManager.load_savefile()
 				break
 			else:
 				print('Invalid Answer. Please try again!')
 				
-	def dump_savefile_to_json(self, name):
+	def dump_savefile_to_json(name):
 		
 		blank_player_data = {
 			"name": name,
@@ -46,7 +43,7 @@ class SaveFileManager:
 		with open('saves.json', 'w') as file:
 			json.dump(savedata, file, indent=2)
 	''
-	def create_savefile(self):
+	def create_savefile():
 		while True:
 			if savedata: #runs the code if the list isnt empty
 				print("\nThese are the taken names. You can't name your save file any of these names\n")
@@ -67,11 +64,11 @@ class SaveFileManager:
 				continue
 			
 			#if it's a valid answer, make a save file
-			self.dump_savefile_to_json(name)
+			SaveFileManager.dump_savefile_to_json(name)
 			print('File sucessfully created')
 			break
 		
-	def load_savefile(self):
+	def load_savefile():
 	
 		lookingforsave = True
 
@@ -92,7 +89,7 @@ class SaveFileManager:
 					savefound = True
 				else:
 					print('\nInvalid Answer. Please try again.')
-					self.load_savefile()
+					SaveFileManager.load_savefile()
 						
 				if savefound == True:
 					if savefile == chosensave:
@@ -111,14 +108,23 @@ class SaveFileManager:
 						return chosensave
 		#when you call this function, you set the player values, coordinates, and room number equal to the values in the save file 
 		
-	def update_savefile(self):
-		#need to make the MainCharacter data into a dictionary to replace the savefile that has its name
-		from rooms import player
-		playerdict = player.__dict__
-		print(playerdict)
-		pass
+	def update_savefile(playerdict):
+		#edward, in the place you run the code, write playerdict = player.__dict__ (make sure your MainCharacter object is called player)
+		#i can't do it here because of import errors....
+		for savefile in savedata:
+			if playerdict['name'] == savefile['name']:
+				savefile.update(playerdict)
+				break
+		with open('saves.json', 'w') as file:
+			json.dump(savedata, file, indent=2 )
+		#need to update the playerdata witht he new items
+	def delete_savefile(playerdict):
+		#find user save file and delete
+		for savefile in savedata:
+			if playerdict['name'] == savefile['name']:
+				savedata.remove(savefile)
+		with open('saves.json', 'w') as file:
+			json.dump(savedata, file, indent=2 )		
 		
 		
-test = SaveFileManager()
-
-test.update_savefile()
+		
