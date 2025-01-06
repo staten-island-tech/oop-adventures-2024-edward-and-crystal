@@ -24,7 +24,7 @@ class SaveFileManager:
 				print('Invalid Answer. Please try again!')
 				
 	def dump_savefile_to_json(name):
-		
+
 		blank_player_data = {
 			"name": name,
 			"maxhp": 100,
@@ -34,8 +34,11 @@ class SaveFileManager:
 			"inventory": ['wooden_sword'],
 			"gold": 0,
 			"level": 1,
-			"exp": 0
+			"exp": 0,
+			"room": 1, 
+			"coordinates": None
 		}
+		#depending on how the attack damage is calculated, might need to make the inventory have dicts with item stats
 
 		savedata.append(blank_player_data)
 		
@@ -93,7 +96,6 @@ class SaveFileManager:
 						
 				if savefound == True:
 					if savefile == chosensave:
-
 						#for better formatting. format: Key: pair, with each key value pair on a new line. EX: Weapon: wooden_sword
 						for key, value in chosensave.items():
 						
@@ -106,25 +108,31 @@ class SaveFileManager:
 					if confirm.upper() == 'Y':
 						lookingforsave = False
 						return chosensave
-		#when you call this function, you set the player values, coordinates, and room number equal to the values in the save file 
+		#when you call this function, you set the MainCharacter object's values equal to the values in the savefiles 
 		
-	def update_savefile(playerdict):
+	def update_savefile(playerdict, playercoords, room_number):
 		#edward, in the place you run the code, write playerdict = player.__dict__ (make sure your MainCharacter object is called player)
 		#i can't do it here because of import errors....
+
+		#these two lines create key-value pairs in the playerdict (main character object aka the player doesnr have these as attributes)
+		playerdict['coordinates'] = playercoords
+		playerdict['room'] = room_number
+
 		for savefile in savedata:
 			if playerdict['name'] == savefile['name']:
 				savefile.update(playerdict)
 				break
 		with open('saves.json', 'w') as file:
-			json.dump(savedata, file, indent=2 )
+			json.dump(savedata, file, indent=2 ) 
 		#need to update the playerdata witht he new items
+
 	def delete_savefile(playerdict):
 		#find user save file and delete
 		for savefile in savedata:
 			if playerdict['name'] == savefile['name']:
 				savedata.remove(savefile)
 		with open('saves.json', 'w') as file:
-			json.dump(savedata, file, indent=2 )		
+			json.dump(savedata, file, indent=2)		
 		
 		
 		

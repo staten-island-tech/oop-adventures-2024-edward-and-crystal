@@ -2,11 +2,11 @@ import pygame
 import random
 import json
 
-'''
-pygame.init()
-screen = pygame.display.set_mode((1280, 720))
-pygame.display.set_caption('Game')'''
 
+pygame.init()
+screen_width = 1280
+screen_height = 720
+screen = pygame.display.set_mode((screen_width,screen_height))
 
 with open('rooms.json', 'r') as file:
     rooms = json.load(file)

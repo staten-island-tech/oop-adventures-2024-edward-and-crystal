@@ -7,8 +7,6 @@ from savefiles import SaveFileManager
 
 enemies = []  
 
-
-
 with open('rooms.json', 'r') as file:
     rooms = json.load(file)
 
@@ -129,10 +127,10 @@ class Room:
                 screen.blit(text, textsurface)
 
 
-player = MainCharacter('drwillfulneglect', 100, 100, 10, 'hey', [], 100, 0, 0)
+player = MainCharacter('w', 100, 100, 10, 'hey', [], 100, 0, 0)
 '''room = Room(1)
 room.LoadRoom(player)'''
 
 playerdict = player.__dict__
 
-SaveFileManager.delete_savefile(playerdict)
+SaveFileManager.update_savefile(playerdict, (0,0), 3)
