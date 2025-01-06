@@ -648,7 +648,6 @@ class Battles:
             
             try:
                 enemies.remove(enemy)
-                enemiesfought.append(enemy)
             except ValueError: #bc this code is gonna run over and over
                 pass
         else:
@@ -686,7 +685,6 @@ class Battles:
             pass
         try:
             if enemy.currenthp < 1:
-                enemiesfought.append(enemy)
                 return
         except UnboundLocalError:
             pass
@@ -1153,18 +1151,21 @@ class Battles:
                 battle = False
                 inbattle = False
         
+        
         player.gold = int(player.gold)
+        import random
         if x == 1:
             x += 1
             for enemy in enemiesfought:
                 player.MainCharacterGetEXP(enemy.expdrop)
-                if player.level >= 30:
-                    player.level = 30
-                    player.exp = 0
+                if not isinstance(enemy, BossEnemy):
+                    player.gold += enemy.golddrop
+                
                 if isinstance(enemy, Enemy):
                     if isinstance(enemy.weapondrop, Weapon) or isinstance(enemy.weapondrop, HealingItem):
-                        if len(player.inventory) < 24: # capacity
-                            player.inventory.append(enemy.weapondrop)
+                        if random.randint(1, 100) >= 35:        
+                            if len(player.inventory) < 24: # capacity
+                                player.inventory.append(enemy.weapondrop)
                     enemiesfought.remove(enemy)
         
     def BattleMenu(player, enemies):
@@ -1180,7 +1181,6 @@ class Battles:
         blockdone = False
         chosenenemy = None
         weaponbroken = False
-        enemiesfought = []
         x = 1
         y = 0
         z = 1
@@ -1194,7 +1194,7 @@ class Battles:
             if len(enemies) == 0:
                 if z == 1:
                     z += 1
-                    x = 1
+                x = 1
                 Battles.EndBattle(enemiesfought, player)
                 wasactiondone = True
  # idk maybe
@@ -1276,7 +1276,7 @@ class Battles:
                     pygame.quit()
                     exit()
                     break
-        
+            
             Battles.EndBattle(enemiesfought, player)        
             pygame.display.update()
             x += 1
@@ -1285,9 +1285,12 @@ class Battles:
                 break
 
     def Battle(player, enemies):
-        global running, wasactiondone, battle, battling, inbattle
+        global running, wasactiondone, battle, battling, inbattle, enemiesfought
         running = False
         inbattle = True
         battle = True
+        enemiesfought = []
+        for enemy in enemies:
+            enemiesfought.append(enemy)
         Battles.BattleMenu(player, enemies)
         battling = False

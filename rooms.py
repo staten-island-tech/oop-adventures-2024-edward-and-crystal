@@ -6,6 +6,7 @@ from charactersitems import Weapon
 from charactersitems import Enemy
 from movement import OpenWorld
 from battles import Battles
+from menus import Menu
 
 pygame.init()
 
@@ -103,7 +104,7 @@ class Room:
             directions = ["LEFT", "UP", "DOWN", "RIGHT"]
             for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
                 self.openworld.CreateMoveButton(direction, events, room, player)
-                self.openworld.CreateMenuButton(events)
+                self.openworld.CreateMenuButton(events, player)
             
             playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
             playerinforect = pygame.Rect(410, 640, 360, 60)
@@ -195,7 +196,8 @@ class Room:
                 text2surface = text2.get_rect(center=textrect.center)
                 text3 = font.render("made by edward and crystal", True, (255, 255, 255))
                 text3surface = text3.get_rect(centerx=textrect.centerx, centery = textrect.centery+80)
-                
+                text4 = font.render("PRESS SPACE TO CLOSE", True, (255, 255, 255))
+                text4surface = text3.get_rect(centerx=textrect.centerx, centery = textrect.centery-240)
                 
                 pygame.draw.rect(screen, (20, 23, 35), textrect)
                 pygame.draw.line(screen, (30, 45, 60), (0, 0), (1280, 760), 150)
@@ -203,15 +205,19 @@ class Room:
                 screen.blit(text, textsurface)
                 screen.blit(text2, text2surface)
                 screen.blit(text3, text3surface)
+                screen.blit(text4, text4surface)
                 player.currenthp = player.maxhp
                 
+                for event in events:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            quit()
                 viewstats = pygame.Rect(200, 500, 880, 200)
                 if viewstats.collidepoint(pygame.mouse.get_pos()):
                     viewstatscolor = (50, 80, 90)
                     for event in events:
                         if event.type == pygame.MOUSEBUTTONDOWN:
-                            print('menu')
-     
+                            Menu.OpenMenuScreen(player)
                 else:
                     viewstatscolor = (30, 45, 50)
                 
@@ -291,7 +297,7 @@ class Room:
         print("DATA DELETION UNDERWAY. THIS PROCESS WILL BE COMPLETED MOMENTARILY.")
         quit()
         
-player = MainCharacter('edward', 1000000, 1000000, 10, Weapon("HI", 0, 100, 10), [], 0, 1, 0)
+player = MainCharacter('edward', 1000000, 1000000, 10, Weapon("HI", 1000, 100, 10), [], 0, 1, 0)
 
 room = Room(0)
 #rphbi = rooms player has been in ... duh ...

@@ -5,7 +5,7 @@
     "maxhp": 12,
     "currenthp": 12,
     "strength": 5,
-    "golddrop": 3,
+    "golddrop": 2,
     "expdrop": 7,
     "weapon": {
       "name": "none",
@@ -26,7 +26,7 @@
     "maxhp": 17,
     "currenthp": 17,
     "strength": 9,
-    "golddrop": 6,
+    "golddrop": 3,
     "expdrop": 13,
     "weapon": {
       "name": "none",
@@ -47,7 +47,7 @@
     "maxhp": 10,
     "currenthp": 10,
     "strength": 4,
-    "golddrop": 5,
+    "golddrop": 1,
     "expdrop": 6,
     "weapon": {
       "name": "none",
@@ -67,7 +67,7 @@
     "maxhp": 23,
     "currenthp": 23,
     "strength": 15,
-    "golddrop": 18,
+    "golddrop": 12,
     "expdrop": 17,
     "weapon": {
       "name": "none",
@@ -88,7 +88,7 @@
     "maxhp": 15,
     "currenthp": 15,
     "strength": 8,
-    "golddrop": 10,
+    "golddrop": 9,
     "expdrop": 9,
     "weapon": {
       "name": "none",
@@ -109,7 +109,7 @@
     "currenthp": 24,
     "strength": 0,
     "steal": 7,
-    "golddrop": 15,
+    "golddrop": 19,
     "expdrop": 17,
     "weapon": {
       "name": "none",
