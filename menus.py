@@ -29,7 +29,7 @@ class Menu:
                 color = (50, 50, 75)
             pygame.draw.rect(screen, color, buttonrect)
         elif buttontitle == "SHOP":
-            buttonrect = pygame.Rect(0, 330, 335, 100) 
+            buttonrect = pygame.Rect(0, 330, 400, 100) 
             if buttonrect.collidepoint(pygame.mouse.get_pos()):
                 color = (100, 110, 140)
             else:
@@ -943,6 +943,80 @@ class Menu:
                 if norect.collidepoint(pygame.mouse.get_pos()):
                     save = False
                     mainmenu = True
+    
+    def MenuOpenAnimation():
+        import time
+        complete = False
+        background = pygame.Rect(0, 720, 1280, 720)
+        lastmovetime = time.time()
+        circles = 0
+
+        
+        rectangle1 = pygame.Rect(-335, 330, 335, 100) 
+        rectangle2 = pygame.Rect(-400, 220, 400, 100)
+        rectangle3 = pygame.Rect(-320, 440, 270, 100)
+        rectangle4 = pygame.Rect(-500, 110, 500, 100)
+        rectangle5 = pygame.Rect(-450, 600, 450, 100)
+
+        rectangles = [rectangle1, rectangle2, rectangle3, rectangle4]
+        
+        backgroundmoving = True
+        buttonsmoving = False
+        
+        while not complete:
+            radius = 400
+            color = (20, 20, 25)
+            redness = color[0]
+            greenness = color[1]
+            blueness = color[2]
+            
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                   complete = True
+            currenttime = time.time()
+            
+                    
+            if backgroundmoving:
+                if currenttime - lastmovetime > 0.01:
+                    lastmovetime = currenttime
+                    background[1] -= 7.2
+                    if background[1] == 0:
+                        backgroundmoving = False
+                        lastmovetime = currenttime
+                        buttonsmoving = True
+            pygame.draw.rect(screen, (20, 20, 25), background)
+                        
+            if buttonsmoving:
+                
+                
+                if currenttime - lastmovetime > 0.005:
+                    circles += 1.3
+                    
+                    rectangle1[0] += 3.35
+                    rectangle2[0] += 4
+                    rectangle3[0] += 2.7
+                    rectangle4[0] += 5
+                    rectangle5[0] += 4.5
+                    if rectangle1[0] == 0:
+                        complete = True
+                        break
+                
+                for i in range(min(int(circles), 100)):
+                    pygame.draw.circle(screen, color, (640, 700), radius)
+                    radius -= 2
+                    redness += 0.5
+                    greenness += 1
+                    blueness += 2
+                    color = (redness, greenness, blueness)
+                    
+                for rectangle in rectangles:
+                    pygame.draw.rect(screen, (50, 50, 75), rectangle)
+                pygame.draw.rect(screen, (90, 100, 150), rectangle5)
+                
+            pygame.display.update()
         
 
     def OpenMenuScreen(player):
@@ -961,6 +1035,9 @@ class Menu:
 
         x = 0
 
+        Menu.MenuOpenAnimation()
+        
+        
         while menurunning:
             screen.fill((20, 20, 25))
             events = pygame.event.get()
