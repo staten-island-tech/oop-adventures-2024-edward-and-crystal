@@ -77,8 +77,8 @@ class Battles:
                         bottomrectmoving = True
             elif bottomrectmoving == True:
                 pygame.draw.rect(screen, (200, 220, 240), bottomrect)
-                if currenttime - lastmovetime > 0.01:
-                    bottomrect[1] -= 1
+                if currenttime - lastmovetime > 0.005:
+                    bottomrect[1] -= 2
                     if bottomrect[1] == 620:
                         complete = True
                         break
@@ -118,8 +118,10 @@ class Battles:
             pygame.draw.line(screen, (200, 50, 60), (0, 0), (1280, 720), int(thickness))
             pygame.draw.line(screen, (200, 50, 60), (0, 720), (1280, 0), int(thickness))
             
-            pygame.draw.rect(screen, (255, 255, 255), (0, 0, length, 360)) 
-            pygame.draw.rect(screen, (255, 255, 255), (leftpos, 360, 1280, 360))
+            pygame.draw.rect(screen, (255, 255, 255), (0, 0, length, 180)) 
+            pygame.draw.rect(screen, (255, 255, 255), (0, 360, length, 180)) 
+            pygame.draw.rect(screen, (255, 255, 255), (leftpos, 180, 1280, 180))
+            pygame.draw.rect(screen, (255, 255, 255), (leftpos, 540, 1280, 180))
             
             if circles:
                 if currenttime - lastmovetime > 0.01:
@@ -166,8 +168,8 @@ class Battles:
             elif bottomrect == True:
                 screen.fill((20, 20, 25))
                 pygame.draw.rect(screen, (200, 220, 240), (0, bottomrecttop, 1280, 100))
-                if currenttime - lastmovetime > 0.01:
-                    bottomrecttop -= 1
+                if currenttime - lastmovetime > 0.005:
+                    bottomrecttop -= 2
                     if bottomrecttop == 620:
                         complete = True
                         break
@@ -414,7 +416,7 @@ class Battles:
         top = 600
         
         if animationtype == 1:
-            radius = 50
+            radius = 100
             complete = False
             circle = True
             lastmovetime = time.time()
@@ -453,7 +455,7 @@ class Battles:
                 screen.blit(hptext, hpsurface)
                 
                 if circle:
-                    pygame.draw.circle(screen, (100, 0, 0), (xcoordinate, 250), radius, 5)
+                    pygame.draw.circle(screen, (100, 0, 0), (xcoordinate, 250), radius, 10)
                 else:
                     if not wouldkill:
                         animationtime = 0.3
@@ -479,7 +481,7 @@ class Battles:
                         if isinstance(enemy, BossEnemy):
                             pygame.draw.rect(screen, (20, 20, 25), (xcoordinate-90, top, 180, height))
                             
-                        if currenttime - lastmovetime > 0.02:
+                        if currenttime - lastmovetime > 0.01:
                             lastmovetime = currenttime
                             height += 6
                             top -= 6
@@ -492,10 +494,10 @@ class Battles:
                 currenttime = time.time()
                 
                 if circle == True:
-                    if currenttime - lastmovetime > 0.05:
-                        radius -= 2.5
+                    if currenttime - lastmovetime > 0.0025:
+                        radius -= 3
                         lastmovetime = currenttime
-                        if radius == 0:
+                        if radius < 0:
                             eksstarttime = time.time()
                             circle = False
                 
@@ -554,30 +556,30 @@ class Battles:
                 if drawinglines:
                     if line == 1:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 4
+                            linelength += 12
                             lastgrowth = currenttime
                             
-                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 100), (xcoordinate - 100 + linelength, 100 + 1.5*linelength), 5)
+                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 100), (xcoordinate - 100 + linelength, 100 + 1.5*linelength), 10)
                     elif line == 2:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 2
+                            linelength += 12
                             lastgrowth = currenttime
                         
-                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 250), (xcoordinate - 100 + linelength, 250), 5)
+                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 250), (xcoordinate - 100 + linelength, 250), 10)
                         
                     elif line == 3:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 4
+                            linelength += 12
                             lastgrowth = currenttime
                             
-                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate + 100, 400), (xcoordinate + 100 - linelength, 400 - 1.5*linelength), 5)
+                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate + 100, 400), (xcoordinate + 100 - linelength, 400 - 1.5*linelength), 10)
                         
                     elif line == 4:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 6
+                            linelength += 24
                             lastgrowth = currenttime
                         
-                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate, 150), (xcoordinate, 150 + linelength), 5)      
+                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate, 100), (xcoordinate, 100 + linelength), 10)      
                         
                     if currenttime - starttime > 0.25:
                             line += 1
@@ -612,10 +614,10 @@ class Battles:
                         if isinstance(enemy, BossEnemy):
                             pygame.draw.rect(screen, (20, 20, 25), (xcoordinate-90, top, 180, height))
                         
-                        if currenttime - lastmovetime > 0.02:
+                        if currenttime - lastmovetime > 0.0175:
                             lastmovetime = currenttime
-                            height += 6
-                            top -= 6
+                            height += 8
+                            top -= 8
                             
                        
                     if currenttime - eksstarttime > animationtime:
