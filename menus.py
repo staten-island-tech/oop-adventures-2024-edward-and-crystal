@@ -874,7 +874,7 @@ class Menu:
         if player.level > 5:
             shopitems.append(goldsword)
             shopitems.append(smallhealingpotion)
-            if player.level > 10:
+            if player.level > 7:
                 shopitems.append(edsword)
                 shopitems.append(bighealingpotion)
         
