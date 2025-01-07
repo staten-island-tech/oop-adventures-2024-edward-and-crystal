@@ -1,43 +1,135 @@
-'''name, maxhp, currenthp, strength, weapon, inventory, gold, level, exp, room, coordinates
-so you would need a function that converts the player object into a dictionary and then use the with open(blahblahblyuh) business to write it into a json file
-and then when you load the game it makes a player object and then loads the room with those coordinates
-yeah 
-uh
-to save me time i will just do this part in the terminal
-basically a while loop that does the save data:'''
-
-#TO DO: LOADING SAVE DATA TO A JSON FILE
-
 import json
-from charactersitems import MainCharacter
-from rooms import Room
 
-with open('saves.json', 'r') as file:
-	savedata = json.load(file)
+try:
+    with open('saves.json', 'r') as file:
+        savedata = json.load(file)
+except(FileNotFoundError, json.JSONDecodeError):
+    savedata = []
+    with open('saves.json', 'w') as file:
+        json.dump(savedata, file, indent=2)
 
-def load_savefile():
-	lookingforsave = True
+class SaveFileManager:
+    def save_or_load_file():
+        #strip removes all spaces before or after the letters (not the spaces in between words)
+    
+        while True:
+            answer = input('Do you want to create a file or load a new one?').strip().lower()
+            if answer == 'create':
+                SaveFileManager.create_savefile()
+                break
+            elif answer == 'load':
+                SaveFileManager.load_savefile()
+                break
+            else:
+                print('Invalid Answer. Please try again!')
+                
+    def dump_savefile_to_json(name):
 
-	while lookingforsave:
-		savefound = False
-		confirmed = False
-	name = input('Whose save would you like to open?')
+        blank_player_data = {
+            "name": name,
+            "maxhp": 100,
+            "currenthp": 100,
+            "strength": 0,
+            "weapon": "wooden_sword", 
+            "inventory": ['wooden_sword'],
+            "gold": 0,
+            "level": 1,
+            "exp": 0,
+            "room": 1, 
+            "coordinates": None
+        }
+        #depending on how the attack damage is calculated, might need to make the inventory have dicts with item stats
 
-	for savefile in savedata:
-		if savefile['name'].upper() == name.upper():
-				chosensave = savefile
-				savefound = True
-		if savefound == True:
-			print()
-			# print all the data of this save im too lazy to type it out
-			confirm = input('Is this the save you would like to open? Y/N')
-			if confirm.upper() == 'Y':
-				lookingforsave = False
+        savedata.append(blank_player_data)
+        
+        # update the json file with the new blank player data
+        with open('saves.json', 'w') as file:
+            json.dump(savedata, file, indent=2)
+    ''
+    def create_savefile():
+        while True:
+            if savedata: #runs the code if the list isnt empty
+                print("\nThese are the taken names. You can't name your save file any of these names\n")
+                #prints all savefile names
+                for savefile in savedata:
+                    print(savefile['name']) #\n skips a line. done for better formatting
+                print() # skips a line for better formatting
 
-	player = MainCharacter(savefile['name'], savefile['maxhp'], savefile['currenthp'], savefile['strength'], savefile['weapon'], savefile['inventory'], savefile['gold'], savefile['level'], savefile['exp'])
-	room = savefile['room']
-	coordinates = savefile['coordinates']
+            name = input('What do you want to name your save file?').strip()
 
-	room = Room(savefile['room'])
+            if name == '':
+                print("Blank save file name. Please try again.")
+                continue
+            
+            #checks if the chosen name matches any of savefile's names
+            if any(savefile['name'].upper() == name.upper() for savefile in savedata):
+                print('\nA save file already has this name. Please try again')
+                continue
+            
+            #if it's a valid answer, make a save file
+            SaveFileManager.dump_savefile_to_json(name)
+            print('File sucessfully created')
+            break
+        
+    def load_savefile():
+    
+        lookingforsave = True
 
-	room.LoadRoom(player, coordinates)
+        while lookingforsave:
+            savefound = False
+
+            print('\nHere are all the save file names:\n') 
+
+            #prints all savefile names
+            for savefile in savedata: 
+                print(savefile['name'])
+            
+            name = input('\nWhich save would you like to open?').upper().strip() 
+
+            for savefile in savedata:
+                if savefile['name'].upper() == name:
+                    chosensave = savefile
+                    savefound = True
+                else:
+                    print('\nInvalid Answer. Please try again.')
+                    SaveFileManager.load_savefile()
+                        
+                if savefound == True:
+                    if savefile == chosensave:
+                        #for better formatting. format: Key: pair, with each key value pair on a new line. EX: Weapon: wooden_sword
+                        for key, value in chosensave.items():
+                        
+                            #converts the inventory (a list) into a string to remove the brackets and quotes when printing, aka to make it look better
+                            if isinstance(value, list):  
+                                value = ", ".join(value)  
+                            print(f'{key.capitalize()}: {value}')
+
+                    confirm = input('Is this the save you would like to open? Y/N')
+                    if confirm.upper() == 'Y':
+                        lookingforsave = False
+                        return chosensave
+        #when you call this function, you set the MainCharacter object's values equal to the values in the savefiles 
+        
+    def update_savefile(playerdict, playercoords, room_number):
+        #edward, in the place you run the code, write playerdict = player.__dict__ (make sure your MainCharacter object is called player)
+        #i can't do it here because of import errors....
+
+        #these two lines create key-value pairs in the playerdict (main character object aka the player doesnr have these as attributes)
+        playerdict['coordinates'] = playercoords
+        playerdict['room'] = room_number
+
+        for savefile in savedata:
+            if playerdict['name'] == savefile['name']:
+                savefile.update(playerdict)
+                break
+        with open('saves.json', 'w') as file:
+            json.dump(savedata, file, indent=2 ) 
+        #need to update the playerdata witht he new items
+
+    def delete_savefile(playerdict):
+        #find user save file and delete
+        for savefile in savedata:
+            if playerdict['name'] == savefile['name']:
+                savedata.remove(savefile)
+        with open('saves.json', 'w') as file:
+            json.dump(savedata, file, indent=2) 
