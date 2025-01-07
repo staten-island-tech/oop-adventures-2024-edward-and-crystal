@@ -91,9 +91,7 @@ class OpenWorld:
                         self.playerx = testplayerx 
                         youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
                         pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
-                        '''enemychance = random.randint(1, 18)
-                        if enemychance == 18:
-                            print("ENEMY!")'''
+                     
                     else:
                         player.currenthp -= 3
                         if player.currenthp < 10:
@@ -109,7 +107,7 @@ class OpenWorld:
             color = (40, 54, 60)
             for event in events: # if we are hovering over the button and we click it the menu gets printed
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print('menu') # sample function
+                    pass 
         else:
             color = (20, 27, 30)
             

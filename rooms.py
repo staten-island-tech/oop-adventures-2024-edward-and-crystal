@@ -42,7 +42,6 @@ class Room:
         for enemy in enemies:
             if player_rect.colliderect(enemy):
                 enemies.remove(enemy)
-                print('battle time!!')
                 #insert actual battles code. you got this, edward!!!!
 
     def LoadRoom(self, player, player_coordinates=None):
@@ -127,10 +126,6 @@ class Room:
                 screen.blit(text, textsurface)
 
 
-player = MainCharacter('w', 100, 100, 10, 'hey', [], 100, 0, 0)
-'''room = Room(1)
-room.LoadRoom(player)'''
+# player = MainCharacter('w', 100, 100, 10, 'hey', [], 100, 0, 0)
 
-playerdict = player.__dict__
 
-SaveFileManager.update_savefile(playerdict, (0,0), 3)

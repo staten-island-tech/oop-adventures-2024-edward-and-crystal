@@ -132,7 +132,9 @@ class SaveFileManager:
 			if playerdict['name'] == savefile['name']:
 				savedata.remove(savefile)
 		with open('saves.json', 'w') as file:
-			json.dump(savedata, file, indent=2)		
+			json.dump(savedata, file, indent=2)	
+
+	
 		
 		
 		
