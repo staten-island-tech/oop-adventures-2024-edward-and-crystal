@@ -1,101 +1,23 @@
 [
   {
-    "name": "w",
-    "maxhp": 100,
-    "currenthp": 100,
-    "strength": 10,
-    "weapon": "hey",
-    "inventory": [],
-    "gold": 100,
-    "level": 0,
-    "exp": 0,
-    "dead": false,
-    "coordinates": [
-      0,
-      0
-    ],
-    "room": 3
-  },
-  {
     "name": "j",
-    "maxhp": 100,
-    "currenthp": 100,
-    "strength": 0,
-    "weapon": "wooden_sword",
-    "inventory": [
-      "wooden_sword"
-    ],
-    "gold": 0,
-    "level": 1,
-    "exp": 0
-  },
-  {
-    "name": "l",
-    "maxhp": 100,
-    "currenthp": 100,
-    "strength": 0,
-    "weapon": "wooden_sword",
-    "inventory": [
-      "wooden_sword"
-    ],
+    "maxhp": 20,
+    "currenthp": 20,
+    "strength": 6,
+    "weapon": {
+      "name": "NONE",
+      "strength": 0,
+      "durability": 8192,
+      "cost": 0
+    },
+    "inventory": [{"name": "NONE",
+      "strength": 0,
+      "durability": 8192,
+      "cost": 0}],
     "gold": 0,
     "level": 1,
     "exp": 0,
     "room": 1,
     "coordinates": null
-  },
-  {
-    "name": "u",
-    "maxhp": 100,
-    "currenthp": 100,
-    "strength": 0,
-    "weapon": "wooden_sword",
-    "inventory": [
-      "wooden_sword"
-    ],
-    "gold": 0,
-    "level": 1,
-    "exp": 0,
-    "room": 1,
-    "coordinates": [
-      800,
-      500
-    ]
-  },
-  {
-    "name": "test",
-    "maxhp": 100,
-    "currenthp": 100,
-    "strength": 0,
-    "weapon": "wooden_sword",
-    "inventory": [
-      "wooden_sword"
-    ],
-    "gold": 0,
-    "level": 1,
-    "exp": 0,
-    "room": 1,
-    "coordinates": [
-      1200,
-      440
-    ]
-  },
-  {
-    "name": "bdssh",
-    "maxhp": 100,
-    "currenthp": 100,
-    "strength": 0,
-    "weapon": "wooden_sword",
-    "inventory": [
-      "wooden_sword"
-    ],
-    "gold": 0,
-    "level": 1,
-    "exp": 0,
-    "room": 1,
-    "coordinates": [
-      980,
-      90
-    ]
   }
 ]

@@ -1,4 +1,5 @@
 import json
+from charactersitems import HealingItem, Weapon, MainCharacter
 
 try:
 	with open('saves.json', 'r') as file:
@@ -27,24 +28,24 @@ class SaveFileManager:
 
 		blank_player_data = {
 			"name": name,
-			"maxhp": 100,
-			"currenthp": 100,
-			"strength": 0,
-			"weapon": "wooden_sword", 
-			"inventory": ['wooden_sword'],
+			"maxhp": 20,
+			"currenthp": 20,
+			"strength": 6,
+			"weapon": Weapon('NONE', 0, 8192, 0).WeaponDictionary(),
+			"json_inventory": [],
 			"gold": 0,
 			"level": 1,
 			"exp": 0,
 			"room": 1, 
 			"coordinates": None
 		}
-		#depending on how the attack damage is calculated, might need to make the inventory have dicts with item stats
 
 		savedata.append(blank_player_data)
 		
 		# update the json file with the new blank player data
 		with open('saves.json', 'w') as file:
 			json.dump(savedata, file, indent=2)
+	
 	''
 	def create_savefile():
 		while True:
@@ -69,7 +70,7 @@ class SaveFileManager:
 			#if it's a valid answer, make a save file
 			SaveFileManager.dump_savefile_to_json(name)
 			print('File sucessfully created')
-			break
+			return name
 		
 	def load_savefile():
 	
@@ -99,7 +100,7 @@ class SaveFileManager:
 						#for better formatting. format: Key: pair, with each key value pair on a new line. EX: Weapon: wooden_sword
 						for key, value in chosensave.items():
 						
-							#converts the inventory (a list) into a string to remove the brackets and quotes when printing, aka to make it look better
+							#converts the json_inventory (a list) into a string to remove the brackets and quotes when printing, aka to make it look better
 							if isinstance(value, list):  
 								value = ", ".join(value)  
 							print(f'{key.capitalize()}: {value}')
@@ -107,7 +108,7 @@ class SaveFileManager:
 					confirm = input('Is this the save you would like to open? Y/N')
 					if confirm.upper() == 'Y':
 						lookingforsave = False
-						return chosensave
+						return name
 		#when you call this function, you set the MainCharacter object's values equal to the values in the savefiles 
 		
 	def update_savefile(playerdict, playercoords, room_number):
@@ -134,7 +135,37 @@ class SaveFileManager:
 		with open('saves.json', 'w') as file:
 			json.dump(savedata, file, indent=2)	
 
-	
+	def convert_json_to_player_object(name):
+		#NAME IS THE SAVEFILE NAME
+		#THIS CONVERTS THE PLAYER DICT FROM THE SAVE FILE INTO A PLAYER OBJECT
+		for savefile in savedata:
+			if savefile['name'].upper() == name.upper():
+				playerdict = savefile
+				del playerdict['room']
+				del playerdict['coordinates']
+				player = MainCharacter(**playerdict)
+				return player 
+			
+	def convert_json_to_inventory(savefile_name):
+		#converts the item dicts in the savefile into objects
+		#need to somehow add these inventory objects to the player object hahahhahhahahahhahahha
+		for savefile in savedata:
+			if savefile['name'].upper() == savefile_name.upper():
+				json_inventory = savefile['inventory']
+				player_object_inventory = []
+				for item in json_inventory:
+					if 'strength' in item:
+						weapon = Weapon(**item)
+						player_object_inventory.append(weapon)
+					else:
+						healing_item = HealingItem(**item)
+						player_object_inventory.append(healing_item)
+
+					
+
+
+SaveFileManager.convert_json_to_inventory('j')
+
 		
 		
 		
