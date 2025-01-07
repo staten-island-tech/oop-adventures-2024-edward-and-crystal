@@ -1,5 +1,5 @@
 import json
-
+from charactersitems import Weapon
 try:
     with open('saves.json', 'r') as file:
         savedata = json.load(file)
@@ -27,11 +27,11 @@ class SaveFileManager:
 
         blank_player_data = {
             "name": name,
-            "maxhp": 100,
-            "currenthp": 100,
-            "strength": 0,
-            "weapon": "wooden_sword", 
-            "inventory": ['wooden_sword'],
+            "maxhp": 25,
+            "currenthp": 25,
+            "strength": 5,
+            "weapon": Weapon('NONE', 0, 8192, 0), 
+            "inventory": [ ],
             "gold": 0,
             "level": 1,
             "exp": 0,
