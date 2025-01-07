@@ -456,7 +456,6 @@ class Battles:
     
                 if circle:
                     for i in range(4):
-                        print(radius)
                         if 0 < radius + (i*30) < 100:
                             pygame.draw.circle(screen, (100, 0, 0), (xcoordinate, 250), radius + i*30, 10)
                 else:
@@ -557,30 +556,29 @@ class Battles:
                 # line 3: xcoord + 100, 100 and xcoord-100, 400
                 
                 if drawinglines:
-                    print(line, linelength)
                     if line == 1:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 6
+                            linelength += 4
                             lastgrowth = currenttime
                             
                         pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 100), (xcoordinate - 100 + linelength, 100 + 1.5*linelength), 10)
                     elif line == 2:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 12
+                            linelength += 4
                             lastgrowth = currenttime
                         
                         pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 250), (xcoordinate - 100 + linelength, 250), 10)
                         
                     elif line == 3:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 12
+                            linelength += 4
                             lastgrowth = currenttime
                             
                         pygame.draw.line(screen, (100, 0, 0), (xcoordinate + 100, 100), (xcoordinate + 100 - linelength, 100 + 1.5*linelength), 10)
                         
                     elif line == 4:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 24
+                            linelength += 12
                             lastgrowth = currenttime
                         
                         pygame.draw.line(screen, (100, 0, 0), (xcoordinate, 100), (xcoordinate, 100 + linelength), 10)      
