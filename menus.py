@@ -865,6 +865,7 @@ class Menu:
         stonesword = Weapon("Stone Sword", 12, 10, 16)
         goldsword = Weapon("Gold Sword", 30, 4, 20)
         edsword = Weapon("EdSword", 50, 10000, 130) # like my own name, as i am a narcissist
+        crystalsword = Weapon("CrystalSword", 49, 9999, 129)
         
         apple = HealingItem("Apple", 4, 10)
         smallhealingpotion = HealingItem("Small Healing Potion", 10, 20)
@@ -877,6 +878,7 @@ class Menu:
             if player.level > 7:
                 shopitems.append(edsword)
                 shopitems.append(bighealingpotion)
+                shopitems.append(crystalsword)
         
         index = 0
             
