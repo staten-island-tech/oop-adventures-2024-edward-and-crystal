@@ -7,6 +7,9 @@ from charactersitems import Enemy
 from movement import OpenWorld
 from battles import Battles
 from menus import Menu
+rphbi = [0]
+player = MainCharacter('edward', 25, 25, 6, Weapon("NONE", 0, 8192, 0), [], 0, 1, 0)
+
 
 pygame.init()
 
@@ -294,18 +297,3 @@ class Room:
         
         print("DATA DELETION UNDERWAY. THIS PROCESS WILL BE COMPLETED MOMENTARILY.")
         quit()
-        
-<<<<<<< HEAD
-player = MainCharacter('edward', 25, 25, 6, Weapon("NONE", 0, 8192, 0), [], 0, 1, 0)
-#rphbi = rooms player has been in ... duh ...
-rphbi = [0]
-=======
-player = MainCharacter('edward', 30, 30, 5, Weapon("NONE", 0, 8192, 0), [], 0, 1, 0)
-
-room = Room(0)
-#rphbi = rooms player has been in ... duh ...
-
-rphbi = [0]
-
-room.LoadRoom(player, rphbi, None)
->>>>>>> 3f3a09ba5fb36cbea533b14303d0a08bbf3a1a35
