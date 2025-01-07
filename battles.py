@@ -453,9 +453,12 @@ class Battles:
                 
                 screen.blit(nameunderhealthbartext, nameunderhbsurface)
                 screen.blit(hptext, hpsurface)
-                
+    
                 if circle:
-                    pygame.draw.circle(screen, (100, 0, 0), (xcoordinate, 250), radius, 10)
+                    for i in range(4):
+                        print(radius)
+                        if 0 < radius + (i*30) < 100:
+                            pygame.draw.circle(screen, (100, 0, 0), (xcoordinate, 250), radius + i*30, 10)
                 else:
                     if not wouldkill:
                         animationtime = 0.3
@@ -494,10 +497,10 @@ class Battles:
                 currenttime = time.time()
                 
                 if circle == True:
-                    if currenttime - lastmovetime > 0.0025:
-                        radius -= 3
+                    if currenttime - lastmovetime > 0.05:
+                        radius -= 5
                         lastmovetime = currenttime
-                        if radius < 0:
+                        if radius < -100:
                             eksstarttime = time.time()
                             circle = False
                 
@@ -554,9 +557,10 @@ class Battles:
                 # line 3: xcoord + 100, 100 and xcoord-100, 400
                 
                 if drawinglines:
+                    print(line, linelength)
                     if line == 1:
                         if currenttime - lastgrowth > 0.0025:
-                            linelength += 12
+                            linelength += 6
                             lastgrowth = currenttime
                             
                         pygame.draw.line(screen, (100, 0, 0), (xcoordinate - 100, 100), (xcoordinate - 100 + linelength, 100 + 1.5*linelength), 10)
@@ -572,7 +576,7 @@ class Battles:
                             linelength += 12
                             lastgrowth = currenttime
                             
-                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate + 100, 400), (xcoordinate + 100 - linelength, 400 - 1.5*linelength), 10)
+                        pygame.draw.line(screen, (100, 0, 0), (xcoordinate + 100, 100), (xcoordinate + 100 - linelength, 100 + 1.5*linelength), 10)
                         
                     elif line == 4:
                         if currenttime - lastgrowth > 0.0025:

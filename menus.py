@@ -67,6 +67,7 @@ class Menu:
                 mainmenu = False
                 if buttontitle == 'CLOSE MENU':
                     menurunning = False
+                    Menu.CloseMenuAnimation()
                 elif buttontitle == 'YOUR   STATS':
                     statsrunning = True
                 elif buttontitle == 'INVENTORY':
@@ -1017,8 +1018,51 @@ class Menu:
                 pygame.draw.rect(screen, (90, 100, 150), rectangle5)
                 
             pygame.display.update()
+            
+    def CloseMenuAnimation():
+        import time
+        complete = False
+        bg = True
+        everythingelse = False
+        bgrect = pygame.Rect(0, 0, 1280, 0)
+        bottomthing = pygame.Rect(0, 720, 1280, 100)
         
-
+        
+        lastmovetime = time.time()
+        
+        while not complete:
+            events = pygame.event.get()
+            currenttime = time.time()
+            
+            for event in events:
+                if event.type == pygame.QUIT:
+                    quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    complete = True
+                    
+            pygame.draw.rect(screen, (20, 20, 25), bgrect)
+            pygame.draw.rect(screen, (185, 220, 240), bottomthing)
+            if bottomthing[1] > 710:
+                pygame.draw.line(screen, (145, 180, 200), (0, bottomthing[1] - 10), (1280, bottomthing[1] - 10), 10)
+            
+            if bg:
+                if currenttime - lastmovetime > 0.005:
+                    lastmovetime = currenttime
+                    bgrect[3] += 14.4
+                    if bgrect[3] > 730:
+                        lastmovetime = currenttime
+                        bg = False
+                        everythingelse = True
+            elif everythingelse:
+                if currenttime - lastmovetime > 0.01:
+                    lastmovetime = currenttime
+                    bottomthing[1] -= 4
+                    
+                    if bottomthing[1] == 620:
+                        complete = True
+                
+            pygame.display.update()
+ 
     def OpenMenuScreen(player):
         global menurunning, mainmenu, statsrunning, shop, inventory, inventoryselectscreen, save, selecteditem, shopselect
         menurunning = True

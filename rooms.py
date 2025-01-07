@@ -166,7 +166,6 @@ class Room:
                         enemies_spawned = False
                         room.LoadRoom(player, rphbi, None)
                 
-                
             if not enemies_spawned:
                 self.spawn_enemies()
                 enemies_spawned = True
@@ -290,7 +289,6 @@ class Room:
             youhad = smallerfont.render("You had a good run! But you are bad at video games.", True, (255, 255, 255))
             youhadsurface = youhad.get_rect(center=(640,480))
             screen.blit(youhad, youhadsurface)
-            
             
             pygame.display.update()
         
