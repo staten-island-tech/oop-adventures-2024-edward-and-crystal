@@ -295,11 +295,11 @@ class Room:
         print("DATA DELETION UNDERWAY. THIS PROCESS WILL BE COMPLETED MOMENTARILY.")
         quit()
         
-player = MainCharacter('edward', 1000000, 1000000, 10, Weapon("HI", 1000, 100, 10), [], 0, 1, 0)
+player = MainCharacter('edward', 30, 30, 5, Weapon("NONE", 0, 8192, 0), [], 0, 1, 0)
 
 room = Room(0)
 #rphbi = rooms player has been in ... duh ...
 
-rphbi = [0, 1, 2, 3, 4]
+rphbi = [0]
 
 room.LoadRoom(player, rphbi, None)

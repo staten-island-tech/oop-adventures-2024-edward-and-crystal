@@ -40,6 +40,8 @@ class Battles:
             for event in events:
                 if event.type == pygame.QUIT:
                     quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    complete = True
             
             currenttime = time.time()
                 
@@ -105,7 +107,9 @@ class Battles:
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
-                    quit
+                    quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    complete = True
             
             currenttime = time.time()
             
@@ -426,6 +430,8 @@ class Battles:
                 for event in events:
                     if event.type == pygame.QUIT:
                         quit()
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        complete = True
                 screen.fill((20, 20, 25))
                 Battles.MakeEnemies(enemies)
                 
@@ -519,6 +525,8 @@ class Battles:
                 for event in events:
                     if event.type == pygame.QUIT:
                         quit()
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        complete = True
                         
                 screen.fill((20, 20, 25))
                 Battles.MakeEnemies(enemies)

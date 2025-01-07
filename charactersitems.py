@@ -174,8 +174,8 @@ class MainCharacter(Character):
             self.level += levels
             overflow = self.exp % 60
             self.exp = overflow
-            self.strength += 5*levels
-            self.maxhp += 10*levels
+            self.strength += 2*levels
+            self.maxhp += 5*levels
             self.currenthp = self.maxhp*hppercent
 
 class Enemy(Character):
