@@ -10,7 +10,6 @@ from menus import Menu
 rphbi = [0]
 player = MainCharacter('edward', 25, 25, 6, Weapon("NONE", 0, 8192, 0), [], 0, 1, 0)
 
-
 pygame.init()
 
 screen_width = 1280
