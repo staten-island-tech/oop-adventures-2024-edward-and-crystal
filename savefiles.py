@@ -143,6 +143,7 @@ class SaveFileManager:
 				playerdict = savefile
 				del playerdict['room']
 				del playerdict['coordinates']
+				playerdict['inventory'] = convert_json_to_inventory(name)
 				player = MainCharacter(**playerdict)
 				return player 
 			
@@ -160,7 +161,8 @@ class SaveFileManager:
 					else:
 						healing_item = HealingItem(**item)
 						player_object_inventory.append(healing_item)
-
+					return player_object_inventory
+    
 					
 
 
