@@ -16,14 +16,16 @@ class SaveFileManager:
 		while True:
 			answer = input('Do you want to create a file or load a new one?').strip().lower()
 			if answer == 'create':
-				SaveFileManager.create_savefile()
+				name = SaveFileManager.create_savefile()
 				break
 			elif answer == 'load':
-				SaveFileManager.load_savefile()
+				name = SaveFileManager.load_savefile()
 				break
 			else:
 				print('Invalid Answer. Please try again!')
-				
+		
+		return name
+	
 	def dump_savefile_to_json(name):
 
 		blank_player_data = {
@@ -32,12 +34,11 @@ class SaveFileManager:
 			"currenthp": 20,
 			"strength": 6,
 			"weapon": Weapon('NONE', 0, 8192, 0).WeaponDictionary(),
-			"json_inventory": [],
+			"inventory": [],
 			"gold": 0,
 			"level": 1,
 			"exp": 0,
-			"room": 1, 
-			"coordinates": None
+			"room": 1
 		}
 
 		savedata.append(blank_player_data)
@@ -111,17 +112,16 @@ class SaveFileManager:
 						return name
 		#when you call this function, you set the MainCharacter object's values equal to the values in the savefiles 
 		
-	def update_savefile(playerdict, playercoords, room_number):
+	def update_savefile(playerdict, room_number):
 		#edward, in the place you run the code, write playerdict = player.__dict__ (make sure your MainCharacter object is called player)
-		#i can't do it here because of import errors....
 
-		#these two lines create key-value pairs in the playerdict (main character object aka the player doesnr have these as attributes)
-		playerdict['coordinates'] = playercoords
-		playerdict['room'] = room_number
-
+		savefile_dict = playerdict
+		savefile_dict['room'] = room_number 
+		
+		#load it as dicts
 		for savefile in savedata:
-			if playerdict['name'] == savefile['name']:
-				savefile.update(playerdict)
+			if savefile_dict['name'] == savefile['name']:
+				savefile.update(savefile_dict)
 				break
 		with open('saves.json', 'w') as file:
 			json.dump(savedata, file, indent=2 ) 
@@ -142,10 +142,10 @@ class SaveFileManager:
 			if savefile['name'].upper() == name.upper():
 				playerdict = savefile
 				del playerdict['room']
-				del playerdict['coordinates']
-				playerdict['inventory'] = convert_json_to_inventory(name)
+				room = savefile['room']
+				playerdict['inventory'] = SaveFileManager.convert_json_to_inventory(name)
 				player = MainCharacter(**playerdict)
-				return player 
+				return [player, room] #you have to make the room object's room number the room number in here. 
 			
 	def convert_json_to_inventory(savefile_name):
 		#converts the item dicts in the savefile into objects
@@ -161,13 +161,11 @@ class SaveFileManager:
 					else:
 						healing_item = HealingItem(**item)
 						player_object_inventory.append(healing_item)
-					return player_object_inventory
+				return player_object_inventory
     
 					
 
 
-SaveFileManager.convert_json_to_inventory('j')
-
 		
 		
-		
+SaveFileManager.cre

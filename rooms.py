@@ -129,8 +129,8 @@ class Room:
 # player = MainCharacter('w', 100, 100, 10, 'hey', [], 100, 0, 0)
 
 
-player = SaveFileManager.convert_json_to_player_object('j')
+'''player = SaveFileManager.convert_json_to_player_object('l')
 
 room = Room(1)
 
-room.LoadRoom(player)
+room.LoadRoom(player)'''
