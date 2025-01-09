@@ -14,12 +14,14 @@ class SaveFileManager:
 		#strip removes all spaces before or after the letters (not the spaces in between words)
 	
 		while True:
-			answer = input('Do you want to create a file or load a new one?').strip().lower()
+			answer = input('Do you want to create a file or load one?').strip().lower()
 			if answer == 'create':
 				name = SaveFileManager.create_savefile()
+				print(name)
 				break
 			elif answer == 'load':
 				name = SaveFileManager.load_savefile()
+				print(name)
 				break
 			else:
 				print('Invalid Answer. Please try again!')
@@ -34,7 +36,7 @@ class SaveFileManager:
 			"currenthp": 20,
 			"strength": 6,
 			"weapon": Weapon('NONE', 0, 8192, 0).WeaponDictionary(),
-			"inventory": [],
+			"inventory": [HealingItem('w', 0, 0).HealingItemDictionary()],
 			"gold": 0,
 			"level": 1,
 			"exp": 0,
@@ -80,36 +82,38 @@ class SaveFileManager:
 		while lookingforsave:
 			savefound = False
 
+			if len(savedata) == 0:
+				print('There are no save files. You must create one.')
+				SaveFileManager.create_savefile()
+				break
+
 			print('\nHere are all the save file names:\n') 
 
 			#prints all savefile names
 			for savefile in savedata: 
 				print(savefile['name'])
 			
-			name = input('\nWhich save would you like to open?').upper().strip() 
+			name = input('\nWhich save would you like to open?').strip() 
 
 			for savefile in savedata:
-				if savefile['name'].upper() == name:
+				if savefile['name'].upper() == name.upper():
 					chosensave = savefile
 					savefound = True
-				else:
-					print('\nInvalid Answer. Please try again.')
-					SaveFileManager.load_savefile()
-						
-				if savefound == True:
-					if savefile == chosensave:
-						#for better formatting. format: Key: pair, with each key value pair on a new line. EX: Weapon: wooden_sword
-						for key, value in chosensave.items():
-						
-							#converts the json_inventory (a list) into a string to remove the brackets and quotes when printing, aka to make it look better
-							if isinstance(value, list):  
-								value = ", ".join(value)  
-							print(f'{key.capitalize()}: {value}')
+					break
+			if not savefound:
+				print('\nInvalid Answer. Please try again.')
+				
+			if savefound:
+				if savefile == chosensave:
+					#for better formatting. format: Key: pair, with each key value pair on a new line. EX: Weapon: wooden_sword
+					for key, value in chosensave.items():
+						print(f'{key.capitalize()}: {value}')
 
-					confirm = input('Is this the save you would like to open? Y/N')
-					if confirm.upper() == 'Y':
-						lookingforsave = False
-						return name
+				confirm = input('Is this the save you would like to open? Y/N')
+				if confirm.upper() == 'Y':
+					lookingforsave = False
+					return name
+				
 		#when you call this function, you set the MainCharacter object's values equal to the values in the savefiles 
 		
 	def update_savefile(playerdict, room_number):
@@ -141,10 +145,11 @@ class SaveFileManager:
 		for savefile in savedata:
 			if savefile['name'].upper() == name.upper():
 				playerdict = savefile
-				del playerdict['room']
 				room = savefile['room']
+				del playerdict['room']
 				playerdict['inventory'] = SaveFileManager.convert_json_to_inventory(name)
 				player = MainCharacter(**playerdict)
+				print(player)
 				return [player, room] #you have to make the room object's room number the room number in here. 
 			
 	def convert_json_to_inventory(savefile_name):
@@ -161,11 +166,10 @@ class SaveFileManager:
 					else:
 						healing_item = HealingItem(**item)
 						player_object_inventory.append(healing_item)
+				print(player_object_inventory)
 				return player_object_inventory
-    
-					
+    	
+name = SaveFileManager.save_or_load_file()
 
 
-		
-		
-SaveFileManager.cre
+SaveFileManager.convert_json_to_player_object(name)
