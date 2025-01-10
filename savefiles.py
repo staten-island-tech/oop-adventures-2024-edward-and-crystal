@@ -117,6 +117,7 @@ class SaveFileManager:
 				confirm = input('Is this the save you would like to open? Y/N')
 				if confirm.upper() == 'Y':
 					lookingforsave = False
+					print("CHECK THE PYGAME WINDOW. ok thanks :)")
 					return name
 				
 		#when you call this function, you set the MainCharacter object's values equal to the values in the savefiles 
@@ -131,15 +132,28 @@ class SaveFileManager:
 		'''
 
 		savefile_dict = playerdict
-		savefile_dict['room'] = room_number 
+		playerdict['weapon'] = playerdict['weapon'].__dict__
+		inventory = []
+		for item in playerdict['inventory']:
+			inventory.append(item.__dict__)
 		
+		playerdict['inventory'] = inventory
+
+		savefile_dict['room'] = room_number 
+		found = False
 		#load it as dicts
 		for savefile in savedata:
 			if savefile_dict['name'] == savefile['name']:
 				savefile.update(savefile_dict)
+				found = True
 				break
+
+		if not found:
+			savedata.append(playerdict)
+
 		with open('saves.json', 'w') as file:
-			json.dump(savedata, file, indent=2 ) 
+			json.dump(savedata, file)
+  
 		#need to update the playerdata witht he new items
 
 	def delete_savefile(playerdict):
@@ -191,4 +205,20 @@ class SaveFileManager:
 						healing_item = HealingItem(**item)
 						player_object_inventory.append(healing_item)
 				return player_object_inventory
-    	
+
+	def convert_inventory_to_dicts(inventory):
+		dictinventory = []
+		for item in inventory:
+			if isinstance(item, Weapon):
+				dictinventory.append({
+					'name' : item.name,
+                    'strength' : item.strength,
+                    'durability' : item.durability,
+                    'cost' : item.cost
+				})
+			elif isinstance(item, HealingItem):
+				dictinventory.append({
+					'name' : item.name,
+                    'heal' : item.heal,
+                    'cost' : item.cost
+				})

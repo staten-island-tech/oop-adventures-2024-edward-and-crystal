@@ -636,10 +636,6 @@ class Battles:
                             
                 
                 pygame.display.update()
-                
-                
-        
-        
                         
     def AttackStepTwo(player, enemy, enemies):
         global attacksteptwo, attack, events, x, damage, enemiesfought, weaponbroken
@@ -1163,7 +1159,6 @@ class Battles:
                 battle = False
                 inbattle = False
         
-        
         player.gold = int(player.gold)
         import random
         if x == 1:
@@ -1183,7 +1178,7 @@ class Battles:
     def BattleMenu(player, enemies):
         global wasactiondone, running, attackpressed, attack, enemy, attacksteptwo, x, y, theyblocking, block, events # im gonna be real i would be 
         # saying what x and y are but im so tired ive been programming multiple hours a day across today and yesterday
-        global blockdone, chosenenemy, enemiesfought, weaponbroken, inbattle, z
+        global blockdone, chosenenemy, enemiesfought, weaponbroken, inbattle, z, dead
         wasactiondone = False
         attackpressed = False
         attack = False
@@ -1193,6 +1188,7 @@ class Battles:
         blockdone = False
         chosenenemy = None
         weaponbroken = False
+        dead = False
         x = 1
         y = 0
         z = 1
@@ -1203,11 +1199,14 @@ class Battles:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-            if len(enemies) == 0:
+            if len(enemies) == 0 or player.currenthp <= 0:
                 if z == 1:
                     z += 1
                 x = 1
-                Battles.EndBattle(enemiesfought, player)
+                if player.currenthp > 0:
+                    Battles.EndBattle(enemiesfought, player)
+                else:
+                    return player
                 wasactiondone = True
  # idk maybe
             
@@ -1276,6 +1275,8 @@ class Battles:
                 screen.blit(text2, text2surface)
             
             Battles.MakeEnemies(enemies)
+            if player.currenthp <= 0:
+                dead = True
             pygame.display.update() 
 
         endingbattle = True

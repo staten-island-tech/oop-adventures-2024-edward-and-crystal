@@ -55,11 +55,11 @@ class Room:
                 if not enemy_collision and not player_collision and in_a_map_rect: #makes sure enemy is in map and isn't colliding with the player or other enemies
                     enemies.append(enemy_rect)
 
-    def check_if_enemy_encounter(self):
-        global player_rect, battling
+    def check_if_enemy_encounter(self, player):
+        global player_rect, inbattle
         for enemy in enemies:
             if player_rect.colliderect(enemy):
-                battling = True
+                inbattle = True
                 enemies.remove(enemy)
                 if self.room_number < 4:
                     fightingenemies = Battles.SpawnEnemies(self.room_number)
@@ -72,11 +72,11 @@ class Room:
                     
 
     def LoadRoom(self, player, rphbi, player_coordinates=None):
-        global player_rect, enemies_spawned, battling
+        global player_rect, enemies_spawned, inbattle
         room_loaded = True
         enemies_spawned = False
         cangoforward = False
-        battling = False
+        inbattle = False
         x = 1
         
         
@@ -94,6 +94,10 @@ class Room:
     
             screen.fill((20, 20, 25)) # background
 
+            if player.currenthp < 0 and x == 1:
+                x += 1
+                self.DeathScreen(player)
+            
             player_rect = pygame.Rect(self.openworld.playerx, self.openworld.playery, 10, 10)
 
             for room in rooms:
@@ -109,7 +113,7 @@ class Room:
             directions = ["LEFT", "UP", "DOWN", "RIGHT"]
             for direction in directions: # a for loop to make all the buttons to save a little code, and to make me look better in front of whalen
                 self.openworld.CreateMoveButton(direction, events, room, player)
-                self.openworld.CreateMenuButton(events, player)
+                self.openworld.CreateMenuButton(events, player, self)
             
             playerinfofont = pygame.font.Font(None, 36) # same making textbox code again, no hover color stuff bc this is not a button
             playerinforect = pygame.Rect(410, 640, 360, 60)
@@ -146,10 +150,6 @@ class Room:
                         enemies_spawned = False
                         room.LoadRoom(player, rphbi, None)
             
-            if player.currenthp <= 0 and x == 1:
-                x += 1
-                self.DeathScreen()
-            
             if self.room_number + 1 in rphbi:
                 goforwardrect = pygame.Rect(1140, 675, 100, 30)
                 if goforwardrect.collidepoint(pygame.mouse.get_pos()):
@@ -182,7 +182,7 @@ class Room:
                 else:
                     pygame.draw.rect(screen, (90, 10, 18), (enemy[0], enemy[1], enemy[2], enemy[3]))
 
-            self.check_if_enemy_encounter()
+            self.check_if_enemy_encounter(player)
             
             if room_loaded and len(enemies) == 0 and player.currenthp > 0:
                 for room in rooms:
@@ -221,7 +221,7 @@ class Room:
                     viewstatscolor = (50, 80, 90)
                     for event in events:
                         if event.type == pygame.MOUSEBUTTONDOWN:
-                            Menu.OpenMenuScreen(player)
+                            Menu.OpenMenuScreen(player, self.room_number)
                 else:
                     viewstatscolor = (30, 45, 50)
                 
@@ -232,7 +232,7 @@ class Room:
                 
             pygame.display.update()
             
-    def DeathScreen(self):
+    def DeathScreen(self, player):
         import time
         bgrect = pygame.Rect(1280, 0, 1280, 720)
         innerrect = pygame.Rect(1290, 10, 1280, 700)
@@ -298,4 +298,14 @@ class Room:
             pygame.display.update()
         
         print("DATA DELETION UNDERWAY. THIS PROCESS WILL BE COMPLETED MOMENTARILY.")
+        with open('saves.json', 'r') as file:
+            saves = json.load(file)
+            
+        for save in saves:
+            if save['name'].upper() == player.name.upper():
+                saves.remove(save)
+                
+        with open('saves.json', 'w') as file:
+            json.dump(saves, file, indent=2)
+        
         quit()

@@ -2,6 +2,7 @@ from charactersitems import Character
 from charactersitems import MainCharacter
 from charactersitems import Weapon
 from charactersitems import HealingItem 
+from savefiles import SaveFileManager
 
 import pygame
 pygame.init()
@@ -904,7 +905,7 @@ class Menu:
                 mainmenu = True
                 shop = False 
                 
-    def Save(player, events):
+    def Save(player, events, roomnumber):
         global save, mainmenu
         titlefont = pygame.font.SysFont(None, 110, bold = True)
         subtitlefont = pygame.font.SysFont(None, 80, bold = True)
@@ -942,7 +943,9 @@ class Menu:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if yesrect.collidepoint(pygame.mouse.get_pos()):
-                    pass
+                    playerdict = player.__dict__
+                    
+                    SaveFileManager.update_savefile(playerdict, roomnumber)
                 if norect.collidepoint(pygame.mouse.get_pos()):
                     save = False
                     mainmenu = True
@@ -1065,7 +1068,7 @@ class Menu:
                 
             pygame.display.update()
  
-    def OpenMenuScreen(player):
+    def OpenMenuScreen(player, roomnumber):
         global menurunning, mainmenu, statsrunning, shop, inventory, inventoryselectscreen, save, selecteditem, shopselect
         menurunning = True
         ending = True
@@ -1125,6 +1128,6 @@ class Menu:
                 Menu.RouteInventoryFunction(player, selecteditem, events)
             
             elif save == True:
-                Menu.Save(player, events)
+                Menu.Save(player, events, roomnumber)
             
             pygame.display.update() 

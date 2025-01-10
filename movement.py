@@ -158,7 +158,7 @@ class OpenWorld:
                     else:
                         player.currenthp = testplayerhealth
              
-    def CreateMenuButton(self, events, player): # opening the menu
+    def CreateMenuButton(self, events, player, room): # opening the menu
         menufont = pygame.font.Font(None, 36) # most of this code is the same
         menurect = pygame.Rect(800, 640, 180, 60)
         menutext = menufont.render("Open Menu", True, (255, 255, 255))
@@ -167,7 +167,7 @@ class OpenWorld:
             color = (40, 54, 60)
             for event in events: # if we are hovering over the button and we click it the menu gets printed
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    Menu.OpenMenuScreen(player) # sample function
+                    Menu.OpenMenuScreen(player, room.room_number) # sample function
         else:
             color = (20, 27, 30)
             
