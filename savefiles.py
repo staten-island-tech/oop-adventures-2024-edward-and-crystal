@@ -1,6 +1,8 @@
 import json
 from charactersitems import HealingItem, Weapon, MainCharacter
 
+#hi, edward, the way i coded it isn't very intuitive so i put actual documentation in the form of docstrings for the functions you'll have to use
+
 try:
 	with open('saves.json', 'r') as file:
 		savedata = json.load(file)
@@ -11,21 +13,24 @@ except(FileNotFoundError, json.JSONDecodeError):
 
 class SaveFileManager:
 	def save_or_load_file():
+		'''
+		Prompts the player to load a save file or create a new one
+
+		Returns:
+			-Save File Name
+		'''
 		#strip removes all spaces before or after the letters (not the spaces in between words)
 	
 		while True:
 			answer = input('Do you want to create a file or load one?').strip().lower()
 			if answer == 'create':
 				name = SaveFileManager.create_savefile()
-				print(name)
 				break
 			elif answer == 'load':
 				name = SaveFileManager.load_savefile()
-				print(name)
 				break
 			else:
 				print('Invalid Answer. Please try again!')
-		
 		return name
 	
 	def dump_savefile_to_json(name):
@@ -36,7 +41,7 @@ class SaveFileManager:
 			"currenthp": 20,
 			"strength": 6,
 			"weapon": Weapon('NONE', 0, 8192, 0).WeaponDictionary(),
-			"inventory": [HealingItem('w', 0, 0).HealingItemDictionary()],
+			"inventory": [],
 			"gold": 0,
 			"level": 1,
 			"exp": 0,
@@ -117,7 +122,13 @@ class SaveFileManager:
 		#when you call this function, you set the MainCharacter object's values equal to the values in the savefiles 
 		
 	def update_savefile(playerdict, room_number):
-		#edward, in the place you run the code, write playerdict = player.__dict__ (make sure your MainCharacter object is called player)
+		'''
+		Updates the player's savefile from the json file
+		
+		Args:
+			-The player's dictionary. (Do [insert whatever you named the payer object].__dict__)
+			-Room Number
+		'''
 
 		savefile_dict = playerdict
 		savefile_dict['room'] = room_number 
@@ -132,6 +143,12 @@ class SaveFileManager:
 		#need to update the playerdata witht he new items
 
 	def delete_savefile(playerdict):
+		'''
+		Deletes the player's savefile from the json file
+
+		Arg:
+			-The player's dictionary. (Do [insert whatever you named the payer object].__dict__)
+		'''
 		#find user save file and delete
 		for savefile in savedata:
 			if playerdict['name'] == savefile['name']:
@@ -140,6 +157,15 @@ class SaveFileManager:
 			json.dump(savedata, file, indent=2)	
 
 	def convert_json_to_player_object(name):
+		'''
+		Uses the data from player's savefile from the json file to create a player object
+
+		Arg:
+			-Save File Name
+		
+		Returns:
+			-[player_object, room_number]
+		'''
 		#NAME IS THE SAVEFILE NAME
 		#THIS CONVERTS THE PLAYER DICT FROM THE SAVE FILE INTO A PLAYER OBJECT
 		for savefile in savedata:
@@ -154,7 +180,6 @@ class SaveFileManager:
 			
 	def convert_json_to_inventory(savefile_name):
 		#converts the item dicts in the savefile into objects
-		#need to somehow add these inventory objects to the player object hahahhahhahahahhahahha
 		for savefile in savedata:
 			if savefile['name'].upper() == savefile_name.upper():
 				json_inventory = savefile['inventory']
@@ -166,10 +191,5 @@ class SaveFileManager:
 					else:
 						healing_item = HealingItem(**item)
 						player_object_inventory.append(healing_item)
-				print(player_object_inventory)
 				return player_object_inventory
     	
-name = SaveFileManager.save_or_load_file()
-
-
-SaveFileManager.convert_json_to_player_object(name)

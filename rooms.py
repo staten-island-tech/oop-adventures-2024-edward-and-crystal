@@ -126,11 +126,13 @@ class Room:
                 screen.blit(text, textsurface)
 
 
-# player = MainCharacter('w', 100, 100, 10, 'hey', [], 100, 0, 0)
 
+playername = SaveFileManager.save_or_load_file()
 
-'''player = SaveFileManager.convert_json_to_player_object('l')
+loadables = SaveFileManager.convert_json_to_player_object(playername)
 
-room = Room(1)
+player = loadables[0]
 
-room.LoadRoom(player)'''
+room = Room(loadables[1])
+
+SaveFileManager.delete_savefile(player.__dict__)
