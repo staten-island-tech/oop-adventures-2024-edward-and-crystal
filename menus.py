@@ -944,8 +944,13 @@ class Menu:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if yesrect.collidepoint(pygame.mouse.get_pos()):
                     playerdict = player.__dict__
+                    playerdict['inventory'] = SaveFileManager.convert_inventory_to_dicts(player.inventory)
                     
                     SaveFileManager.update_savefile(playerdict, roomnumber)
+                    
+                    if isinstance(player, dict):
+                        quit()
+
                 if norect.collidepoint(pygame.mouse.get_pos()):
                     save = False
                     mainmenu = True

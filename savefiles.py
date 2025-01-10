@@ -134,12 +134,12 @@ class SaveFileManager:
 		savefile_dict = playerdict
 		playerdict['weapon'] = playerdict['weapon'].__dict__
 		inventory = []
-		for item in playerdict['inventory']:
-			inventory.append(item.__dict__)
 		
 		playerdict['inventory'] = inventory
 
 		savefile_dict['room'] = room_number 
+		del playerdict['dead']
+
 		found = False
 		#load it as dicts
 		for savefile in savedata:
@@ -183,13 +183,16 @@ class SaveFileManager:
 		#NAME IS THE SAVEFILE NAME
 		#THIS CONVERTS THE PLAYER DICT FROM THE SAVE FILE INTO A PLAYER OBJECT
 		for savefile in savedata:
-			if savefile['name'].upper() == name.upper():
-				playerdict = savefile
-				room = savefile['room']
-				del playerdict['room']
-				playerdict['inventory'] = SaveFileManager.convert_json_to_inventory(name)
-				player = MainCharacter(**playerdict)
-				return [player, room] #you have to make the room object's room number the room number in here. 
+			try:
+				if savefile['name'].upper() == name.upper():
+					playerdict = savefile
+					room = savefile['room']
+					del playerdict['room']
+					playerdict['inventory'] = SaveFileManager.convert_json_to_inventory(name)
+					player = MainCharacter(**playerdict)
+					return [player, room] #you have to make the room object's room number the room number in here. 
+			except AttributeError:
+				pass #alas, 
 			
 	def convert_json_to_inventory(savefile_name):
 		#converts the item dicts in the savefile into objects
@@ -222,3 +225,5 @@ class SaveFileManager:
                     'heal' : item.heal,
                     'cost' : item.cost
 				})
+    
+		return dictinventory

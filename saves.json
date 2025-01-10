@@ -1,1 +1,1 @@
-[]
+[{"name": "edward", "maxhp": 20, "currenthp": 16, "strength": 6, "weapon": {"name": "Goblin Club", "strength": 6, "durability": 10, "cost": 6}, "inventory": [{"name": "Goblin Club", "strength": 6, "durability": 10, "cost": 6}], "gold": 3, "level": 1, "exp": 13, "room": 1}, {"name": "drawde", "maxhp": 20, "currenthp": 20, "strength": 6, "weapon": {"name": "NONE", "strength": 0, "durability": 8188, "cost": 0}, "inventory": [], "gold": 3, "level": 1, "exp": 13, "room": 1}]
