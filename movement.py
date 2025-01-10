@@ -3,14 +3,11 @@ import random
 import json
 from menus import Menu
 
+
 pygame.init()
-
-screen = pygame.display.set_mode((1280, 720))
-pygame.display.set_caption('Game')
-running = True
-
-playerx = None
-playery = None
+screen_width = 1280
+screen_height = 720
+screen = pygame.display.set_mode((screen_width,screen_height))
 
 with open('rooms.json', 'r') as file:
     rooms = json.load(file)
@@ -100,9 +97,7 @@ class OpenWorld:
                         self.playerx = testplayerx 
                         youareSTUPIDrect = pygame.Rect(140, 10, 1000, 30)
                         pygame.draw.rect(screen, (20, 20, 25), youareSTUPIDrect)
-                        '''enemychance = random.randint(1, 18)
-                        if enemychance == 18:
-                            print("ENEMY!")'''
+                     
                     else:
                         testplayerhealth = player.currenthp - 3
                         
