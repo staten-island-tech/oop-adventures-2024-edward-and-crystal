@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import json
 
 enemies = [
@@ -145,4 +143,3 @@ enemies = [
 
 with open('enemies.json', 'w') as file:
     json.dump(enemies, file, indent=2)
->>>>>>> 03e0ecb04dc692eb5508911ae39cb01e6e15f35c
