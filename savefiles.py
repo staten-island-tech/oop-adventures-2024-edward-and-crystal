@@ -175,7 +175,6 @@ class SaveFileManager:
 				del playerdict['room']
 				playerdict['inventory'] = SaveFileManager.convert_json_to_inventory(name)
 				player = MainCharacter(**playerdict)
-				print(player)
 				return [player, room] #you have to make the room object's room number the room number in here. 
 			
 	def convert_json_to_inventory(savefile_name):
