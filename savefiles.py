@@ -34,7 +34,6 @@ class SaveFileManager:
 		return name
 	
 	def dump_savefile_to_json(name):
-
 		blank_player_data = {
 			"name": name,
 			"maxhp": 20,
@@ -45,7 +44,7 @@ class SaveFileManager:
 			"gold": 0,
 			"level": 1,
 			"exp": 0,
-			"room": 1
+			"room": 0
 		}
 
 		savedata.append(blank_player_data)
@@ -132,14 +131,10 @@ class SaveFileManager:
 		'''
 
 		savefile_dict = playerdict
-		playerdict['weapon'] = playerdict['weapon'].__dict__
-		inventory = []
-		
-		playerdict['inventory'] = inventory
 
 		savefile_dict['room'] = room_number 
 		del playerdict['dead']
-
+		print(savefile_dict)
 		found = False
 		#load it as dicts
 		for savefile in savedata:
@@ -148,8 +143,8 @@ class SaveFileManager:
 				found = True
 				break
 
-		if not found:
-			savedata.append(playerdict)
+			if found:
+				savedata.append(playerdict)
 
 		with open('saves.json', 'w') as file:
 			json.dump(savedata, file)
@@ -188,8 +183,8 @@ class SaveFileManager:
 					playerdict = savefile
 					room = savefile['room']
 					del playerdict['room']
-					playerdict['inventory'] = SaveFileManager.convert_json_to_inventory(name)
 					player = MainCharacter(**playerdict)
+					player.inventory = SaveFileManager.convert_json_to_inventory(name)
 					return [player, room] #you have to make the room object's room number the room number in here. 
 			except AttributeError:
 				pass #alas, 
@@ -201,6 +196,7 @@ class SaveFileManager:
 				json_inventory = savefile['inventory']
 				player_object_inventory = []
 				for item in json_inventory:
+					print(type(item))
 					if 'strength' in item:
 						weapon = Weapon(**item)
 						player_object_inventory.append(weapon)

@@ -1,8 +1,18 @@
 import json
-with open('saves.json', 'r') as file:
-  saves = json.load(file)
-  
-saves.clear()
+from charactersitems import MainCharacter
 
-with open('saves.json', 'w') as file:
-  json.dump(saves, file)
+player = MainCharacter('j', 20, 20, 6,  {
+      "name": "NONE",
+      "strength": 0,
+      "durability": 8192,
+      "cost": 0
+    },
+    
+        {"name": "Goblin Club",
+        "strength": 6,
+        "durability": 10,
+        "cost": 6
+      }, 0, 0, 0)
+
+
+print(player.__dict__)
