@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-print('hello world')
-=======
 import json
 
 enemies = [
@@ -146,4 +143,3 @@ enemies = [
 
 with open('enemies.json', 'w') as file:
     json.dump(enemies, file, indent=2)
->>>>>>> 3f3a09ba5fb36cbea533b14303d0a08bbf3a1a35

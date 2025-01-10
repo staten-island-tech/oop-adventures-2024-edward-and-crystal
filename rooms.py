@@ -7,6 +7,8 @@ from charactersitems import Enemy
 from movement import OpenWorld
 from battles import Battles
 from menus import Menu
+from savefiles import SaveFileManager
+
 rphbi = [0]
 player = MainCharacter('edward', 25, 25, 6, Weapon("NONE", 0, 8192, 0), [], 0, 1, 0)
 
@@ -17,6 +19,7 @@ screen_height = 720
 screen = pygame.display.set_mode((screen_width,screen_height))
 running = True
 enemies = []
+
 
 with open('rooms.json', 'r') as file:
     rooms = json.load(file)
@@ -163,8 +166,8 @@ class Room:
                 for event in events:
                     if goforwardcolor[0] == 60 and event.type == pygame.MOUSEBUTTONDOWN:
                         self.room_number += 1
-                        room = Room(self.room_number)
                         enemies.clear()
+                        room = Room(self.room_number)   
                         enemies_spawned = False
                         room.LoadRoom(player, rphbi, None)
                 
