@@ -956,7 +956,6 @@ class Menu:
                         player.weapon = Weapon(**player.weapon)
                     except TypeError:
                         pass
-                    print(player.weapon)
                     blankinventory = []
                     for item in player.inventory:
                         try:
@@ -969,7 +968,6 @@ class Menu:
                             
                     player.inventory = blankinventory
                     
-                    print(player.inventory)
                     save = False
                     mainmenu = True
                             

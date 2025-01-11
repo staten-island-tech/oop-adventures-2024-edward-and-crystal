@@ -15,5 +15,29 @@
     "level": 1,
     "exp": 0,
     "room": 0
+  },
+  {
+    "name": "crystal",
+    "maxhp": 20,
+    "currenthp": 11,
+    "strength": 6,
+    "weapon": {
+      "name": "Goblin Club",
+      "strength": 6,
+      "durability": 8,
+      "cost": 6
+    },
+    "inventory": [
+      {
+        "name": "Goblin Club",
+        "strength": 6,
+        "durability": 10,
+        "cost": 6
+      }
+    ],
+    "gold": 12.0,
+    "level": 1,
+    "exp": 46,
+    "room": 0
   }
 ]
