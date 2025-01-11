@@ -147,7 +147,7 @@ class SaveFileManager:
 				savedata.append(playerdict)
 
 		with open('saves.json', 'w') as file:
-			json.dump(savedata, file)
+			json.dump(savedata, file, indent=2)
   
 		#need to update the playerdata witht he new items
 
