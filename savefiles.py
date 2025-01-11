@@ -134,7 +134,6 @@ class SaveFileManager:
 
 		savefile_dict['room'] = room_number 
 		del playerdict['dead']
-		print(savefile_dict)
 		found = False
 		#load it as dicts
 		for savefile in savedata:
@@ -196,7 +195,6 @@ class SaveFileManager:
 				json_inventory = savefile['inventory']
 				player_object_inventory = []
 				for item in json_inventory:
-					print(type(item))
 					if 'strength' in item:
 						weapon = Weapon(**item)
 						player_object_inventory.append(weapon)
