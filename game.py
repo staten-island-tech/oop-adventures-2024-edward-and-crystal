@@ -8,7 +8,7 @@ import pygame
 
 name = SaveFileManager.save_or_load_file()
 
-loadables= SaveFileManager.convert_json_to_player_object(name)
+loadables = SaveFileManager.convert_json_to_player_object(name)
 
 player = loadables[0]
 roomnumber = loadables[1]

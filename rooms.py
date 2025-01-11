@@ -94,7 +94,7 @@ class Room:
     
             screen.fill((20, 20, 25)) # background
 
-            if player.currenthp < 0 and x == 1:
+            if player.currenthp <= 0 and x == 1:
                 x += 1
                 self.DeathScreen(player)
             

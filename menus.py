@@ -877,8 +877,8 @@ class Menu:
             shopitems.append(goldsword)
             shopitems.append(smallhealingpotion)
             if player.level > 7:
-                shopitems.append(edsword)
                 shopitems.append(bighealingpotion)
+                shopitems.append(edsword)
                 shopitems.append(crystalsword)
         
         index = 0
@@ -906,7 +906,7 @@ class Menu:
                 shop = False 
                 
     def Save(player, events, roomnumber):
-        global save, mainmenu
+        global save, mainmenu, playerdict
         titlefont = pygame.font.SysFont(None, 110, bold = True)
         subtitlefont = pygame.font.SysFont(None, 80, bold = True)
         
@@ -952,8 +952,27 @@ class Menu:
                     SaveFileManager.update_savefile(playerdict, roomnumber)
 
                 if norect.collidepoint(pygame.mouse.get_pos()):
+                    try:
+                        player.weapon = Weapon(**player.weapon)
+                    except TypeError:
+                        pass
+                    print(player.weapon)
+                    blankinventory = []
+                    for item in player.inventory:
+                        try:
+                            if 'strength' in item:
+                                blankinventory.append(Weapon(item['name'], item['strength'], item['durability'], item['cost']))
+                            else:
+                                blankinventory.append(HealingItem(item['name'], item['heal'], item['cost']))
+                        except TypeError:
+                            pass
+                            
+                    player.inventory = blankinventory
+                    
+                    print(player.inventory)
                     save = False
                     mainmenu = True
+                            
     
     def MenuOpenAnimation():
         import time

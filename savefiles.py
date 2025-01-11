@@ -111,7 +111,10 @@ class SaveFileManager:
 				if savefile == chosensave:
 					#for better formatting. format: Key: pair, with each key value pair on a new line. EX: Weapon: wooden_sword
 					for key, value in chosensave.items():
-						print(f'{key.capitalize()}: {value}')
+						if key == 'room':
+							print(f'{key.capitalize()}: {value+1}')
+						else:
+							print(f'{key.capitalize()}: {value}')
 
 				confirm = input('Is this the save you would like to open? Y/N ')
 				if confirm.upper() == 'Y':
@@ -133,7 +136,10 @@ class SaveFileManager:
 		savefile_dict = playerdict
 
 		savefile_dict['room'] = room_number 
-		del playerdict['dead']
+		try:
+			del playerdict['dead']
+		except KeyError:
+			pass
 		found = False
 		#load it as dicts
 		for savefile in savedata:
