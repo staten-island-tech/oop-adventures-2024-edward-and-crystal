@@ -39,7 +39,7 @@ class SaveFileManager:
 			"maxhp": 20,
 			"currenthp": 20,
 			"strength": 6,
-			"weapon": Weapon('NONE', 0, 8192, 0).WeaponDictionary(),
+			"weapon": Weapon('Starter Club', 0, 8192, 0).WeaponDictionary(),
 			"inventory": [],
 			"gold": 0,
 			"level": 1,
@@ -76,7 +76,7 @@ class SaveFileManager:
 			
 			#if it's a valid answer, make a save file
 			SaveFileManager.dump_savefile_to_json(name)
-			print('File sucessfully created')
+			print('File sucessfully created. CHECK THE PYGAME WINDOW. ok thanks :)')
 			return name
 		
 	def load_savefile():
