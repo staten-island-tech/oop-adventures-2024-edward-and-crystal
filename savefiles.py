@@ -22,7 +22,7 @@ class SaveFileManager:
 		#strip removes all spaces before or after the letters (not the spaces in between words)
 	
 		while True:
-			answer = input('Do you want to create a file or load one?').strip().lower()
+			answer = input('Do you want to create a file or load one? ').strip().lower()
 			if answer == 'create':
 				name = SaveFileManager.create_savefile()
 				break
@@ -63,7 +63,7 @@ class SaveFileManager:
 					print(savefile['name']) #\n skips a line. done for better formatting
 				print() # skips a line for better formatting
 
-			name = input('What do you want to name your save file?').strip()
+			name = input('What do you want to name your save file? ').strip()
 
 			if name == '':
 				print("Blank save file name. Please try again.")
@@ -88,7 +88,7 @@ class SaveFileManager:
 
 			if len(savedata) == 0:
 				print('There are no save files. You must create one.')
-				SaveFileManager.create_savefile()
+				name = SaveFileManager.create_savefile()
 				break
 
 			print('\nHere are all the save file names:\n') 
@@ -97,7 +97,7 @@ class SaveFileManager:
 			for savefile in savedata: 
 				print(savefile['name'])
 			
-			name = input('\nWhich save would you like to open?').strip() 
+			name = input('\nWhich save would you like to open? ').strip() 
 
 			for savefile in savedata:
 				if savefile['name'].upper() == name.upper():
@@ -113,7 +113,7 @@ class SaveFileManager:
 					for key, value in chosensave.items():
 						print(f'{key.capitalize()}: {value}')
 
-				confirm = input('Is this the save you would like to open? Y/N')
+				confirm = input('Is this the save you would like to open? Y/N ')
 				if confirm.upper() == 'Y':
 					lookingforsave = False
 					print("CHECK THE PYGAME WINDOW. ok thanks :)")

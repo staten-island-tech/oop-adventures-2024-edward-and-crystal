@@ -4,6 +4,7 @@ from menus import Menu
 from movement import OpenWorld
 from savefiles import SaveFileManager
 from rooms import Room
+import pygame
 
 name = SaveFileManager.save_or_load_file()
 

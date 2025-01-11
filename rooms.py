@@ -216,19 +216,16 @@ class Room:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                             quit()
-                viewstats = pygame.Rect(200, 500, 880, 200)
-                if viewstats.collidepoint(pygame.mouse.get_pos()):
-                    viewstatscolor = (50, 80, 90)
-                    for event in events:
-                        if event.type == pygame.MOUSEBUTTONDOWN:
-                            Menu.OpenMenuScreen(player, self.room_number)
-                else:
-                    viewstatscolor = (30, 45, 50)
                 
-                pygame.draw.rect(screen, viewstatscolor, viewstats)
-                viewtext = font.render("VIEW YOUR STATS", True, (255, 255, 255))
-                viewsurface = viewtext.get_rect(center=viewstats.center)
-                screen.blit(viewtext, viewsurface)
+                with open('saves.json', 'r') as file:
+                    saves = json.load(file)
+                
+                for save in saves:
+                    if save['name'] == player.name:
+                        saves.remove(save)
+                
+                with open('saves.json', 'w') as file:
+                    json.dump(saves, file, indent=2)
                 
             pygame.display.update()
             

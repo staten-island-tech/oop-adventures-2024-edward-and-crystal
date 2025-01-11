@@ -1,6 +1,6 @@
 [
   {
-    "name": "crystal",
+    "name": "edward",
     "maxhp": 20,
     "currenthp": 20,
     "strength": 6,
@@ -14,42 +14,6 @@
     "gold": 0,
     "level": 1,
     "exp": 0,
-    "room": 1
-  },
-  {
-    "name": "edward",
-    "maxhp": 20,
-    "currenthp": 15,
-    "strength": 6,
-    "weapon": {
-      "name": "Stone Sword",
-      "strength": 12,
-      "durability": 9,
-      "cost": 16
-    },
-    "inventory": [
-      {
-        "name": "Stone Sword",
-        "strength": 12,
-        "durability": 9,
-        "cost": 16
-      },
-      {
-        "name": "Goblin Club",
-        "strength": 6,
-        "durability": 10,
-        "cost": 6
-      },
-      {
-        "name": "Goblin Club",
-        "strength": 6,
-        "durability": 10,
-        "cost": 6
-      }
-    ],
-    "gold": 9950,
-    "level": 1,
-    "exp": 21,
-    "room": 1
+    "room": 0
   }
 ]
