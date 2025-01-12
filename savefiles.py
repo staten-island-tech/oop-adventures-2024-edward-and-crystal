@@ -34,13 +34,14 @@ class SaveFileManager:
 		return name
 	
 	def dump_savefile_to_json(name):
+		starterclub = Weapon('Starter Club', 0, 8192, 0).WeaponDictionary()
 		blank_player_data = {
 			"name": name,
 			"maxhp": 20,
 			"currenthp": 20,
 			"strength": 6,
-			"weapon": Weapon('Starter Club', 0, 8192, 0).WeaponDictionary(),
-			"inventory": [],
+			"weapon": starterclub,
+			"inventory": [starterclub],
 			"gold": 0,
 			"level": 1,
 			"exp": 0,

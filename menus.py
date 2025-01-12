@@ -321,6 +321,8 @@ class Menu:
         
         durabilityrect = pygame.Rect(50, 450, 840, 100)
         durabilitypercentage = selecteditem.durability / 100
+        if durabilitypercentage > 1:
+            durabilitypercentage = 1
         
         durabilityrectinside = pygame.Rect(60, 460, (840*durabilitypercentage) - 20, 80)
         pygame.draw.rect(screen, (20, 20, 30), durabilityrect)

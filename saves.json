@@ -67,5 +67,69 @@
     "level": 1,
     "exp": 0,
     "room": 0
+  },
+  {
+    "name": "thecoolertest",
+    "maxhp": 25,
+    "currenthp": 25.0,
+    "strength": 8,
+    "weapon": {
+      "name": "Goblin Club",
+      "strength": 6,
+      "durability": 1,
+      "cost": 6
+    },
+    "inventory": [
+      {
+        "name": "Goblin Club",
+        "strength": 6,
+        "durability": 1,
+        "cost": 6
+      },
+      {
+        "name": "Secretion",
+        "heal": 6,
+        "cost": 4
+      },
+      {
+        "name": "Secretion",
+        "heal": 6,
+        "cost": 4
+      },
+      {
+        "name": "Goblin Club",
+        "strength": 6,
+        "durability": 10,
+        "cost": 6
+      }
+    ],
+    "gold": 23,
+    "level": 2,
+    "exp": 12,
+    "room": 0
+  },
+  {
+    "name": "saavrg",
+    "maxhp": 20,
+    "currenthp": 20,
+    "strength": 6,
+    "weapon": {
+      "name": "Starter Club",
+      "strength": 0,
+      "durability": 8192,
+      "cost": 0
+    },
+    "inventory": [
+      {
+        "name": "Starter Club",
+        "strength": 0,
+        "durability": 8192,
+        "cost": 0
+      }
+    ],
+    "gold": 0,
+    "level": 1,
+    "exp": 0,
+    "room": 0
   }
 ]
