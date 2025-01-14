@@ -134,13 +134,13 @@
   },
   {
     "name": "saavrg2",
-    "maxhp": 35,
-    "currenthp": 35,
-    "strength": 12,
+    "maxhp": 40,
+    "currenthp": 34.285714285714285,
+    "strength": 14,
     "weapon": {
       "name": "Stone Sword",
       "strength": 12,
-      "durability": 10,
+      "durability": 8,
       "cost": 16
     },
     "inventory": [
@@ -178,11 +178,23 @@
         "name": "Secretion",
         "heal": 6,
         "cost": 4
+      },
+      {
+        "name": "Goblin Club",
+        "strength": 6,
+        "durability": 10,
+        "cost": 6
+      },
+      {
+        "name": "Goblin Club",
+        "strength": 6,
+        "durability": 10,
+        "cost": 6
       }
     ],
-    "gold": 68.0,
-    "level": 4,
-    "exp": 55,
+    "gold": 72,
+    "level": 5,
+    "exp": 9,
     "room": 0
   }
 ]
