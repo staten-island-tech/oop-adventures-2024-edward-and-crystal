@@ -1,12 +1,6 @@
 from charactersitems import Character, MainCharacter, Enemy, BossEnemy, Grifter, Weapon, HealingItem
-from battles import Battles
-from menus import Menu
-from movement import OpenWorld
 from savefiles import SaveFileManager
 from rooms import Room
-import pygame
-
-print('hello')
 
 name = SaveFileManager.save_or_load_file()
 

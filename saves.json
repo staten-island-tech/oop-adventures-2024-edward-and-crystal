@@ -133,68 +133,27 @@
     "room": 0
   },
   {
-    "name": "saavrg2",
-    "maxhp": 40,
-    "currenthp": 34.285714285714285,
-    "strength": 14,
+    "name": "hi",
+    "maxhp": 20,
+    "currenthp": 15,
+    "strength": 6,
     "weapon": {
-      "name": "Stone Sword",
-      "strength": 12,
-      "durability": 8,
-      "cost": 16
+      "name": "Starter Club",
+      "strength": 0,
+      "durability": 8185,
+      "cost": 0
     },
     "inventory": [
       {
-        "name": "Goblin Club",
-        "strength": 6,
-        "durability": 0,
-        "cost": 6
-      },
-      {
-        "name": "Goblin Club",
-        "strength": 6,
-        "durability": 2,
-        "cost": 6
-      },
-      {
-        "name": "Goblin Club",
-        "strength": 6,
-        "durability": 10,
-        "cost": 6
-      },
-      {
-        "name": "Goblin Club",
-        "strength": 6,
-        "durability": 10,
-        "cost": 6
-      },
-      {
-        "name": "Stone Sword",
-        "strength": 12,
-        "durability": 10,
-        "cost": 16
-      },
-      {
-        "name": "Secretion",
-        "heal": 6,
-        "cost": 4
-      },
-      {
-        "name": "Goblin Club",
-        "strength": 6,
-        "durability": 10,
-        "cost": 6
-      },
-      {
-        "name": "Goblin Club",
-        "strength": 6,
-        "durability": 10,
-        "cost": 6
+        "name": "Starter Club",
+        "strength": 0,
+        "durability": 8192,
+        "cost": 0
       }
     ],
-    "gold": 72,
-    "level": 5,
-    "exp": 9,
+    "gold": 3,
+    "level": 1,
+    "exp": 13,
     "room": 0
   }
 ]
