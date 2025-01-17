@@ -952,6 +952,25 @@ class Menu:
                     if isinstance(player, dict):
                         quit()
                     SaveFileManager.update_savefile(playerdict, roomnumber)
+                    
+                    try:
+                        player.weapon = Weapon(**player.weapon)
+                    except TypeError:
+                        pass
+                    blankinventory = []
+                    for item in player.inventory:
+                        try:
+                            if 'strength' in item:
+                                blankinventory.append(Weapon(item['name'], item['strength'], item['durability'], item['cost']))
+                            else:
+                                blankinventory.append(HealingItem(item['name'], item['heal'], item['cost']))
+                        except TypeError:
+                            pass
+                            
+                    player.inventory = blankinventory
+                    
+                    save = False
+                    mainmenu = True
 
                 if norect.collidepoint(pygame.mouse.get_pos()):
                     try:
