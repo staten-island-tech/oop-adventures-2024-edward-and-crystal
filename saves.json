@@ -46,5 +46,29 @@
     "level": 1,
     "exp": 7,
     "room": 0
+  },
+  {
+    "name": "edward",
+    "maxhp": 20,
+    "currenthp": 20,
+    "strength": 6,
+    "weapon": {
+      "name": "Starter Club",
+      "strength": 0,
+      "durability": 8192,
+      "cost": 0
+    },
+    "inventory": [
+      {
+        "name": "Starter Club",
+        "strength": 0,
+        "durability": 8192,
+        "cost": 0
+      }
+    ],
+    "gold": 0,
+    "level": 1,
+    "exp": 0,
+    "room": 0
   }
 ]
